@@ -71,8 +71,8 @@ public class RenderSystem implements Runnable {
             }
 
             // get the average of the positions
-            avgPos.x += pos.x;
-            avgPos.y += pos.y;
+            avgPos.x += pos.x + fcs.x;
+            avgPos.y += pos.y + fcs.y;
             count.count++;
         });
 

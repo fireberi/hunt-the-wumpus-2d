@@ -2,15 +2,15 @@ package scripts.util;
 
 public class Frame {
 
-    public double x;
-    public double y;
-    public double w;
-    public double h;
-    public double ox;
-    public double oy;
+    public float x;
+    public float y;
+    public float w;
+    public float h;
+    public float ox;
+    public float oy;
     public double time = 0;
 
-    public Frame(double x, double y, double w, double h, double ox, double oy) {
+    public Frame(float x, float y, float w, float h, float ox, float oy) {
         this.x = x;
         this.y = y;
         this.w = w;

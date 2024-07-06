@@ -45,24 +45,24 @@ public final class Objects {
             }),
             new HealthComponent(200),
             new InventoryComponent(inventory),
-            new FocusComponent(true),
+            new FocusComponent(true, 0f, 0f),
             new SpriteComponent(new ImageComponent("hunter", 48, 32), "idle", true,
                 new String[] {"idle", "air", "run"},
                 new boolean[] {true, false, true, false},
                 new double[] {0.75f, 0f, 0.15f},
                 new Frame[][] {
                     {
-                        new Frame(0, 0, 16, 16, -8, -11),
-                        new Frame(16, 0, 16, 16, -8, -11),
+                        new Frame(0f, 0f, 16f, 16f, -8f, -11f),
+                        new Frame(16f, 0f, 16f, 16f, -8f, -11f),
                     },
                     {
-                        new Frame(32, 0, 16, 16, -8, -11),
+                        new Frame(32f, 0f, 16f, 16f, -8f, -11f),
                     },
                     {
-                        new Frame(0, 16, 16, 16, -8, -11),
-                        new Frame(16, 16, 16, 16, -8, -11),
-                        new Frame(32, 16, 16, 16, -8, -11),
-                        new Frame(16, 16, 16, 16, -8, -11),
+                        new Frame(0f, 16f, 16f, 16f, -8f, -11f),
+                        new Frame(16f, 16f, 16f, 16f, -8f, -11f),
+                        new Frame(32f, 16f, 16f, 16f, -8f, -11f),
+                        new Frame(16f, 16f, 16f, 16f, -8f, -11f),
                     }
                 }
             )
@@ -83,29 +83,29 @@ public final class Objects {
             }),
             new HealthComponent(200),
             new InventoryComponent(inventory),
-            new FocusComponent(true),
+            new FocusComponent(true, 0f, -8f),
             new SpriteComponent(new ImageComponent("hunter", 48, 32), 0, "idle", true,
                 new String[] {"idle", "air", "run", "melee"},
                 new boolean[] {true, false, true, false},
                 new double[] {0.75f, 0.1f, 0.14f, 0.08f},
                 new Frame[][] {
                     {
-                        new Frame(0, 0, 16, 16, -7, -9),
-                        new Frame(16, 0, 16, 16, -7, -9),
+                        new Frame(0f, 0f, 16f, 16f, -7f, -9f),
+                        new Frame(16f, 0f, 16f, 16f, -7f, -9f),
                     },
                     {
-                        new Frame(32, 0, 16, 16, -7, -9),
+                        new Frame(32f, 0f, 16f, 16f, -7f, -9f),
                     },
                     {
-                        new Frame(0, 16, 16, 16, -7, -9),
-                        new Frame(16, 16, 16, 16, -7, -9),
-                        new Frame(32, 16, 16, 16, -7, -9),
-                        new Frame(16, 16, 16, 16, -7, -9),
+                        new Frame(0f, 16f, 16f, 16f, -7f, -9f),
+                        new Frame(16f, 16f, 16f, 16f, -7f, -9f),
+                        new Frame(32f, 16f, 16f, 16f, -7f, -9f),
+                        new Frame(16f, 16f, 16f, 16f, -7f, -9f),
                     },
                     {
-                        new Frame(32, 0, 16, 16, -7, -9),
-                        new Frame(16, 16, 16, 16, -7, -9),
-                        new Frame(32, 16, 16, 16, -7, -9),
+                        new Frame(32f, 0f, 16f, 16f, -7f, -9f),
+                        new Frame(16f, 16f, 16f, 16f, -7f, -9f),
+                        new Frame(32f, 16f, 16f, 16f, -7f, -9f),
                     }
                 }
             )
@@ -142,22 +142,22 @@ public final class Objects {
                 new double[] {0.75f, 10f, 0.14f, 0.08f},
                 new Frame[][] {
                     {
-                        new Frame(0, 0, 16, 16, -15.5, -10),
-                        new Frame(0, 0, 16, 16, -15.5, -9),
+                        new Frame(0f, 0f, 16f, 16f, -15.5f, -10),
+                        new Frame(0f, 0f, 16f, 16f, -15.5f, -9),
                     },
                     {
-                        new Frame(0, 16, 16, 16, -19.5, -14),
+                        new Frame(0f, 16f, 16f, 16f, -19.5f, -14),
                     },
                     {
-                        new Frame(0, 0, 16, 16, -18.5, -11),
-                        new Frame(0, 0, 16, 16, -13.5, -10),
-                        new Frame(0, 0, 16, 16, -10.5, -10),
-                        new Frame(0, 0, 16, 16, -13.5, -10),
+                        new Frame(0f, 0f, 16f, 16f, -18.5f, -11),
+                        new Frame(0f, 0f, 16f, 16f, -13.5f, -10),
+                        new Frame(0f, 0f, 16f, 16f, -10.5f, -10),
+                        new Frame(0f, 0f, 16f, 16f, -13.5f, -10),
                     },
                     {
-                        new Frame(16, 0, 16, 16, -18.5, -15),
-                        new Frame(0, 16, 16, 16, -15.5, -11),
-                        new Frame(16, 16, 16, 16, -9.5, -8),
+                        new Frame(16f, 0f, 16f, 16f, -18.5f, -15),
+                        new Frame(0f, 16f, 16f, 16f, -15.5f, -11),
+                        new Frame(16f, 16f, 16f, 16f, -9.5f, -8),
                     }
                 }
             )
