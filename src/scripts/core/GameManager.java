@@ -7,7 +7,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
 
-// import scripts.scenes
 import scripts.scenes.test.*;
 import scripts.scenes.levels.*;
 
@@ -24,8 +23,8 @@ class GameManager {
         sceneData.put("Level1", new SceneLevel1());
 
         //region load images
-        images.put("hunter", new Image("assets/graphics/hunter.png", 0, 0, false, true));
-        images.put("rusty", new Image("assets/graphics/rusty.png", 0, 0, false, true));
+        images.put("hunter", new Image("graphics/hunter.png", 0, 0, false, true));
+        images.put("rusty", new Image("graphics/rusty.png", 0, 0, false, true));
         //endregion
 
         System.out.println("GameManager init");
