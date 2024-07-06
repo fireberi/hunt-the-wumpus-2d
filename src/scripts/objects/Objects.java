@@ -135,11 +135,7 @@ public final class Objects {
                 // new GraphicsComponent(14f, 8f, "hitbox", false),
             }),
             new DamageComponent(30),
-            new TimerComponent(true, new Timer[] {
-                new Timer(0.5, false, true),
-                new Timer(0.4, false),
-                new Timer(0.08, false)
-            }),
+            new TimerComponent(false, new Timer[] {new Timer(0.16), new Timer(0.15), new Timer(0.19)}),
             new SpriteComponent(new ImageComponent("rusty", 32, 32), 1, "idle", true,
                 new String[] {"idle", "air", "run", "attack"},
                 new boolean[] {true, false, true, false},
@@ -238,7 +234,7 @@ public final class Objects {
             new HurtboxGraphicsListComponent(new GraphicsComponent[] {
                 new GraphicsComponent(7f, 10f, "hurtbox", false),
             }),
-            new HealthComponent(40)
+            new HealthComponent(10)
         );
     }
     //endregion

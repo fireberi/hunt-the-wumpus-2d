@@ -174,28 +174,29 @@ public class PlayerControllerSystem implements Runnable {
             if (pcc.hasInventory) {
                 InventoryComponent inv = e.entity().get(InventoryComponent.class);
                 Entity sword = inv.inventory.get("sword");
-                Timer[] swordTimers = sword.get(TimerComponent.class).timers;
+                TimerComponent swordTmc = sword.get(TimerComponent.class);
                 HitboxComponent swordHit = sword.get(HitboxComponent.class);
                 SpriteComponent swordSpr = sword.get(SpriteComponent.class);
 
                 swordHit.active = false;
 
-                if (confirmJustPressed) {
-                    if (!swordTimers[1].active) {
-                        swordHit.active = true;
-                    }
-                    swordTimers[1].start();
+                if (confirmJustPressed && !swordTmc.active()) {
+                    swordTmc.startTimer(0, 0);
                 }
                 // spawn an arrow
                 if (cancelJustPressed) {
                     Objects.createArrowActor(cherry, pos.x, pos.y, vel.facingRight);
                 }
 
+                if (swordTmc.timers[0].timeout) {
+                    swordHit.active = true;
+                }
+
                 // animation
                 if (swordSpr.image.flip != spr.image.flip) {
                     swordSpr.image.flip = spr.image.flip;
                 }
-                if (swordTimers[0].active || swordTimers[1].active) {
+                if (swordTmc.timers[0].active || swordTmc.timers[1].active) {
                     spr.nextAnim = "melee";
                     swordSpr.nextAnim = "attack";
                 }

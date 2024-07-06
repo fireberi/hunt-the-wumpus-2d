@@ -21,31 +21,36 @@ public class TimerSystem implements Runnable {
 
     public void run() {
         cherry.findEntitiesWith(TimerComponent.class).stream().forEach(e -> {
-            Timer[] timers = e.comp().timers;
+            TimerComponent tmc = e.comp();
+            Timer[] timers = tmc.timers;
 
-            int count = 0;
-            int length = timers.length;
-            // System.out.println("\nTimer System");
-            for (Timer timer : timers) {
-                // System.out.println("timer " + count + ": " + timer.active);
-                if (count + 1 < length) {
-                    timer.update(state.delta, timers[count + 1]);
-                    count += 1;
-                    continue;
+            if (!tmc.repeat) {
+                double overflow = 0;
+                for (Timer t : timers) {
+                    double result = t.update(state.delta);
+                    if (result < 0) {
+                        overflow = result;
+                    }
+                    else if (result > 0) {
+                        System.out.println("TimerSystem ERROR: overflow became positive (should be negative)");
+                    }
                 }
-                timer.update(state.delta);
+                if (timers[tmc.current].timeout) {
+                    tmc.current += 1;
+                    if (tmc.current < timers.length) {
+                        timers[tmc.current].start(overflow);
+                    }
+                    else {
+                        tmc.current = 0;
+                    }
+                }
             }
 
             /*
-            loop through timers
-                if current timer is not last timer
-                    update the timer, pass in the next timer
-                else if the current timer is the last timer
-                    update the timer
-                    get the overflow when timer times out
-                    if the timercomponent repeats
-                        start the next timer with the overflow
-
+            How this works:
+            - start one of the timers from the timer component
+            - when that one ends, move on to the next one
+            - if the next one is non-existent and the timer component has repeat, start the first timer, otherwise do nothing
             */
         });
     }

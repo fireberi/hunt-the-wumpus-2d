@@ -14,4 +14,18 @@ public class TimerComponent {
         this.current = 0;
     }
 
+    public boolean active() {
+        for (Timer t : timers) {
+            if (t.active) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void startTimer(int index, double overflow) {
+        current = index;
+        timers[current].start(overflow);
+    }
+
 }
