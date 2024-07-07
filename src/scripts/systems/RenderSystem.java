@@ -62,7 +62,10 @@ public class RenderSystem implements Runnable {
         PositionComponent avgPos = new PositionComponent(0, 0);
 
         // not using int count = 0; because local variables cannot be mutated in a lambda
-        var count = new Object() {int count = 0;};
+        var vars = new Object() {
+            int count = 0;
+            boolean focused = false;
+        };
         cherry.findEntitiesWith(FocusComponent.class, PositionComponent.class).stream().forEach(e -> {
             FocusComponent fcs = e.comp1();
             PositionComponent pos = e.comp2();
@@ -74,11 +77,18 @@ public class RenderSystem implements Runnable {
             // get the average of the positions
             avgPos.x += pos.x + fcs.x;
             avgPos.y += pos.y + fcs.y;
-            count.count++;
+            vars.count++;
+            vars.focused = true;
         });
 
-        avgPos.x /= count.count;
-        avgPos.y /= count.count;
+        if (vars.focused) {
+            avgPos.x /= vars.count;
+            avgPos.y /= vars.count;
+        }
+        else {
+            avgPos.x = 0;
+            avgPos.y = 0;
+        }
 
         float newX = avgPos.x - (Constants.WIDTH / 2);
         float newY = avgPos.y - (Constants.HEIGHT / 2);
