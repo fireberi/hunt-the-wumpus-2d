@@ -75,7 +75,7 @@ public final class Objects {
             new PlayerControllerComponent(inventory.size() == 0 ? false : true),
             new PositionComponent(x, y),
             new VelocityComponent(0f, 0f, true, gravity),
-            new SpeedComponent(0.05f, 0.074f, 0.5f, 2.5f),
+            new SpeedComponent(0.05f, 0.074f, 0.55f, 2.5f),
             new GravityComponent(),
             new JumpComponent(1.15f, 0.75f),
             new BoxColliderComponent(8f, 14f),
@@ -124,7 +124,7 @@ public final class Objects {
                     cherry.findEntitiesWith(PlayerControllerComponent.class, PositionComponent.class, VelocityComponent.class).stream().forEach(player -> {
                         PositionComponent ppos = player.comp2();
                         VelocityComponent pvel = player.comp3();
-                        float direction = pvel.facingRight ? 10.5f : -10.5f;
+                        float direction = pvel.facingRight ? hit.w / 2 + 2 : -hit.w / 2 - 2;
                         pos.x = ppos.x + direction;
                         pos.y = ppos.y;
                     });
