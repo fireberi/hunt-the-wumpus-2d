@@ -12,6 +12,7 @@ import scripts.components.*;
 
 import scripts.util.Timer;
 import scripts.util.Frame;
+import scripts.util.DamageTypes.Damage;
 
 public final class Objects {
 
@@ -43,7 +44,7 @@ public final class Objects {
             new GraphicsListComponent(new GraphicsComponent[] {
                 new GraphicsComponent(7f, 10f, Color.rgb(255, 255, 255), true)
             }),
-            new HealthComponent(200),
+            new HealthComponent(200f),
             new InventoryComponent(inventory),
             new FocusComponent(true, 0f, 0f),
             new SpriteComponent(new ImageComponent("hunter", 48, 32), "idle", true,
@@ -81,7 +82,7 @@ public final class Objects {
             new GraphicsListComponent(new GraphicsComponent[] {
                 // new GraphicsComponent(8f, 14f, Color.rgb(255, 255, 255), true)
             }),
-            new HealthComponent(200),
+            new HealthComponent(200f),
             new InventoryComponent(inventory),
             new FocusComponent(true, 0f, -8f),
             new SpriteComponent(new ImageComponent("hunter", 48, 32), 0, "idle", true,
@@ -134,7 +135,7 @@ public final class Objects {
             new HitboxGraphicsListComponent(new GraphicsComponent[] {
                 // new GraphicsComponent(14f, 8f, "hitbox", false),
             }),
-            new DamageComponent(30),
+            new DamageComponent(new Damage[] {Damage.INSTANT}, new float[] {30f}),
             new TimerComponent(false, new Timer[] {new Timer(0.16), new Timer(0.15), new Timer(0.19)}),
             new SpriteComponent(new ImageComponent("rusty", 32, 32), 1, "idle", true,
                 new String[] {"idle", "air", "run", "attack"},
@@ -190,7 +191,7 @@ public final class Objects {
             new HitboxGraphicsListComponent(new GraphicsComponent[] {
                 new GraphicsComponent(4f, 4f, "hitbox", false),
             }),
-            new DamageComponent(20)
+            new DamageComponent(new Damage[] {Damage.INSTANT}, new float[] {20f})
         );
     }
 
@@ -209,21 +210,10 @@ public final class Objects {
                     HitboxComponent aHit = attacker.get(HitboxComponent.class);
                     HurtboxComponent rHrt = receiver.get(HurtboxComponent.class);
                     HealthComponent rHp = receiver.get(HealthComponent.class);
-                    if (aHit.type == "arrow") {
+                    if (aHit.type == "arrow" || aHit.type == "sword") {
                         if (justEntered) {
-                            rHp.health = Math.max(0, rHp.health - attacker.get(DamageComponent.class).damage);
-                            if (rHp.health <= 0) {
-                                rHrt.markDelete = true;
-                            }
-                            aHit.markDelete = true;
-                        }
-                    }
-                    if (aHit.type == "sword") {
-                        if (justEntered) {
-                            rHp.health = Math.max(0, rHp.health - attacker.get(DamageComponent.class).damage);
-                            if (rHp.health <= 0) {
-                                rHrt.markDelete = true;
-                            }
+                            DamageComponent dmc = attacker.get(DamageComponent.class);
+                            rHp.add(dmc.effects, dmc.values);
                         }
                     }
                 }
@@ -234,7 +224,7 @@ public final class Objects {
             new HurtboxGraphicsListComponent(new GraphicsComponent[] {
                 new GraphicsComponent(7f, 10f, "hurtbox", false),
             }),
-            new HealthComponent(10)
+            new HealthComponent(10f)
         );
     }
     //endregion

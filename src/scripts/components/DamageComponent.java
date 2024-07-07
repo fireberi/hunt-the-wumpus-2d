@@ -1,11 +1,15 @@
 package scripts.components;
 
+import scripts.util.DamageTypes;
+
 public class DamageComponent {
 
-    public int damage;
+    public DamageTypes.Damage[] effects;
+    public float[] values;
 
-    public DamageComponent(int damage) {
-        this.damage = damage;
+    public DamageComponent(DamageTypes.Damage[] effects, float[] values) {
+        this.effects = effects;
+        this.values = values;
     }
 
 }

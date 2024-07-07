@@ -48,10 +48,11 @@ public class SceneLevel1 extends Scene {
         TimerSystem timerSystem = new TimerSystem(cherry, state);
         GravitySystem gravitySystem = new GravitySystem(cherry, state);
         PlayerControllerSystem playerControllerSystem = new PlayerControllerSystem(cherry, state);
+        EnemyAISystem enemyAISystem = new EnemyAISystem(cherry, state);
         MoveSystem moveSystem = new MoveSystem(cherry, state);
         // BorderCollisionSystem borderCollisionSystem = new BorderCollisionSystem(cherry, state);
         AreaCollisionSystem areaCollisionSystem = new AreaCollisionSystem(cherry, state);
-        EnemyAISystem enemyAISystem = new EnemyAISystem(cherry, state);
+        HealthDamageSystem healthDamageSystem = new HealthDamageSystem(cherry, state);
         SpriteSystem spriteSystem = new SpriteSystem(cherry, state);
 
         updateScheduler.schedule(timerSystem);
@@ -61,6 +62,7 @@ public class SceneLevel1 extends Scene {
         updateScheduler.schedule(moveSystem);
         // updateScheduler.schedule(borderCollisionSystem);
         updateScheduler.schedule(areaCollisionSystem);
+        updateScheduler.schedule(healthDamageSystem);
         updateScheduler.schedule(spriteSystem);
 
         RenderSystem renderSystem = new RenderSystem(cherry, state, ctx, characterX - 160f, characterY - 90f, images);

@@ -27,6 +27,7 @@ import scripts.core.Constants;
 import scripts.core.State;
 import scripts.util.GameMath;
 import scripts.util.Frame;
+import scripts.util.Blocks;
 
 public class RenderSystem implements Runnable {
 
@@ -95,18 +96,21 @@ public class RenderSystem implements Runnable {
             for (int[] row : grid) {
                 int x = 0;
                 for (int tile : row) {
-                    boolean draw = false;
-                    if (tile == 1) {
+                    boolean draw = true;
+                    if (tile == Blocks.BORDER) {
                         ctx.setFill(Color.rgb(207, 207, 207));
-                        draw = true;
                     }
-                    else if (tile == 2) {
+                    else if (tile == Blocks.WALL) {
                         ctx.setFill(Color.rgb(255, 63, 143));
-                        draw = true;
                     }
-                    else if (tile == 3) {
+                    else if (tile == Blocks.LAVA) {
                         ctx.setFill(Color.rgb(191, 0, 0));
-                        draw = true;
+                    }
+                    else if (tile == Blocks.SPIKE) {
+                        ctx.setFill(Color.rgb(128, 128, 128));
+                    }
+                    else {
+                        draw = false;
                     }
                     if (draw) {
                         ctx.fillRect(Math.floor(x * Constants.SCALE - camPos.x * Constants.VIEWPORT_SCALE), Math.floor(y * Constants.SCALE - camPos.y * Constants.VIEWPORT_SCALE), Constants.SCALE, Constants.SCALE);
