@@ -41,7 +41,6 @@ public class PlayerControllerSystem implements Runnable {
             JumpComponent jmp = e.comp4();
             BoxColliderComponent boxCol = e.comp5();
             PositionComponent pos = e.comp6();
-            SpriteComponent spr = e.entity().get(SpriteComponent.class);
 
             boolean rightJustPressed = pcc.inputs.get("right").justPressed();
             boolean rightPressed = pcc.inputs.get("right").pressed();
@@ -154,21 +153,19 @@ public class PlayerControllerSystem implements Runnable {
                 }
             }
 
-            // animation
-            if (vel.facingRight && spr.image.flip) {
-                spr.image.flip = false;
+            // animation checks
+            boolean flip = !vel.facingRight;
+            String nextAnim = "";
+            if (boxCol.bottom) {
+                if ((vel.facingRight && rightPressed && vel.x >= 0.1) || (!vel.facingRight && leftPressed && vel.x <= 0.1)) {
+                    nextAnim = "run";
+                }
+                else {
+                    nextAnim = "idle";
+                }
             }
-            else if (!vel.facingRight && !spr.image.flip) {
-                spr.image.flip = true;
-            }
-            if (boxCol.bottom && ((vel.facingRight && rightPressed && vel.x >= 0.1) || (!vel.facingRight && leftPressed && vel.x <= 0.1))) {
-                spr.nextAnim = "run";
-            }
-            else if (Math.abs(vel.y) > 0.1) {
-                spr.nextAnim = "air";
-            }
-            else if (Math.abs(vel.x) < 0.1 && Math.abs(vel.y) < 0.1 && boxCol.bottom) {
-                spr.nextAnim = "idle";
+            else {
+                nextAnim = "air";
             }
 
             if (pcc.hasInventory) {
@@ -176,7 +173,6 @@ public class PlayerControllerSystem implements Runnable {
                 Entity sword = inv.inventory.get("sword");
                 TimerComponent swordTmc = sword.get(TimerComponent.class);
                 HitboxComponent swordHit = sword.get(HitboxComponent.class);
-                SpriteComponent swordSpr = sword.get(SpriteComponent.class);
 
                 swordHit.active = false;
 
@@ -192,22 +188,31 @@ public class PlayerControllerSystem implements Runnable {
                     swordHit.active = true;
                 }
 
-                // animation
-                if (swordSpr.image.flip != spr.image.flip) {
-                    swordSpr.image.flip = spr.image.flip;
-                }
+                // animation check
                 if (swordTmc.timers[0].active || swordTmc.timers[1].active) {
-                    spr.nextAnim = "melee";
+                    nextAnim = "melee";
+                }
+            }
+
+            // set animation
+            SpriteComponent spr = e.entity().get(SpriteComponent.class);
+            SpriteComponent swordSpr = null;
+            if (pcc.hasInventory) {
+                swordSpr = e.entity().get(InventoryComponent.class).inventory.get("sword").get(SpriteComponent.class);
+            }
+            if (spr != null) {
+                if (spr.image.flip != flip) {
+                    spr.image.flip = flip;
+                }
+                spr.nextAnim = nextAnim;
+            }
+            if (swordSpr != null) {
+                if (swordSpr.image.flip != flip) {
+                    swordSpr.image.flip = flip;
+                }
+                swordSpr.nextAnim = nextAnim;
+                if (swordSpr.nextAnim == "melee") {
                     swordSpr.nextAnim = "attack";
-                }
-                else if (spr.nextAnim == "idle") {
-                    swordSpr.nextAnim = "idle";
-                }
-                else if (spr.nextAnim == "air") {
-                    swordSpr.nextAnim = "air";
-                }
-                else if (spr.nextAnim == "run") {
-                    swordSpr.nextAnim = "run";
                 }
             }
         });

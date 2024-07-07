@@ -142,22 +142,22 @@ public final class Objects {
                 new double[] {0.75f, 10f, 0.14f, 0.08f},
                 new Frame[][] {
                     {
-                        new Frame(0f, 0f, 16f, 16f, -15.5f, -10),
-                        new Frame(0f, 0f, 16f, 16f, -15.5f, -9),
+                        new Frame(0f, 0f, 16f, 16f, -14f, -9),
+                        new Frame(0f, 0f, 16f, 16f, -14f, -8),
                     },
                     {
-                        new Frame(0f, 16f, 16f, 16f, -19.5f, -14),
+                        new Frame(0f, 16f, 16f, 16f, -18f, -14),
                     },
                     {
-                        new Frame(0f, 0f, 16f, 16f, -18.5f, -11),
-                        new Frame(0f, 0f, 16f, 16f, -13.5f, -10),
-                        new Frame(0f, 0f, 16f, 16f, -10.5f, -10),
-                        new Frame(0f, 0f, 16f, 16f, -13.5f, -10),
+                        new Frame(0f, 0f, 16f, 16f, -18f, -10),
+                        new Frame(0f, 0f, 16f, 16f, -13f, -9),
+                        new Frame(0f, 0f, 16f, 16f, -10f, -9),
+                        new Frame(0f, 0f, 16f, 16f, -13f, -9),
                     },
                     {
-                        new Frame(16f, 0f, 16f, 16f, -18.5f, -15),
-                        new Frame(0f, 16f, 16f, 16f, -15.5f, -11),
-                        new Frame(16f, 16f, 16f, 16f, -9.5f, -8),
+                        new Frame(16f, 0f, 16f, 16f, -17f, -15),
+                        new Frame(0f, 16f, 16f, 16f, -14f, -10),
+                        new Frame(16f, 16f, 16f, 16f, -7, -8),
                     }
                 }
             )
