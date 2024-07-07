@@ -36,7 +36,7 @@ public class SceneLevel1 extends Scene {
         //region entity setup
         final float characterX = 32f;
         final float characterY = 64f;
-        Objects.createEnemyActor(cherry, 380f, 79f, true);
+        Objects.createEnemyActor(cherry, 380f, 80f, true);
         Objects.createCharacterActor(cherry, characterX, characterY, true, new HashMap<String, Entity>(Map.ofEntries(
             Map.entry("sword", Objects.createSwordActor(cherry, 108f, 170f, true))
         )));
@@ -55,6 +55,12 @@ public class SceneLevel1 extends Scene {
         HealthDamageSystem healthDamageSystem = new HealthDamageSystem(cherry, state);
         SpriteSystem spriteSystem = new SpriteSystem(cherry, state);
 
+        RenderSystem renderSystem = new RenderSystem(cherry, state, ctx, characterX - 160f, characterY - 90f, images);
+        TextSystem textSystem = new TextSystem(cherry, ctx);
+
+        EntityDeletionSystem entityDeletionSystem = new EntityDeletionSystem(cherry, state, renderSystem);
+
+        updateScheduler.schedule(entityDeletionSystem);
         updateScheduler.schedule(timerSystem);
         updateScheduler.schedule(gravitySystem);
         updateScheduler.schedule(playerControllerSystem);
@@ -64,9 +70,6 @@ public class SceneLevel1 extends Scene {
         updateScheduler.schedule(areaCollisionSystem);
         updateScheduler.schedule(healthDamageSystem);
         updateScheduler.schedule(spriteSystem);
-
-        RenderSystem renderSystem = new RenderSystem(cherry, state, ctx, characterX - 160f, characterY - 90f, images);
-        TextSystem textSystem = new TextSystem(cherry, ctx);
 
         renderScheduler.schedule(renderSystem);
         renderScheduler.schedule(textSystem);
