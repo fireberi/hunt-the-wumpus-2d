@@ -22,7 +22,7 @@ public final class Collision {
                 }
             }
         }
-        return null;
+        return new int[] {0};
     }
 
     private Collision() {}

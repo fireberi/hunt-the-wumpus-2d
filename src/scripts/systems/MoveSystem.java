@@ -13,6 +13,7 @@ import scripts.components.TilemapComponent;
 import scripts.core.Constants;
 import scripts.core.State;
 import scripts.util.Collision;
+import scripts.util.Blocks;
 
 public class MoveSystem implements Runnable {
 
@@ -156,36 +157,36 @@ public class MoveSystem implements Runnable {
 
     private void processGridCollision(PositionComponent pos, VelocityComponent vel, BoxColliderComponent boxCol, TilemapComponent map) {
 
+        //region solid blocks
         float nextX = pos.x + boxCol.x + vel.x;
 
         int[] xCollision = Collision.gridAABB(Constants.TILESIZE, map.grid, new int[] {1, 2}, nextX, pos.y + boxCol.y, boxCol.w, boxCol.h);
+        int[] xCollision = Collision.gridAABB(Constants.TILESIZE, map.grid, Blocks.solids, nextX, pos.y + boxCol.y, boxCol.w, boxCol.h);
+        int tile = xCollision[0];
 
-        if (xCollision != null) {
-            int tile = xCollision[0];
+        if (tile != 0) {
             int tx = xCollision[1] * Constants.TILESIZE;
             int ty = xCollision[2] * Constants.TILESIZE;
 
-            if (1 <= tile && tile <= 2) {
-                if (vel.x > 0) {
-                    pos.x = tx - boxCol.w - boxCol.x;
+            if (vel.x > 0) {
+                pos.x = tx - boxCol.w - boxCol.x;
+                collideRight(vel, boxCol);
+            }
+            else if (vel.x < 0) {
+                pos.x = tx + Constants.TILESIZE + boxCol.x + boxCol.w;
+                collideLeft(vel, boxCol);
+            }
+            else {
+                // bump to nearest right or left edge
+                if (Math.abs(pos.x + boxCol.x + boxCol.w - tx) < Math.abs(pos.x + boxCol.x - (tx + Constants.TILESIZE))) {
+                    pos.x = tx + boxCol.x;
+                    boxCol.right = true;
                     collideRight(vel, boxCol);
                 }
-                else if (vel.x < 0) {
-                    pos.x = tx + Constants.TILESIZE + boxCol.x + boxCol.w;
-                    collideLeft(vel, boxCol);
-                }
                 else {
-                    // bump to nearest right or left edge
-                    if (Math.abs(pos.x + boxCol.x + boxCol.w - tx) < Math.abs(pos.x + boxCol.x - (tx + Constants.TILESIZE))) {
-                        pos.x = tx + boxCol.x;
-                        boxCol.right = true;
-                        collideRight(vel, boxCol);
-                    }
-                    else {
-                        pos.x = tx + Constants.TILESIZE + boxCol.x;
-                        boxCol.left = true;
-                        collideLeft(vel, boxCol);
-                    }
+                    pos.x = tx + Constants.TILESIZE + boxCol.x;
+                    boxCol.left = true;
+                    collideLeft(vel, boxCol);
                 }
             }
         }
@@ -195,37 +196,62 @@ public class MoveSystem implements Runnable {
 
         float nextY = pos.y + boxCol.y + vel.y;
 
-        int[] yCollision = Collision.gridAABB(Constants.TILESIZE, map.grid, new int[] {1, 2}, pos.x + boxCol.x, nextY, boxCol.w, boxCol.h);
+        int[] yCollision = Collision.gridAABB(Constants.TILESIZE, map.grid, Blocks.solids, pos.x + boxCol.x, nextY, boxCol.w, boxCol.h);
+        tile = yCollision[0];
 
-
-        if (yCollision != null) {
-            int tile = yCollision[0];
+        if (tile != 0) {
             int ty = yCollision[2] * Constants.TILESIZE;
-            if (1 <= tile && tile <= 2) {
-                if (vel.y > 0) {
+
+            if (vel.y > 0) {
+                pos.y = ty + boxCol.y;
+                collideBottom(vel, boxCol);
+            }
+            else if (vel.y < 0) {
+                pos.y = ty + Constants.TILESIZE - boxCol.y;
+                collideTop(vel, boxCol);
+            }
+            else {
+                // bump to nearest bottom or top edge
+                if (Math.abs(pos.y + boxCol.y + boxCol.h - ty) < Math.abs(pos.y + boxCol.y - (ty + Constants.TILESIZE))) {
                     pos.y = ty + boxCol.y;
                     collideBottom(vel, boxCol);
                 }
-                else if (vel.y < 0) {
-                    pos.y = ty + Constants.TILESIZE - boxCol.y;
-                    collideTop(vel, boxCol);
-                }
                 else {
-                    // bump to nearest bottom or top edge
-                    if (Math.abs(pos.y + boxCol.y + boxCol.h - ty) < Math.abs(pos.y + boxCol.y - (ty + Constants.TILESIZE))) {
-                        pos.y = ty + boxCol.y;
-                        collideBottom(vel, boxCol);
-                    }
-                    else {
-                        pos.y = ty + Constants.TILESIZE + boxCol.y;
-                        collideTop(vel, boxCol);
-                    }
+                    pos.y = ty + Constants.TILESIZE + boxCol.y;
+                    collideTop(vel, boxCol);
                 }
             }
         }
         else {
             pos.y += vel.y;
         }
+        //endregion
+
+        //region interactable blocks
+        int[] collision = Collision.gridAABB(Constants.TILESIZE, map.grid, Blocks.interactables, pos.x + boxCol.x, pos.y + boxCol.y, boxCol.w, boxCol.h);
+
+        tile = collision[0];
+        // TODO:
+        // add support for multiple collisions (not just with one block)
+        // this way interactable blocks can stack their effects
+        // e.g. touching a lava block and a spike block will cause the player's health to decline their accumulated values
+
+        if (tile != 0) {
+            int tx = collision[1] * Constants.TILESIZE;
+            int ty = collision[2] * Constants.TILESIZE;
+
+            if (tile == Blocks.LAVA) {
+                // reduce lots of health, knockback character
+                pos.y = ty + boxCol.y;
+                vel.y = -0.8f - Constants.GRAVITY;
+            }
+            else if (tile == Blocks.SPIKE) {
+                // reduce a bit of health, knockback character
+                pos.y = ty + boxCol.y;
+                vel.y = -0.8f - Constants.GRAVITY;
+            }
+        }
+        //endregion
     }
 
     private void collideRight(VelocityComponent vel, BoxColliderComponent boxCol) {
