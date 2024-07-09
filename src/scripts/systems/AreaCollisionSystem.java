@@ -50,18 +50,6 @@ public class AreaCollisionSystem implements Runnable {
 
             hit.updateLogic.clean(cherry, attacker.entity());
         });
-        cherry.findEntitiesWith(HitboxComponent.class).stream().forEach(e -> {
-            HitboxComponent hit = e.comp();
-            if (hit.markDelete) {
-                cherry.deleteEntity(e.entity());
-            }
-        });
-        cherry.findEntitiesWith(HurtboxComponent.class).stream().forEach(e -> {
-            HurtboxComponent hrt = e.comp();
-            if (hrt.markDelete) {
-                cherry.deleteEntity(e.entity());
-            }
-        });
     }
 
 }
