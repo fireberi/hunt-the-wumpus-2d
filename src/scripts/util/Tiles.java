@@ -1,5 +1,6 @@
 package scripts.util;
 
+import java.util.HashMap;
 import java.util.stream.IntStream;
 
 public final class Tiles {
@@ -43,6 +44,8 @@ public final class Tiles {
     public static final int NL = NEXT_LEVEL;
     //endregion
 
+    public static final HashMap<String, Integer> enemyTypes = new HashMap<String, Integer>();
+
     public static final int[] list;
     public static final int[] decorations;
     public static final int[] solids;
@@ -80,6 +83,13 @@ public final class Tiles {
             interactables[i] = i + initialised_blocks;
         }
         initialised_blocks += interactables_count;
+
+        // define enemy types
+        enemyTypes.put("super worm", 0);
+        enemyTypes.put("super spider", 1);
+        enemyTypes.put("super bat", 2);
+        enemyTypes.put("ghoul", 3);
+        enemyTypes.put("the wumpus", 4);
     }
 
     public static boolean isSolid(int tile) {
