@@ -12,16 +12,16 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.image.Image;
 
 import dev.dominion.ecs.api.Dominion;
+import dev.dominion.ecs.api.Entity;
 
 import scripts.components.PositionComponent;
 import scripts.components.GraphicsComponent;
 import scripts.components.GraphicsListComponent;
-import scripts.components.HitboxGraphicsListComponent;
-import scripts.components.HurtboxGraphicsListComponent;
 import scripts.components.TilemapComponent;
 import scripts.components.FocusComponent;
 import scripts.components.ImageComponent;
 import scripts.components.SpriteComponent;
+import scripts.components.RenderLayerComponent;
 
 import scripts.core.Constants;
 import scripts.core.State;
@@ -36,15 +36,14 @@ public class RenderSystem implements Runnable {
     private State state;
     private PositionComponent camPos = new PositionComponent(0, 0);
     private HashMap<String, Image> images;
-    private ArrayList<SpriteComponent> spriteLayer0 = new ArrayList<SpriteComponent>();
-    private ArrayList<SpriteComponent> spriteLayer1 = new ArrayList<SpriteComponent>();
-    private ArrayList<SpriteComponent> spriteLayer2 = new ArrayList<SpriteComponent>();
-    private ArrayList<SpriteComponent> spriteLayer3 = new ArrayList<SpriteComponent>();
-    private ArrayList<PositionComponent> spritePosLayer0 = new ArrayList<PositionComponent>();
-    private ArrayList<PositionComponent> spritePosLayer1 = new ArrayList<PositionComponent>();
-    private ArrayList<PositionComponent> spritePosLayer2 = new ArrayList<PositionComponent>();
-    private ArrayList<PositionComponent> spritePosLayer3 = new ArrayList<PositionComponent>();
-    private int decay = 10;
+
+    private HashMap<Byte, ArrayList<PositionComponent>> positionLayers = new HashMap<Byte, ArrayList<PositionComponent>>();
+    private HashMap<Byte, ArrayList<GraphicsListComponent>> graphicsListLayers = new HashMap<Byte, ArrayList<GraphicsListComponent>>();
+    private HashMap<Byte, ArrayList<SpriteComponent>> spriteLayers = new HashMap<Byte, ArrayList<SpriteComponent>>();
+    private HashMap<Byte, ArrayList<TilemapComponent>> tilemapLayers = new HashMap<Byte, ArrayList<TilemapComponent>>();
+    private byte maxLayers = 4;
+
+    private int cameraDecay = 10;
 
     public RenderSystem(Dominion cherry, State state, GraphicsContext ctx, float cameraX, float cameraY, HashMap <String, Image> images) {
         this.cherry = cherry;
@@ -53,6 +52,12 @@ public class RenderSystem implements Runnable {
         this.camPos.x = cameraX;
         this.camPos.y = cameraY;
         this.images = images;
+        for (byte lyr = 0; lyr < maxLayers; lyr++) {
+            positionLayers.put(lyr, new ArrayList<PositionComponent>());
+            tilemapLayers.put(lyr, new ArrayList<TilemapComponent>());
+            graphicsListLayers.put(lyr, new ArrayList<GraphicsListComponent>());
+            spriteLayers.put(lyr, new ArrayList<SpriteComponent>());
+        }
     }
 
     public void run() {
@@ -93,129 +98,102 @@ public class RenderSystem implements Runnable {
         float newX = avgPos.x - (Constants.WIDTH / 2);
         float newY = avgPos.y - (Constants.HEIGHT / 2);
 
-        camPos.x = (float) GameMath.expDecay(camPos.x, newX, decay, (float) state.delta);
-        camPos.y = (float) GameMath.expDecay(camPos.y, newY, decay, (float) state.delta);
+        camPos.x = (float) GameMath.expDecay(camPos.x, newX, cameraDecay, (float) state.delta);
+        camPos.y = (float) GameMath.expDecay(camPos.y, newY, cameraDecay, (float) state.delta);
         //endregion
 
-        //region tile rendering
-        cherry.findEntitiesWith(TilemapComponent.class).stream().forEach(e -> {
-            TilemapComponent map = e.comp();
-            int[][] grid = map.grid;
+        //region sort render layers
+        // reset the layers
+        for (byte lyr = 0; lyr < maxLayers; lyr++) {
+            positionLayers.get(lyr).clear();
+            graphicsListLayers.get(lyr).clear();
+            spriteLayers.get(lyr).clear();
+            tilemapLayers.get(lyr).clear();
+        }
+        cherry.findEntitiesWith(RenderLayerComponent.class).stream().forEach(e -> {
+            Entity entity = e.entity();
+            byte lyr = e.comp().layer;
+            PositionComponent pos = entity.get(PositionComponent.class);
+            TilemapComponent map = entity.get(TilemapComponent.class);
+            SpriteComponent spr = entity.get(SpriteComponent.class);
+            GraphicsListComponent gfl = entity.get(GraphicsListComponent.class);
 
-            int y = 0;
-            for (int[] row : grid) {
-                int x = 0;
-                for (int tile : row) {
-                    boolean draw = true;
-                    if (tile == Blocks.BORDER) {
-                        ctx.setFill(Color.rgb(207, 207, 207));
+            if (pos != null || map != null) {
+                positionLayers.get(lyr).add(pos);
+                spriteLayers.get(lyr).add(spr);
+                graphicsListLayers.get(lyr).add(gfl);
+                tilemapLayers.get(lyr).add(map);
+            }
+        });
+        //endregion
+
+        //region render components
+        for (byte lyr = 0; lyr < maxLayers; lyr++) {
+            int i = 0;
+            for (PositionComponent pos : positionLayers.get(lyr)) {
+                TilemapComponent map = tilemapLayers.get(lyr).get(i);
+                SpriteComponent spr = spriteLayers.get(lyr).get(i);
+                GraphicsListComponent gfl = graphicsListLayers.get(lyr).get(i);
+
+                if (map != null) {
+                    // render tilemap
+                    int[][] grid = map.grid;
+
+                    int y = 0;
+                    for (int[] row : grid) {
+                        int x = 0;
+                        for (int tile : row) {
+                            boolean draw = true;
+                            if (tile == Blocks.BORDER) {
+                                ctx.setFill(Color.rgb(207, 207, 207));
+                            }
+                            else if (tile == Blocks.WALL) {
+                                ctx.setFill(Color.rgb(255, 63, 143));
+                            }
+                            else if (tile == Blocks.LAVA) {
+                                ctx.setFill(Color.rgb(191, 0, 0));
+                            }
+                            else if (tile == Blocks.SPIKE) {
+                                ctx.setFill(Color.rgb(128, 128, 128));
+                            }
+                            else {
+                                draw = false;
+                            }
+                            if (draw) {
+                                ctx.fillRect(Math.floor(x * Constants.SCALE - camPos.x * Constants.VIEWPORT_SCALE), Math.floor(y * Constants.SCALE - camPos.y * Constants.VIEWPORT_SCALE), Constants.SCALE, Constants.SCALE);
+                            }
+                            x += 1;
+                        }
+                        y += 1;
                     }
-                    else if (tile == Blocks.WALL) {
-                        ctx.setFill(Color.rgb(255, 63, 143));
-                    }
-                    else if (tile == Blocks.LAVA) {
-                        ctx.setFill(Color.rgb(191, 0, 0));
-                    }
-                    else if (tile == Blocks.SPIKE) {
-                        ctx.setFill(Color.rgb(128, 128, 128));
+                }
+                if (spr != null) {
+                    // render sprite
+                    Image img = images.get(spr.image.imageName);
+                    Frame f = spr.frame();
+                    int s = Constants.VIEWPORT_SCALE;
+
+                    if (!spr.image.flip) {
+                        ctx.drawImage(img, f.x, f.y, f.w, f.h,
+                            (pos.x + f.ox - camPos.x) * s,
+                            (pos.y + f.oy - camPos.y) * s,
+                            f.w * s, f.h * s);
                     }
                     else {
-                        draw = false;
+                        ctx.drawImage(img, f.x, f.y, f.w, f.h,
+                            (pos.x - f.ox - camPos.x) * s,
+                            (pos.y + f.oy - camPos.y) * s,
+                            -f.w * s, f.h * s);
                     }
-                    if (draw) {
-                        ctx.fillRect(Math.floor(x * Constants.SCALE - camPos.x * Constants.VIEWPORT_SCALE), Math.floor(y * Constants.SCALE - camPos.y * Constants.VIEWPORT_SCALE), Constants.SCALE, Constants.SCALE);
+                }
+                if (gfl != null) {
+                    // render graphics
+                    for (GraphicsComponent gfx : gfl.list) {
+                        drawRect(pos, gfx, gfx.fill);
                     }
-                    x += 1;
                 }
-                y += 1;
+                i++;
             }
-        });
-        cherry.findEntitiesWith(PositionComponent.class, GraphicsComponent.class).stream().forEach(e -> {
-            PositionComponent pos = e.comp1();
-            GraphicsComponent gfx = e.comp2();
-            drawRect(pos, gfx, gfx.fill);
-        });
-        cherry.findEntitiesWith(PositionComponent.class, GraphicsListComponent.class).stream().forEach(e -> {
-            PositionComponent pos = e.comp1();
-            GraphicsListComponent gfl = e.comp2();
-            for (GraphicsComponent gfx : gfl.list) {
-                drawRect(pos, gfx, gfx.fill);
-            }
-        });
-        cherry.findEntitiesWith(PositionComponent.class, HitboxGraphicsListComponent.class).stream().forEach(e -> {
-            PositionComponent pos = e.comp1();
-            HitboxGraphicsListComponent hitgfl = e.comp2();
-            for (GraphicsComponent gfx : hitgfl.list) {
-                drawRect(pos, gfx, gfx.fill);
-            }
-        });
-        cherry.findEntitiesWith(PositionComponent.class, HurtboxGraphicsListComponent.class).stream().forEach(e -> {
-            PositionComponent pos = e.comp1();
-            HurtboxGraphicsListComponent hrtgfl = e.comp2();
-            for (GraphicsComponent gfx : hrtgfl.list) {
-                drawRect(pos, gfx, gfx.fill);
-            }
-        });
-        //endregion
-
-        //region image rendering
-        cherry.findEntitiesWith(ImageComponent.class, PositionComponent.class).stream().forEach(e -> {
-            ImageComponent img = e.comp1();
-            PositionComponent pos = e.comp2();
-            Image i = images.get(img.imageName);
-
-            ctx.drawImage(i, (pos.x + img.x - camPos.x) * Constants.VIEWPORT_SCALE, (pos.y + img.y - camPos.y) * Constants.VIEWPORT_SCALE, img.w * Constants.VIEWPORT_SCALE, img.h * Constants.VIEWPORT_SCALE);
-        });
-        //endregion
-
-        //region sprite animation rendering
-        cherry.findEntitiesWith(SpriteComponent.class, PositionComponent.class).stream().forEach(e -> {
-            // cache the sprites
-            SpriteComponent spr = e.comp1();
-            if (!spr.hasCached) {
-                PositionComponent pos = e.comp2();
-                if (spr.layer == 0) {
-                    spriteLayer0.add(spr);
-                    spritePosLayer0.add(pos);
-                }
-                else if (spr.layer == 1) {
-                    spriteLayer1.add(spr);
-                    spritePosLayer1.add(pos);
-                }
-                else if (spr.layer == 2) {
-                    spriteLayer2.add(spr);
-                    spritePosLayer2.add(pos);
-                }
-                else if (spr.layer == 3) {
-                    spriteLayer3.add(spr);
-                    spritePosLayer3.add(pos);
-                }
-                else {
-                    System.out.println("invalid layer for SpriteComponent");
-                }
-                spr.hasCached = true;
-            }
-        });
-        // render the sprites
-        int idx = 0;
-        for (SpriteComponent spr : spriteLayer0) {
-            renderSprite(spr, spr.image, spritePosLayer0.get(idx));
-            idx += 1;
-        }
-        idx = 0;
-        for (SpriteComponent spr : spriteLayer1) {
-            renderSprite(spr, spr.image, spritePosLayer1.get(idx));
-            idx += 1;
-        }
-        idx = 0;
-        for (SpriteComponent spr : spriteLayer2) {
-            renderSprite(spr, spr.image, spritePosLayer2.get(idx));
-            idx += 1;
-        }
-        idx = 0;
-        for (SpriteComponent spr : spriteLayer3) {
-            renderSprite(spr, spr.image, spritePosLayer3.get(idx));
-            idx += 1;
         }
         //endregion
     }
@@ -249,25 +227,6 @@ public class RenderSystem implements Runnable {
         else {
             ctx.setLineWidth(1 * Constants.VIEWPORT_SCALE);
             ctx.strokeRect(Math.floor((pos.x + gfx.x - camPos.x + 0.5) * Constants.VIEWPORT_SCALE), Math.floor((pos.y + gfx.y - camPos.y + 0.5) * Constants.VIEWPORT_SCALE), (gfx.w - 1) * Constants.VIEWPORT_SCALE, (gfx.h - 1) * Constants.VIEWPORT_SCALE);
-        }
-    }
-
-    private void renderSprite(SpriteComponent spr, ImageComponent img, PositionComponent pos) {
-        Image i = images.get(img.imageName);
-        Frame f = spr.frame();
-        int s = Constants.VIEWPORT_SCALE;
-
-        if (!img.flip) {
-            ctx.drawImage(i, f.x, f.y, f.w, f.h,
-                (pos.x + f.ox - camPos.x) * s,
-                (pos.y + f.oy - camPos.y) * s,
-                f.w * s, f.h * s);
-        }
-        else {
-            ctx.drawImage(i, f.x, f.y, f.w, f.h,
-                (pos.x - f.ox - camPos.x) * s,
-                (pos.y + f.oy - camPos.y) * s,
-                -f.w * s, f.h * s);
         }
     }
 

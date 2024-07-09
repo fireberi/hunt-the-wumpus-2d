@@ -41,7 +41,7 @@ public class SceneLevel1 extends Scene {
             Map.entry("sword", Objects.createSwordActor(cherry, 108f, 170f, true))
         )));
 
-        cherry.createEntity(LevelData.level1);
+        cherry.createEntity(new RenderLayerComponent((byte) 0), LevelData.level1);
         //endregion
 
         //region system setup

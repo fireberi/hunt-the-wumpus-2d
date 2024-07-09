@@ -79,9 +79,6 @@ public final class Objects {
             new GravityComponent(),
             new JumpComponent(1.15f, 0.75f),
             new BoxColliderComponent(8f, 14f),
-            new GraphicsListComponent(new GraphicsComponent[] {
-                // new GraphicsComponent(8f, 14f, Color.rgb(255, 255, 255), true)
-            }),
             new HealthComponent(200f),
             new InventoryComponent(inventory),
             new FocusComponent(true, 0f, -8f),
@@ -109,7 +106,11 @@ public final class Objects {
                         new Frame(32f, 16f, 16f, 16f, -7f, -9f),
                     }
                 }
-            )
+            ),
+            new GraphicsListComponent(new GraphicsComponent[] {
+                // new GraphicsComponent(8f, 14f, Color.rgb(255, 255, 255), true)
+            }),
+            new RenderLayerComponent((byte) 1)
         );
     }
 
@@ -131,9 +132,6 @@ public final class Objects {
                 }
                 @Override
                 public void clean(Dominion cherry, Entity sword) {}
-            }),
-            new HitboxGraphicsListComponent(new GraphicsComponent[] {
-                // new GraphicsComponent(14f, 8f, "hitbox", false),
             }),
             new DamageComponent(new Damage[] {Damage.INSTANT}, new float[] {30f}),
             new TimerComponent(false, new Timer[] {new Timer(0.16), new Timer(0.15), new Timer(0.19)}),
@@ -162,6 +160,11 @@ public final class Objects {
                     }
                 }
             )
+            ),
+            new GraphicsListComponent(new GraphicsComponent[] {
+                // new GraphicsComponent(14f, 8f, "hitbox", false),
+            }),
+            new RenderLayerComponent((byte) 2)
         );
     }
 
@@ -185,13 +188,12 @@ public final class Objects {
                     }
                 }
             }),
+            new DamageComponent(new Damage[] {Damage.INSTANT}, new float[] {20f}),
             new GraphicsListComponent(new GraphicsComponent[] {
                 new GraphicsComponent(4f, 4f, Color.rgb(0, 207, 255), true),
-            }),
-            new HitboxGraphicsListComponent(new GraphicsComponent[] {
                 new GraphicsComponent(4f, 4f, "hitbox", false),
             }),
-            new DamageComponent(new Damage[] {Damage.INSTANT}, new float[] {20f})
+            new RenderLayerComponent((byte) 2)
         );
     }
 
@@ -220,11 +222,10 @@ public final class Objects {
             }),
             new GraphicsListComponent(new GraphicsComponent[] {
                 new GraphicsComponent(7f, 10f, Color.rgb(159, 31, 47), true),
-            }),
-            new HurtboxGraphicsListComponent(new GraphicsComponent[] {
                 new GraphicsComponent(7f, 10f, "hurtbox", false),
             }),
             new HealthComponent(10f)
+            new RenderLayerComponent((byte) 1)
         );
     }
     //endregion
