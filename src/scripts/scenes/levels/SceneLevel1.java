@@ -6,8 +6,6 @@ import java.util.Map;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-import dev.dominion.ecs.api.Entity;
-
 import scripts.scenes.SceneBaseLevel;
 
 import scripts.components.*;
@@ -18,21 +16,8 @@ public final class SceneLevel1 extends SceneBaseLevel {
 
     @Override
     public void init(GraphicsContext ctx, HashMap<String, Image> images) {
-        final float characterX = 32f;
-        final float characterY = 64f;
+        loadLevel(ctx, images, LevelData.level1PlayerSpawn, LevelData.level1EnemySpawns, LevelData.level1);
 
-        Objects.createEnemyActor(cherry, 320f, 80f, true);
-        // temp (for fun)
-        for (int i = 0; i < 20; i++) {
-            Objects.createEnemyActor(cherry, 160f + (float) (Math.random() * 201), 80f, true);
-        }
-        Objects.createCharacterActor(cherry, characterX, characterY, true, new HashMap<String, Entity>(Map.ofEntries(
-            Map.entry("sword", Objects.createSwordActor(cherry, 108f, 170f, true))
-        )));
-
-        cherry.createEntity(new RenderLayerComponent((byte) 0), LevelData.level1);
-
-        initSystems(ctx, images, characterX, characterY);
         System.out.println("SceneLevel1 init");
     }
 
