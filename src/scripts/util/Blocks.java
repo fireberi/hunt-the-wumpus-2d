@@ -4,59 +4,80 @@ import java.util.stream.IntStream;
 
 public final class Blocks {
 
+    //region decorations
     public static final int EMPTY = 0;
-    public static final int BORDER = 1;
-    public static final int GROUND = 2;
-    public static final int WALL = 3;
-    public static final int LAVA = 4;
-    public static final int SPIKE = 5;
-    public static final int ROCK1 = 6;
-    public static final int ROCK2 = 7;
-    public static final int ROCK3 = 8;
-    public static final int ROCK4 = 9;
+    public static final int __ = EMPTY;
 
-    public static final int __ = 0;
-    public static final int BD = 1;
-    public static final int GR = 2;
-    public static final int WL = 3;
-    public static final int LV = 4;
-    public static final int SK = 5;
-    public static final int R1 = 6;
-    public static final int R2 = 7;
-    public static final int R3 = 8;
-    public static final int R4 = 9;
+    public static final int ROCK1 = 1;
+    public static final int R1 = ROCK1;
 
-    public static final int[] list = new int[] {
-        EMPTY,
-        BORDER,
-        GROUND,
-        WALL,
-        LAVA,
-        SPIKE,
-        ROCK1,
-        ROCK2,
-        ROCK3,
-        ROCK4,
-    };
+    public static final int ROCK2 = 2;
+    public static final int R2 = ROCK2;
 
-    public static final int[] decorations = new int[] {
-        EMPTY,
-        ROCK1,
-        ROCK2,
-        ROCK3,
-        ROCK4,
-    };
+    public static final int ROCK3 = 3;
+    public static final int R3 = ROCK3;
 
-    public static final int[] solids = new int[] {
-        BORDER,
-        GROUND,
-        WALL,
-    };
+    public static final int ROCK4 = 4;
+    public static final int R4 = ROCK4;
+    //endregion
 
-    public static final int[] interactables = new int[] {
-        LAVA,
-        SPIKE,
-    };
+    //region solids
+    public static final int BORDER = 5;
+    public static final int BD = BORDER;
+
+    public static final int GROUND = 6;
+    public static final int GR = GROUND;
+
+    public static final int WALL = 7;
+    public static final int WL = WALL;
+    //endregion
+
+    //region interactables
+    public static final int LAVA = 8;
+    public static final int LV = LAVA;
+
+    public static final int SPIKE = 9;
+    public static final int SK = SPIKE;
+    //endregion
+
+    public static final int[] list;
+    public static final int[] decorations;
+    public static final int[] solids;
+    public static final int[] interactables;
+
+    static {
+        // auto generate list, decorations, solids and interactables arrays
+
+        int block_count = 9;
+        int initialised_blocks = 0;
+        int decorations_count = 5;
+        int solid_count = 3;
+        int interactables_count = 2;
+
+        list = new int[block_count];
+        decorations = new int[decorations_count];
+        solids = new int[solid_count];
+        interactables = new int[interactables_count];
+
+        for (int i = 0; i < block_count; i++) {
+            list[i] = i;
+        }
+
+        for (int i = 0; i < decorations_count; i++) {
+            decorations[i] = i + initialised_blocks;
+        }
+        initialised_blocks += decorations_count;
+
+        for (int i = 0; i < solid_count; i++) {
+            solids[i] = i + initialised_blocks;
+        }
+        initialised_blocks += solid_count;
+
+        for (int i = 0; i < interactables_count; i++) {
+            interactables[i] = i + initialised_blocks;
+        }
+        initialised_blocks += interactables_count;
+    }
 
     public static boolean isSolid(int tile) {
         return IntStream.of(solids).anyMatch(x -> x == tile);
