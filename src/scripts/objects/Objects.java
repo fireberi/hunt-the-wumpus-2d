@@ -172,9 +172,9 @@ public final class Objects {
         float direction = facingRight ? 2.5f : -2.5f;
         return cherry.createEntity(
             new PositionComponent(x, y),
-            new VelocityComponent(direction, -0.3f, true, true),
-            new SpeedComponent(0.1f, 0.005f, 2.0f, 2.5f),
-            new GravityComponent(0.01f),
+            new VelocityComponent(direction, -0.2f, true, true),
+            new SpeedComponent(0f, 0f, 0f, 2.5f),
+            new GravityComponent(0.008f),
             new BoxColliderComponent(4f, 4f),
             new HitboxComponent("arrow", true, 4f, 4f, new HitboxLogic() {
                 @Override
@@ -215,6 +215,9 @@ public final class Objects {
                     if (aHit.type == "arrow" || aHit.type == "sword") {
                         if (justEntered) {
                             DamageComponent dmc = attacker.get(DamageComponent.class);
+                            if (aHit.type == "arrow") {
+                                attacker.get(HitboxComponent.class).markDelete = true;
+                            }
                             rHp.add(dmc.effects, dmc.values);
                         }
                     }
@@ -224,7 +227,7 @@ public final class Objects {
                 new GraphicsComponent(7f, 10f, Color.rgb(159, 31, 47), true),
                 new GraphicsComponent(7f, 10f, "hurtbox", false),
             }),
-            new HealthComponent(10f)
+            new HealthComponent(50f),
             new RenderLayerComponent((byte) 1)
         );
     }
