@@ -147,11 +147,14 @@ public class RenderSystem implements Runnable {
                             if (tile == Blocks.BORDER) {
                                 ctx.setFill(Color.rgb(207, 207, 207));
                             }
+                            else if (tile == Blocks.GROUND) {
+                                ctx.setFill(Color.rgb(111, 127, 143));
+                            }
                             else if (tile == Blocks.WALL) {
                                 ctx.setFill(Color.rgb(255, 63, 143));
                             }
                             else if (tile == Blocks.LAVA) {
-                                ctx.setFill(Color.rgb(191, 0, 0));
+                                ctx.setFill(Color.rgb(111, 111, 111));
                             }
                             else if (tile == Blocks.SPIKE) {
                                 ctx.setFill(Color.rgb(128, 128, 128));

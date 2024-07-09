@@ -6,17 +6,30 @@ public final class Blocks {
 
     public static final int EMPTY = 0;
     public static final int BORDER = 1;
-    public static final int WALL = 2;
-    public static final int LAVA = 3;
-    public static final int SPIKE = 4;
-    public static final int ROCK1 = 5;
-    public static final int ROCK2 = 6;
-    public static final int ROCK3 = 7;
-    public static final int ROCK4 = 8;
+    public static final int GROUND = 2;
+    public static final int WALL = 3;
+    public static final int LAVA = 4;
+    public static final int SPIKE = 5;
+    public static final int ROCK1 = 6;
+    public static final int ROCK2 = 7;
+    public static final int ROCK3 = 8;
+    public static final int ROCK4 = 9;
+
+    public static final int __ = 0;
+    public static final int BD = 1;
+    public static final int GR = 2;
+    public static final int WL = 3;
+    public static final int LV = 4;
+    public static final int SK = 5;
+    public static final int R1 = 6;
+    public static final int R2 = 7;
+    public static final int R3 = 8;
+    public static final int R4 = 9;
 
     public static final int[] list = new int[] {
         EMPTY,
         BORDER,
+        GROUND,
         WALL,
         LAVA,
         SPIKE,
@@ -36,6 +49,7 @@ public final class Blocks {
 
     public static final int[] solids = new int[] {
         BORDER,
+        GROUND,
         WALL,
     };
 
