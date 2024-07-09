@@ -14,7 +14,7 @@ import scripts.components.HealthComponent;
 import scripts.core.Constants;
 import scripts.core.State;
 import scripts.util.Collision;
-import scripts.util.Blocks;
+import scripts.util.Tiles;
 import scripts.util.DamageTypes.Damage;
 
 public class MoveSystem implements Runnable {
@@ -162,7 +162,7 @@ public class MoveSystem implements Runnable {
         //region solid blocks
         float nextX = pos.x + boxCol.x + vel.x;
 
-        int[] xCollision = Collision.gridAABB(Constants.TILESIZE, map.grid, Blocks.solids, nextX, pos.y + boxCol.y, boxCol.w, boxCol.h);
+        int[] xCollision = Collision.gridAABB(Constants.TILESIZE, map.grid, Tiles.solids, nextX, pos.y + boxCol.y, boxCol.w, boxCol.h);
         int tile = xCollision[0];
 
         if (tile != 0) {
@@ -197,7 +197,7 @@ public class MoveSystem implements Runnable {
 
         float nextY = pos.y + boxCol.y + vel.y;
 
-        int[] yCollision = Collision.gridAABB(Constants.TILESIZE, map.grid, Blocks.solids, pos.x + boxCol.x, nextY, boxCol.w, boxCol.h);
+        int[] yCollision = Collision.gridAABB(Constants.TILESIZE, map.grid, Tiles.solids, pos.x + boxCol.x, nextY, boxCol.w, boxCol.h);
         tile = yCollision[0];
 
         if (tile != 0) {
@@ -229,7 +229,7 @@ public class MoveSystem implements Runnable {
         //endregion
 
         //region interactable blocks
-        int[] collision = Collision.gridAABB(Constants.TILESIZE, map.grid, Blocks.interactables, pos.x + boxCol.x, pos.y + boxCol.y, boxCol.w, boxCol.h);
+        int[] collision = Collision.gridAABB(Constants.TILESIZE, map.grid, Tiles.interactables, pos.x + boxCol.x, pos.y + boxCol.y, boxCol.w, boxCol.h);
 
         tile = collision[0];
         // TODO:
@@ -244,14 +244,14 @@ public class MoveSystem implements Runnable {
             Damage[] effects = {null};
             float[] values = {0f};
 
-            if (tile == Blocks.LAVA) {
+            if (tile == Tiles.LAVA) {
                 // reduce lots of health, knockback character
                 pos.y = ty + boxCol.y;
                 vel.y = -0.8f - Constants.GRAVITY;
                 effects[0] = Damage.INSTANT;
                 values[0] = 50f;
             }
-            else if (tile == Blocks.SPIKE) {
+            else if (tile == Tiles.SPIKE) {
                 // reduce a bit of health, knockback character
                 pos.y = ty + boxCol.y;
                 vel.y = -0.8f - Constants.GRAVITY;

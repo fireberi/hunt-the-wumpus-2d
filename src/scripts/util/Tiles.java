@@ -2,7 +2,7 @@ package scripts.util;
 
 import java.util.stream.IntStream;
 
-public final class Blocks {
+public final class Tiles {
 
     //region decorations
     public static final int EMPTY = 0;
@@ -91,6 +91,6 @@ public final class Blocks {
         return IntStream.of(interactables).anyMatch(x -> x == tile);
     }
 
-    private Blocks() {}
+    private Tiles() {}
 
 }
