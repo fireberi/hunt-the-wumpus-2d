@@ -179,6 +179,7 @@ public class PlayerControllerSystem implements Runnable {
                 if (confirmJustPressed && !swordTmc.active()) {
                     swordTmc.startTimer(0, 0);
                 }
+
                 // spawn an arrow
                 if (cancelJustPressed) {
                     Objects.createArrowActor(cherry, pos.x, pos.y, vel.facingRight);
@@ -201,14 +202,18 @@ public class PlayerControllerSystem implements Runnable {
                 swordSpr = e.entity().get(InventoryComponent.class).inventory.get("sword").get(SpriteComponent.class);
             }
             if (spr != null) {
-                if (spr.image.flip != flip) {
-                    spr.image.flip = flip;
+                if (nextAnim != "melee") {
+                    if (spr.image.flip != flip) {
+                        spr.image.flip = flip;
+                    }
                 }
                 spr.nextAnim = nextAnim;
             }
             if (swordSpr != null) {
-                if (swordSpr.image.flip != flip) {
-                    swordSpr.image.flip = flip;
+                if (nextAnim != "melee") {
+                    if (swordSpr.image.flip != flip) {
+                        swordSpr.image.flip = flip;
+                    }
                 }
                 swordSpr.nextAnim = nextAnim;
                 if (swordSpr.nextAnim == "melee") {

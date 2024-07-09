@@ -27,6 +27,7 @@ public class SpriteSystem implements Runnable {
 
             // switch and reset animation
             if (spr.currentAnim != spr.nextAnim) {
+                spr.frame().time = 0;
                 spr.currentAnim = spr.nextAnim;
                 spr.currentFrame = 0;
             }

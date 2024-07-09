@@ -30,6 +30,7 @@ public class SpriteComponent {
         this.waitTimes = new double[] {0};
         this.frameData = new Frame[][] {{new Frame(0, 0, image.w, image.h, 0, 0)}};
         this.nextAnim = "default";
+        this.currentAnim = "default";
         this.active = false;
         this.layer = 0;
         this.repeats = new boolean[] {false};
@@ -42,6 +43,7 @@ public class SpriteComponent {
         this.waitTimes = waitTimes;
         this.frameData = frames;
         this.nextAnim = nextAnim;
+        this.currentAnim = nextAnim;
         this.active = active;
         this.layer = 0;
         this.repeats = repeats;
@@ -54,6 +56,7 @@ public class SpriteComponent {
         this.waitTimes = new double[] {0};
         this.frameData = new Frame[][] {{new Frame(0, 0, image.w, image.h, 0, 0)}};
         this.nextAnim = "default";
+        this.currentAnim = "default";
         this.active = false;
         this.layer = layer;
         this.repeats = new boolean[] {false};
@@ -66,6 +69,7 @@ public class SpriteComponent {
         this.waitTimes = waitTimes;
         this.frameData = frames;
         this.nextAnim = nextAnim;
+        this.currentAnim = nextAnim;
         this.active = active;
         this.layer = layer;
         this.repeats = repeats;

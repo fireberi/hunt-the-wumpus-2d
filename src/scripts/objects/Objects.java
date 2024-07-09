@@ -122,10 +122,17 @@ public final class Objects {
                 public void update(Dominion cherry, Entity sword) {
                     PositionComponent pos = sword.get(PositionComponent.class);
                     HitboxComponent hit = sword.get(HitboxComponent.class);
+                    SpriteComponent spr = sword.get(SpriteComponent.class);
                     cherry.findEntitiesWith(PlayerControllerComponent.class, PositionComponent.class, VelocityComponent.class).stream().forEach(player -> {
                         PositionComponent ppos = player.comp2();
                         VelocityComponent pvel = player.comp3();
-                        float direction = pvel.facingRight ? hit.w / 2 + 2 : -hit.w / 2 - 2;
+                        float direction;
+                        if (spr == null) {
+                            direction = pvel.facingRight ? hit.w / 2 + 2 : -hit.w / 2 - 2;
+                        }
+                        else {
+                            direction = !spr.image.flip ? hit.w / 2 + 2 : -hit.w / 2 - 2;
+                        }
                         pos.x = ppos.x + direction;
                         pos.y = ppos.y;
                     });
@@ -159,7 +166,6 @@ public final class Objects {
                         new Frame(16f, 16f, 16f, 16f, -7, -8),
                     }
                 }
-            )
             ),
             new GraphicsListComponent(new GraphicsComponent[] {
                 // new GraphicsComponent(14f, 8f, "hitbox", false),
