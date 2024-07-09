@@ -8,13 +8,13 @@ import javafx.scene.image.Image;
 
 import dev.dominion.ecs.api.Entity;
 
-import scripts.scenes.BaseLevel;
+import scripts.scenes.SceneBaseLevel;
 
 import scripts.components.*;
 
 import scripts.objects.*;
 
-public final class SceneLevel1 extends BaseLevel {
+public final class SceneLevel1 extends SceneBaseLevel {
 
     @Override
     public void init(GraphicsContext ctx, HashMap<String, Image> images) {

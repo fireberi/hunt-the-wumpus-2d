@@ -38,6 +38,9 @@ public final class Tiles {
 
     public static final int SPIKE = 9;
     public static final int SK = SPIKE;
+
+    public static final int NEXT_LEVEL = 10;
+    public static final int NL = NEXT_LEVEL;
     //endregion
 
     public static final int[] list;

@@ -19,10 +19,10 @@ public final class LevelData {
     public static final int LV = Tiles.LV;
     public static final int SK = Tiles.SK;
 
-    // temporary things
-    public static final int PS = 0; // player spawn
-    public static final int ES = 0; // enemy spawns
-    public static final int NL = 0; // next level
+    public static final int PS = 0;
+    public static final int ES = 0;
+
+    public static final int NL = Tiles.NL;
 
     public static TilemapComponent level1 = new TilemapComponent(new int[][] {
         {BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD},
@@ -36,7 +36,7 @@ public final class LevelData {
         {BD,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,WL,__,__,__,__,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,BD},
         {BD,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,WL,__,__,__,__,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,BD},
         {BD,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,WL,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,WL,__,__,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,BD},
-        {BD,__,__,PS,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,WL,WL,WL,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,WL,SK,SK,WL,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,ES,__,__,__,__,__,__,__,__,WL,__,__,WL,__,__,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,BD},
+        {BD,__,__,PS,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,WL,WL,WL,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,WL,SK,SK,SK,WL,__,__,__,__,__,__,__,__,__,__,__,__,__,__,ES,__,__,__,__,__,__,__,__,WL,__,__,WL,__,__,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,BD},
         {BD,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,BD},
         {BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD},
     });
