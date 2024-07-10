@@ -28,7 +28,7 @@ public class SceneBaseLevel extends Scene {
     Scheduler updateScheduler = cherry.createScheduler();
     Scheduler renderScheduler = cherry.createScheduler();
 
-    public void loadLevel(GraphicsContext ctx, HashMap<String, Image> images, int[] playerSpawn, int[][] enemySpawns, TilemapComponent mapData) {
+    public void loadLevel(GraphicsContext ctx, HashMap<String, Image> images, int[] playerSpawn, int[][] enemySpawns, TilemapComponent mapData, String nextLevel) {
         // create entities
         float playerSpawnX = playerSpawn[0] * Constants.TILESIZE;
         float playerSpawnY = playerSpawn[1] * Constants.TILESIZE;
@@ -53,7 +53,13 @@ public class SceneBaseLevel extends Scene {
         EnemyAISystem enemyAISystem = new EnemyAISystem(cherry, state);
         MoveSystem moveSystem = new MoveSystem(cherry, state);
         AreaCollisionSystem areaCollisionSystem = new AreaCollisionSystem(cherry, state);
-        TileCollisionSystem tileCollisionSystem = new TileCollisionSystem(cherry, state);
+        TileCollisionSystem tileCollisionSystem;
+        if (nextLevel != null || nextLevel != "") {
+            tileCollisionSystem = new TileCollisionSystem(cherry, state, this, nextLevel);
+        }
+        else {
+            tileCollisionSystem = new TileCollisionSystem(cherry, state);
+        }
         HealthDamageSystem healthDamageSystem = new HealthDamageSystem(cherry, state);
         SpriteSystem spriteSystem = new SpriteSystem(cherry, state);
 
@@ -89,10 +95,11 @@ public class SceneBaseLevel extends Scene {
         renderScheduler.tick();
     }
 
+    @Override
     public void shutDown() {
-        System.out.println("SceneLevel1 shut down");
         updateScheduler.shutDown();
         renderScheduler.shutDown();
+        System.out.println("level shut down");
     }
 
 }

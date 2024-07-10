@@ -21,6 +21,7 @@ class GameManager {
         sceneData.put("Test", new SceneTest());
         sceneData.put("Prototype", new ScenePrototype());
         sceneData.put("Level1", new SceneLevel1());
+        sceneData.put("Level2", new SceneLevel2());
 
         //region load images
         images.put("hunter", new Image("graphics/hunter.png", 0, 0, false, true));
@@ -37,6 +38,7 @@ class GameManager {
 
         if (scene.nextScene != "") {
             scene.active = false;
+            scene.shutDown();
             sceneName = scene.nextScene;
             scene = sceneData.get(sceneName);
         }
@@ -65,6 +67,7 @@ class GameManager {
         Scene scene = sceneData.get(sceneName);
 
         scene.shutDown();
+        System.out.println("GameManager shut down");
     }
 
 }

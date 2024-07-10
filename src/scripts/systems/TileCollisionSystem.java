@@ -12,6 +12,7 @@ import scripts.components.HealthComponent;
 
 import scripts.core.Constants;
 import scripts.core.State;
+import scripts.core.Scene;
 import scripts.util.Collision;
 import scripts.util.Tiles;
 import scripts.util.DamageTypes.Damage;
@@ -20,10 +21,19 @@ public class TileCollisionSystem implements Runnable {
 
     private Dominion cherry;
     private State state;
+    private Scene scene;
+    private String nextLevel;
 
     public TileCollisionSystem(Dominion cherry, State state) {
         this.cherry = cherry;
         this.state = state;
+    }
+
+    public TileCollisionSystem(Dominion cherry, State state, Scene scene, String nextLevel) {
+        this.cherry = cherry;
+        this.state = state;
+        this.scene = scene;
+        this.nextLevel = nextLevel;
     }
 
     public void run() {
@@ -61,9 +71,15 @@ public class TileCollisionSystem implements Runnable {
                     float[] values = {0f};
                     boolean healthAffected = false;
 
-                    if (tile == Tiles.NEXT_LEVEL && pcc != null) {
+                    if (tile == Tiles.NEXT_LEVEL && pcc != null && nextLevel != "") {
                         // proceed to next level
                         System.out.println("next level");
+                        System.out.println("nextLevel: " + nextLevel);
+                        System.out.println("scene: " + scene);
+                        System.out.println("scene.nextScene (before): " + scene.nextScene);
+                        scene.nextScene = nextLevel;
+                        System.out.println("scene.nextScene (after): " + scene.nextScene);
+                        System.out.println();
                     }
                     else if (tile == Tiles.LAVA && hth != null) {
                         // reduce lots of health, knockback character

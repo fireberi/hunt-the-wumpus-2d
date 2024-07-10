@@ -30,6 +30,7 @@ public final class LevelData {
     public static int[][] level1EnemySpawns = new int[][] {
         {Tiles.enemyTypes.get("super worm").intValue(), 65, 11},
     };
+    public static String level1NextLevel = "Level2";
 
     public static TilemapComponent level1 = new TilemapComponent(new int[][] {
         {BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD},
@@ -43,7 +44,7 @@ public final class LevelData {
         {BD,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,WL,__,__,__,__,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,BD},
         {BD,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,WL,__,__,__,__,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,BD},
         {BD,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,WL,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,WL,__,__,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,BD},
-        {BD,__,__,__,__,PS,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,WL,WL,WL,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,WL,SK,SK,SK,WL,__,__,__,__,__,__,__,__,__,__,__,__,__,__,ES,__,__,__,__,__,__,__,__,WL,__,__,WL,__,__,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,BD},
+        {BD,__,__,__,__,PS,__,__,__,NL,__,__,__,__,__,__,__,__,__,__,__,__,WL,WL,WL,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,WL,SK,SK,SK,WL,__,__,__,__,__,__,__,__,__,__,__,__,__,__,ES,__,__,__,__,__,__,__,__,WL,__,__,WL,__,__,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,WL,BD},
         {BD,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,GR,BD},
         {BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD},
     });
@@ -51,6 +52,9 @@ public final class LevelData {
 
     //region level 2
     public static int[] level2PlayerSpawn = new int[] {3, 11};
+    public static int[][] level2EnemySpawns = new int[0][];
+    public static String level2NextLevel = "";
+
     public static TilemapComponent level2 = new TilemapComponent(new int[][] {
         {BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD,BD},
         {BD,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,BD},

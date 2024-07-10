@@ -179,8 +179,8 @@ public class Main extends Application {
     @Override
     public void stop() {
         System.out.println("stopping");
-
         gameManager.shutDown();
+        System.out.println("stopped");
     }
 
     public static void main(String[] args) {
