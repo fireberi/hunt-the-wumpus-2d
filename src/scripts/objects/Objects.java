@@ -205,7 +205,7 @@ public final class Objects {
 
     public static Entity createEnemyActor(Dominion cherry, float x, float y, boolean gravity) {
         return cherry.createEntity(
-            new EnemyAIComponent("left-right"),
+            // new EnemyAIComponent("left-right"),
             new PositionComponent(x, y),
             new VelocityComponent(0f, 0f, true, gravity),
             new SpeedComponent(0.05f, 0.074f, 0.15f, 2.5f),

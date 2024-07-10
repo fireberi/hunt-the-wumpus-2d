@@ -53,6 +53,7 @@ public class SceneBaseLevel extends Scene {
         EnemyAISystem enemyAISystem = new EnemyAISystem(cherry, state);
         MoveSystem moveSystem = new MoveSystem(cherry, state);
         AreaCollisionSystem areaCollisionSystem = new AreaCollisionSystem(cherry, state);
+        TileCollisionSystem tileCollisionSystem = new TileCollisionSystem(cherry, state);
         HealthDamageSystem healthDamageSystem = new HealthDamageSystem(cherry, state);
         SpriteSystem spriteSystem = new SpriteSystem(cherry, state);
 
@@ -68,6 +69,7 @@ public class SceneBaseLevel extends Scene {
         updateScheduler.schedule(enemyAISystem);
         updateScheduler.schedule(moveSystem);
         updateScheduler.schedule(areaCollisionSystem);
+        updateScheduler.schedule(tileCollisionSystem);
         updateScheduler.schedule(healthDamageSystem);
         updateScheduler.schedule(spriteSystem);
 

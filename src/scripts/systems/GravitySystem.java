@@ -5,6 +5,7 @@ import dev.dominion.ecs.api.Dominion;
 import scripts.components.VelocityComponent;
 import scripts.components.SpeedComponent;
 import scripts.components.GravityComponent;
+
 import scripts.core.State;
 
 public class GravitySystem implements Runnable {

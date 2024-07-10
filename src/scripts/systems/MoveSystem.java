@@ -9,20 +9,17 @@ import scripts.components.PositionComponent;
 import scripts.components.VelocityComponent;
 import scripts.components.BoxColliderComponent;
 import scripts.components.TilemapComponent;
-import scripts.components.HealthComponent;
 
 import scripts.core.Constants;
 import scripts.core.State;
 import scripts.util.Collision;
 import scripts.util.Tiles;
-import scripts.util.DamageTypes.Damage;
 
 public class MoveSystem implements Runnable {
 
     private Dominion cherry;
     private State state;
     private float collisionBuffer = 2f;
-    private final boolean GRID_COLLISION = true;
 
     public MoveSystem(Dominion cherry, State state) {
         this.cherry = cherry;
@@ -34,7 +31,6 @@ public class MoveSystem implements Runnable {
             PositionComponent pos = e.comp1();
             VelocityComponent vel = e.comp2();
             BoxColliderComponent boxCol = e.comp3();
-            HealthComponent hth = e.entity().get(HealthComponent.class);
 
             if (vel.x == 0 && vel.y == 0) {
                 return;
@@ -45,7 +41,7 @@ public class MoveSystem implements Runnable {
             boxCol.bottom = false;
             boxCol.top = false;
 
-            if (!GRID_COLLISION) {
+            if (!Constants.GRID_COLLISION) {
                 cherry.findEntitiesWith(PositionComponent.class, BoxColliderComponent.class).stream().forEach(item -> {
                     PositionComponent ipos = item.comp1();
                     BoxColliderComponent iboxCol = item.comp2();
@@ -69,7 +65,7 @@ public class MoveSystem implements Runnable {
             else {
                 cherry.findEntitiesWith(TilemapComponent.class).stream().forEach(tilemap -> {
                     TilemapComponent map = tilemap.comp();
-                    processGridCollision(pos, vel, boxCol, map, hth);
+                    processGridCollision(pos, vel, boxCol, map);
                 });
             }
         });
@@ -158,7 +154,7 @@ public class MoveSystem implements Runnable {
         return new float[] {newX, newY};
     }
 
-    private void processGridCollision(PositionComponent pos, VelocityComponent vel, BoxColliderComponent boxCol, TilemapComponent map, HealthComponent hth) {
+    private void processGridCollision(PositionComponent pos, VelocityComponent vel, BoxColliderComponent boxCol, TilemapComponent map) {
         //region solid blocks
         float nextX = pos.x + boxCol.x + vel.x;
 
@@ -225,43 +221,6 @@ public class MoveSystem implements Runnable {
         }
         else {
             pos.y += vel.y;
-        }
-        //endregion
-
-        //region interactable blocks
-        int[] collision = Collision.gridAABB(Constants.TILESIZE, map.grid, Tiles.interactables, pos.x + boxCol.x, pos.y + boxCol.y, boxCol.w, boxCol.h);
-
-        tile = collision[0];
-        // TODO:
-        // add support for multiple collisions (not just with one block)
-        // this way interactable blocks can stack their effects
-        // e.g. touching a lava block and a spike block will cause the player's health to decline their accumulated values
-
-        if (tile != 0) {
-            int tx = collision[1] * Constants.TILESIZE;
-            int ty = collision[2] * Constants.TILESIZE;
-
-            Damage[] effects = {null};
-            float[] values = {0f};
-
-            if (tile == Tiles.LAVA) {
-                // reduce lots of health, knockback character
-                pos.y = ty + boxCol.y;
-                vel.y = -0.8f - Constants.GRAVITY;
-                effects[0] = Damage.INSTANT;
-                values[0] = 50f;
-            }
-            else if (tile == Tiles.SPIKE) {
-                // reduce a bit of health, knockback character
-                pos.y = ty + boxCol.y;
-                vel.y = -0.8f - Constants.GRAVITY;
-                effects[0] = Damage.INSTANT;
-                values[0] = 20f;
-            }
-
-            if (hth != null) {
-                hth.add(effects, values);
-            }
         }
         //endregion
     }

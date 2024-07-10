@@ -54,11 +54,11 @@ public final class Tiles {
     static {
         // auto generate list, decorations, solids and interactables arrays
 
-        int block_count = 9;
         int initialised_blocks = 0;
         int decorations_count = 5;
         int solid_count = 3;
-        int interactables_count = 2;
+        int interactables_count = 3;
+        int block_count = decorations_count + solid_count + interactables_count;
 
         list = new int[block_count];
         decorations = new int[decorations_count];
@@ -83,6 +83,8 @@ public final class Tiles {
             interactables[i] = i + initialised_blocks;
         }
         initialised_blocks += interactables_count;
+
+
 
         // define enemy types
         enemyTypes.put("super worm", 0);

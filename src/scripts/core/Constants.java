@@ -10,6 +10,8 @@ public final class Constants {
 
     public static final float GRAVITY = 0.037f;
 
+    public static final boolean GRID_COLLISION = true;
+
     private Constants() {}
 
 }
