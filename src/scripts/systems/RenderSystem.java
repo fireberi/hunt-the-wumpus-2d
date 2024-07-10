@@ -159,6 +159,9 @@ public class RenderSystem implements Runnable {
                             else if (tile == Tiles.SPIKE) {
                                 ctx.setFill(Color.rgb(128, 128, 128));
                             }
+                            else if (tile == Tiles.NEXT_LEVEL) {
+                                ctx.setFill(Color.rgb(127, 207, 239));
+                            }
                             else {
                                 draw = false;
                             }

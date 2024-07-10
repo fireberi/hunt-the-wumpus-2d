@@ -71,15 +71,10 @@ public class TileCollisionSystem implements Runnable {
                     float[] values = {0f};
                     boolean healthAffected = false;
 
-                    if (tile == Tiles.NEXT_LEVEL && pcc != null && nextLevel != "") {
+                    if (tile == Tiles.NEXT_LEVEL && pcc != null && pcc.inputs.get("alt").justPressed() && nextLevel != "") {
                         // proceed to next level
                         System.out.println("next level");
-                        System.out.println("nextLevel: " + nextLevel);
-                        System.out.println("scene: " + scene);
-                        System.out.println("scene.nextScene (before): " + scene.nextScene);
                         scene.nextScene = nextLevel;
-                        System.out.println("scene.nextScene (after): " + scene.nextScene);
-                        System.out.println();
                     }
                     else if (tile == Tiles.LAVA && hth != null) {
                         // reduce lots of health, knockback character
