@@ -41,7 +41,7 @@ public class AreaCollisionSystem implements Runnable {
 
                 boolean isOnSameLayer = false;
                 for (int l = 0; l < hit.layer.length; l++) {
-                    if (hit.layer[l] == hrt.layer[l]) {
+                    if (hit.layer[l] == true && hrt.layer[l] == true) {
                         isOnSameLayer = true;
                         break;
                     }
