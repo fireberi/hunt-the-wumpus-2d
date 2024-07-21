@@ -10,6 +10,10 @@ public class Input {
     private boolean justReleased = false;
     KeyCode[] keyData;
 
+    public Input() {
+        keyData = new KeyCode[0];
+    }
+
     public Input(KeyCode... keys) {
         keyData = keys;
     }

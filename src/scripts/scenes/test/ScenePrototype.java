@@ -64,13 +64,20 @@ public class ScenePrototype extends Scene {
         //endregion
 
         //region entity setup (with grid collision)
-        Objects.createEnemyActor(cherry, 100f, 40f, true);
-        Objects.createEnemyActor(cherry, 160f, 80f, true);
-        Objects.createEnemyActor(cherry, 20f, 100f, true);
-        Objects.createEnemyActor(cherry, 120f, 160f, true);
-        Objects.createTestCharacterActor(cherry, 108f, 170f, true, new HashMap<String, Entity>(Map.ofEntries(
-            Map.entry("sword", Objects.createSwordActor(cherry, 108f, 170f, true))
-        )));
+        Objects.createSimpleEnemyActor(cherry, 100f, 40f, true);
+        Objects.createSimpleEnemyActor(cherry, 160f, 80f, true);
+        Objects.createSimpleEnemyActor(cherry, 20f, 100f, true);
+        Objects.createSimpleEnemyActor(cherry, 120f, 160f, true);
+        Objects.createTestCharacterActor(cherry, 108f, 170f, true, new HashMap<String, InventoryItem>(Map.ofEntries(
+                Map.entry("melee", new InventoryItem(
+                    Objects.createSwordActor(cherry, 108f, 170f, true),
+                    new InventoryLogic() {
+                        @Override
+                        public void update(Entity item, Entity owner) {}
+                    }
+                ))
+            ))
+        );
 
         cherry.createEntity(
             new TilemapComponent(new int[][] {

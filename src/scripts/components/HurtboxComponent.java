@@ -9,18 +9,18 @@ public class HurtboxComponent extends BoxComponent {
     public final ArrayList<HitboxComponent> justEntered = new ArrayList<HitboxComponent>();
     public final ArrayList<HitboxComponent> entered = new ArrayList<HitboxComponent>();
     public final ArrayList<HitboxComponent> justExited = new ArrayList<HitboxComponent>();
-    public HurtboxLogic updateLogic;
+    public boolean[] layer;
 
-    public HurtboxComponent(boolean active, float w, float h, HurtboxLogic updateLogic) {
+    public HurtboxComponent(boolean active, float w, float h, boolean[] layer) {
         super(w, h);
         this.active = active;
-        this.updateLogic = updateLogic;
+        this.layer = layer;
     }
 
-    public HurtboxComponent(boolean active, float x, float y, float w, float h, HurtboxLogic updateLogic) {
+    public HurtboxComponent(boolean active, float x, float y, float w, float h, boolean[] layer) {
         super(x, y, w, h);
         this.active = active;
-        this.updateLogic = updateLogic;
+        this.layer = layer;
     }
 
     public void enter(HitboxComponent hit) {

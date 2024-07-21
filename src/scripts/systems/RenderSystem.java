@@ -35,6 +35,7 @@ public class RenderSystem implements Runnable {
     private GraphicsContext ctx;
     private State state;
     private PositionComponent camPos = new PositionComponent(0, 0);
+    private PositionComponent targetCamPos = new PositionComponent(0, 0);
     private HashMap<String, Image> images;
 
     private HashMap<Byte, ArrayList<PositionComponent>> positionLayers = new HashMap<Byte, ArrayList<PositionComponent>>();
@@ -64,7 +65,7 @@ public class RenderSystem implements Runnable {
         // drawGrid(ctx, 40, 22, Constants.SCALE);
 
         //region calculate camera position
-        PositionComponent avgPos = new PositionComponent(0, 0);
+        PositionComponent totalPos = new PositionComponent(0, 0);
 
         // not using int count = 0; because local variables cannot be mutated in a lambda
         var vars = new Object() {
@@ -80,26 +81,19 @@ public class RenderSystem implements Runnable {
             }
 
             // get the average of the positions
-            avgPos.x += pos.x + fcs.x;
-            avgPos.y += pos.y + fcs.y;
+            totalPos.x += pos.x + fcs.x;
+            totalPos.y += pos.y + fcs.y;
             vars.count++;
             vars.focused = true;
         });
 
         if (vars.focused) {
-            avgPos.x /= vars.count;
-            avgPos.y /= vars.count;
-        }
-        else {
-            avgPos.x = 0;
-            avgPos.y = 0;
+            targetCamPos.x = (totalPos.x / vars.count) - (Constants.WIDTH / 2);
+            targetCamPos.y = (totalPos.y / vars.count) - (Constants.HEIGHT / 2);
         }
 
-        float newX = avgPos.x - (Constants.WIDTH / 2);
-        float newY = avgPos.y - (Constants.HEIGHT / 2);
-
-        camPos.x = (float) GameMath.expDecay(camPos.x, newX, cameraDecay, (float) state.delta);
-        camPos.y = (float) GameMath.expDecay(camPos.y, newY, cameraDecay, (float) state.delta);
+        camPos.x = (float) GameMath.expDecay(camPos.x, targetCamPos.x, cameraDecay, (float) state.delta);
+        camPos.y = (float) GameMath.expDecay(camPos.y, targetCamPos.y, cameraDecay, (float) state.delta);
         //endregion
 
         //region sort render layers
@@ -139,34 +133,152 @@ public class RenderSystem implements Runnable {
                     // render tilemap
                     int[][] grid = map.grid;
 
+                    Image img = images.get("mapSpritesheet");
+                    int imgX = 0;
+                    int imgY = 0;
+                    int imgW = 8;
+                    int imgH = 8;
+
                     int y = 0;
                     for (int[] row : grid) {
                         int x = 0;
                         for (int tile : row) {
                             boolean draw = true;
+                            boolean drawImage = false;
                             if (tile == Tiles.BORDER) {
                                 ctx.setFill(Color.rgb(207, 207, 207));
                             }
-                            else if (tile == Tiles.GROUND) {
-                                ctx.setFill(Color.rgb(111, 127, 143));
+                            else if (tile == Tiles.EMPTY) {
+                                imgX = 8;
+                                imgY = 8;
+                                drawImage = true;
                             }
-                            else if (tile == Tiles.WALL) {
+                            else if (tile == Tiles.W0) {
+                                imgX = 0;
+                                imgY = 0;
+                                drawImage = true;
                                 ctx.setFill(Color.rgb(255, 63, 143));
                             }
-                            else if (tile == Tiles.LAVA) {
+                            else if (tile == Tiles.W1) {
+                                imgX = 8;
+                                imgY = 0;
+                                drawImage = true;
+                                ctx.setFill(Color.rgb(255, 63, 143));
+                            }
+                            else if (tile == Tiles.W2) {
+                                imgX = 16;
+                                imgY = 0;
+                                drawImage = true;
+                                ctx.setFill(Color.rgb(255, 63, 143));
+                            }
+                            else if (tile == Tiles.W3) {
+                                imgX = 0;
+                                imgY = 8;
+                                drawImage = true;
+                                ctx.setFill(Color.rgb(255, 63, 143));
+                            }
+                            else if (tile == Tiles.W5) {
+                                imgX = 16;
+                                imgY = 8;
+                                drawImage = true;
+                                ctx.setFill(Color.rgb(255, 63, 143));
+                            }
+                            else if (tile == Tiles.W6) {
+                                imgX = 0;
+                                imgY = 16;
+                                drawImage = true;
+                                ctx.setFill(Color.rgb(255, 63, 143));
+                            }
+                            else if (tile == Tiles.W7) {
+                                imgX = 8;
+                                imgY = 16;
+                                drawImage = true;
+                                ctx.setFill(Color.rgb(255, 63, 143));
+                            }
+                            else if (tile == Tiles.W8) {
+                                imgX = 16;
+                                imgY = 16;
+                                drawImage = true;
+                                ctx.setFill(Color.rgb(255, 63, 143));
+                            }
+                            else if (tile == Tiles.WA) {
+                                imgX = 24;
+                                imgY = 0;
+                                drawImage = true;
+                                ctx.setFill(Color.rgb(255, 63, 143));
+                            }
+                            else if (tile == Tiles.WB) {
+                                imgX = 32;
+                                imgY = 0;
+                                drawImage = true;
+                                ctx.setFill(Color.rgb(255, 63, 143));
+                            }
+                            else if (tile == Tiles.WC) {
+                                imgX = 24;
+                                imgY = 8;
+                                drawImage = true;
+                                ctx.setFill(Color.rgb(255, 63, 143));
+                            }
+                            else if (tile == Tiles.WD) {
+                                imgX = 32;
+                                imgY = 8;
+                                drawImage = true;
+                                ctx.setFill(Color.rgb(255, 63, 143));
+                            }
+                            else if (tile == Tiles.LAVA_TOP) {
+                                imgX = 40;
+                                imgY = 8;
+                                drawImage = true;
+                                ctx.setFill(Color.rgb(111, 111, 111));
+                            }
+                            else if (tile == Tiles.LAVA_BODY) {
+                                imgX = 40;
+                                imgY = 16;
+                                drawImage = true;
                                 ctx.setFill(Color.rgb(111, 111, 111));
                             }
                             else if (tile == Tiles.SPIKE) {
+                                imgX = 40;
+                                imgY = 0;
+                                drawImage = true;
                                 ctx.setFill(Color.rgb(128, 128, 128));
                             }
-                            else if (tile == Tiles.NEXT_LEVEL) {
+                            else if (tile == Tiles.NEXT_LEVEL_TOP_LEFT) {
+                                imgX = 24;
+                                imgY = 16;
+                                drawImage = true;
+                                ctx.setFill(Color.rgb(127, 207, 239));
+                            }
+                            else if (tile == Tiles.NEXT_LEVEL_TOP_RIGHT) {
+                                imgX = 32;
+                                imgY = 16;
+                                drawImage = true;
+                                ctx.setFill(Color.rgb(127, 207, 239));
+                            }
+                            else if (tile == Tiles.NEXT_LEVEL_BOTTOM_LEFT) {
+                                imgX = 24;
+                                imgY = 24;
+                                drawImage = true;
+                                ctx.setFill(Color.rgb(127, 207, 239));
+                            }
+                            else if (tile == Tiles.NEXT_LEVEL_BOTTOM_RIGHT) {
+                                imgX = 32;
+                                imgY = 24;
+                                drawImage = true;
                                 ctx.setFill(Color.rgb(127, 207, 239));
                             }
                             else {
                                 draw = false;
                             }
-                            if (draw) {
-                                ctx.fillRect(Math.floor(x * Constants.SCALE - camPos.x * Constants.VIEWPORT_SCALE), Math.floor(y * Constants.SCALE - camPos.y * Constants.VIEWPORT_SCALE), Constants.SCALE, Constants.SCALE);
+                            int renderX = (int) Math.floor(x * Constants.SCALE - camPos.x * Constants.VIEWPORT_SCALE);
+                            int renderY = (int) Math.floor(y * Constants.SCALE - camPos.y * Constants.VIEWPORT_SCALE);
+                            if (draw && !drawImage) {
+                                ctx.fillRect(renderX, renderY, Constants.SCALE, Constants.SCALE);
+                            }
+                            if (drawImage) {
+                                ctx.drawImage(img, imgX, imgY, imgW, imgH,
+                                    renderX, renderY,
+                                    imgW * Constants.VIEWPORT_SCALE, imgH * Constants.VIEWPORT_SCALE);
                             }
                             x += 1;
                         }
@@ -179,17 +291,19 @@ public class RenderSystem implements Runnable {
                     Frame f = spr.frame();
                     int s = Constants.VIEWPORT_SCALE;
 
-                    if (!spr.image.flip) {
-                        ctx.drawImage(img, f.x, f.y, f.w, f.h,
-                            (pos.x + f.ox - camPos.x) * s,
-                            (pos.y + f.oy - camPos.y) * s,
-                            f.w * s, f.h * s);
-                    }
-                    else {
-                        ctx.drawImage(img, f.x, f.y, f.w, f.h,
-                            (pos.x - f.ox - camPos.x) * s,
-                            (pos.y + f.oy - camPos.y) * s,
-                            -f.w * s, f.h * s);
+                    if (f != null) {
+                        if (!spr.image.flip) {
+                            ctx.drawImage(img, f.x, f.y, f.w, f.h,
+                                (pos.x + f.ox - camPos.x) * s,
+                                (pos.y + f.oy - camPos.y) * s,
+                                f.w * s, f.h * s);
+                        }
+                        else {
+                            ctx.drawImage(img, f.x, f.y, f.w, f.h,
+                                (pos.x - f.ox - camPos.x) * s,
+                                (pos.y + f.oy - camPos.y) * s,
+                                -f.w * s, f.h * s);
+                        }
                     }
                 }
                 if (gfl != null) {

@@ -22,10 +22,13 @@ class GameManager {
         sceneData.put("Prototype", new ScenePrototype());
         sceneData.put("Level1", new SceneLevel1());
         sceneData.put("Level2", new SceneLevel2());
+        sceneData.put("Level3", new SceneLevel3());
 
         //region load images
+        images.put("mapSpritesheet", new Image("graphics/map.png", 0, 0, false, true));
         images.put("hunter", new Image("graphics/hunter.png", 0, 0, false, true));
         images.put("rusty", new Image("graphics/rusty.png", 0, 0, false, true));
+        images.put("super_worm", new Image("graphics/super_worm.png", 0, 0, false, true));
         //endregion
 
         System.out.println("GameManager init");
@@ -55,7 +58,7 @@ class GameManager {
     void render(GraphicsContext ctx, Stage stage) {
         Scene scene = sceneData.get(sceneName);
 
-        ctx.setFill(Color.rgb(31, 31, 31));
+        ctx.setFill(Color.rgb(15, 15, 31));
         ctx.fillRect(0, 0, stage.getWidth(), stage.getHeight());
 
         if (scene.active) {

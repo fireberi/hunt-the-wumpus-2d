@@ -4,6 +4,7 @@ import dev.dominion.ecs.api.Dominion;
 import dev.dominion.ecs.api.Entity;
 
 import scripts.components.PlayerControllerComponent;
+import scripts.components.InputComponent;
 import scripts.components.PositionComponent;
 import scripts.components.VelocityComponent;
 import scripts.components.SpeedComponent;
@@ -41,6 +42,7 @@ public class PlayerControllerSystem implements Runnable {
             JumpComponent jmp = e.comp4();
             BoxColliderComponent boxCol = e.comp5();
             PositionComponent pos = e.comp6();
+            InputComponent inp = e.entity().get(InputComponent.class);
 
             boolean rightJustPressed = pcc.inputs.get("right").justPressed();
             boolean rightPressed = pcc.inputs.get("right").pressed();
@@ -70,87 +72,35 @@ public class PlayerControllerSystem implements Runnable {
             boolean altPressed = pcc.inputs.get("alt").pressed();
             boolean altJustReleased = pcc.inputs.get("alt").justReleased();
 
-            if (altJustPressed) {}
-
-            // determine direction
-            if (rightJustPressed && !leftJustPressed) {
-                vel.facingRight = true;
+            if (rightJustPressed) {
+                inp.inputs.get("right").press();
             }
-            else if (leftJustPressed && !rightJustPressed) {
-                vel.facingRight = false;
+            if (rightJustReleased) {
+                inp.inputs.get("right").release();
             }
-
-            if (rightJustReleased && leftPressed) {
-                vel.facingRight = false;
+            if (leftJustPressed) {
+                inp.inputs.get("left").press();
             }
-            else if (leftJustReleased && rightPressed) {
-                vel.facingRight = true;
+            if (leftJustReleased) {
+                inp.inputs.get("left").release();
             }
-
-            // move in direction
-            if (vel.facingRight && rightPressed) {
-                if (vel.x < -spd.maxX / 2) {
-                    vel.x = GameMath.approach(vel.x, spd.maxX, 3 * spd.ax);
-                }
-                else {
-                    vel.x = GameMath.approach(vel.x, spd.maxX, spd.ax);
-                }
+            if (downJustPressed) {
+                inp.inputs.get("down").press();
             }
-            else if (!vel.facingRight && leftPressed) {
-                if (vel.x > spd.maxX / 2) {
-                    vel.x = GameMath.approach(vel.x, -spd.maxX, 3 * spd.ax);
-                }
-                else {
-                    vel.x = GameMath.approach(vel.x, -spd.maxX, spd.ax);
-                }
+            if (downJustReleased) {
+                inp.inputs.get("down").release();
             }
-            else if (vel.x != 0) {
-                vel.x = GameMath.approach(vel.x, 0, spd.dx);
+            if (upJustPressed) {
+                inp.inputs.get("up").press();
             }
-
-            // if gravity, up becomes jump and down is not an input
-            if (vel.gravity) {
-                if (upJustPressed) {
-                    jmp.jump = true;
-                }
-                else if (upJustReleased) {
-                    jmp.jump = false;
-                }
-
-                if (boxCol.bottom && jmp.jump) {
-                    vel.y = -jmp.force;
-                    boxCol.bottom = false;
-                    jmp.jump = false;
-                }
-                else if (upJustReleased && vel.y < -jmp.small) {
-                    vel.y = -jmp.small;
-                }
+            if (upJustReleased) {
+                inp.inputs.get("up").release();
             }
-            // otherwise up becomes up and down becomes down
-            else {
-                if (downJustPressed && !upJustPressed) {
-                    vel.facingDown = true;
-                }
-                else if (upJustPressed && !downJustPressed) {
-                    vel.facingDown = false;
-                }
-
-                if (downJustReleased && upPressed) {
-                    vel.facingDown = false;
-                }
-                else if (upJustReleased && downPressed) {
-                    vel.facingDown = true;
-                }
-
-                if (vel.facingDown && downPressed) {
-                vel.y = GameMath.approach(vel.y, spd.maxX, spd.ax);
-                }
-                else if (!vel.facingDown && upPressed) {
-                    vel.y = GameMath.approach(vel.y, -spd.maxX, spd.ax);
-                }
-                else if (vel.y != 0) {
-                    vel.y = GameMath.approach(vel.y, 0, spd.dx);
-                }
+            if (confirmJustPressed) {
+                inp.inputs.get("attack").press();
+            }
+            if (confirmJustReleased) {
+                inp.inputs.get("attack").release();
             }
 
             // animation checks
@@ -168,38 +118,23 @@ public class PlayerControllerSystem implements Runnable {
                 nextAnim = "air";
             }
 
-            if (pcc.hasInventory) {
-                InventoryComponent inv = e.entity().get(InventoryComponent.class);
-                Entity sword = inv.inventory.get("sword");
-                TimerComponent swordTmc = sword.get(TimerComponent.class);
-                HitboxComponent swordHit = sword.get(HitboxComponent.class);
-
-                swordHit.active = false;
-
-                if (confirmJustPressed && !swordTmc.active()) {
-                    swordTmc.startTimer(0, 0);
-                }
-
-                // spawn an arrow
-                if (cancelJustPressed) {
-                    Objects.createArrowActor(cherry, pos.x, pos.y, vel.facingRight);
-                }
-
-                if (swordTmc.timers[0].timeout) {
-                    swordHit.active = true;
-                }
-
-                // animation check
-                if (swordTmc.timers[0].active || swordTmc.timers[1].active) {
-                    nextAnim = "melee";
+            InventoryComponent inv = e.entity().get(InventoryComponent.class);
+            if (inv.inventory.size() != 0) {
+                Entity weapon = inv.getCurrent();
+                if (inv.current == "melee") {
+                    // animation check
+                    TimerComponent tmc = weapon.get(TimerComponent.class);
+                    if (tmc.timers[0].active || tmc.timers[1].active) {
+                        nextAnim = "melee";
+                    }
                 }
             }
 
             // set animation
             SpriteComponent spr = e.entity().get(SpriteComponent.class);
             SpriteComponent swordSpr = null;
-            if (pcc.hasInventory) {
-                swordSpr = e.entity().get(InventoryComponent.class).inventory.get("sword").get(SpriteComponent.class);
+            if (inv.inventory.size() != 0) {
+                swordSpr = e.entity().get(InventoryComponent.class).inventory.get("melee").item.get(SpriteComponent.class);
             }
             if (spr != null) {
                 if (nextAnim != "melee") {

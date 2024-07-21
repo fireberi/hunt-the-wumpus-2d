@@ -12,13 +12,13 @@ import scripts.components.*;
 
 import scripts.objects.*;
 
-public final class SceneLevel1 extends SceneBaseLevel {
+public final class SceneLevel3 extends SceneBaseLevel {
 
     @Override
     public void init(GraphicsContext ctx, HashMap<String, Image> images) {
-        loadLevel(ctx, images, LevelData.level1.playerSpawn, LevelData.level1.enemySpawns, LevelData.level1.nextLevel, LevelData.level1.tilemap);
+        loadLevel(ctx, images, LevelData.level3.playerSpawn, LevelData.level3.enemySpawns, LevelData.level3.nextLevel, LevelData.level3.tilemap);
 
-        System.out.println("SceneLevel1 init");
+        System.out.println("SceneLevel3 init");
     }
 
 }

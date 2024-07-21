@@ -53,21 +53,13 @@ public class HealthDamageSystem implements Runnable {
             }
 
             // reset effects and values
-            ListIterator<Damage> eIter = effects.listIterator();
-            i = 0;
-            while (eIter.hasNext()) {
+            int deleted = 0;
+            for (i = 0; i < markDeletes.length; i++) {
                 if (markDeletes[i]) {
-                    effects.remove(i);
+                    effects.remove(i - deleted);
+                    values.remove(i - deleted);
+                    deleted++;
                 }
-                i++;
-            }
-            ListIterator<Float> vIter = values.listIterator();
-            i = 0;
-            while (vIter.hasNext()) {
-                if (markDeletes[i]) {
-                    values.remove(i);
-                }
-                i++;
             }
         });
     }

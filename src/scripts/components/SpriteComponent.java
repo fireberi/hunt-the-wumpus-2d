@@ -76,6 +76,10 @@ public class SpriteComponent {
     }
 
     public Frame frame() {
+        int idx = index(names, currentAnim);
+        if (idx == -1) {
+            return null;
+        }
         return frameData[index(names, currentAnim)][currentFrame];
     }
 

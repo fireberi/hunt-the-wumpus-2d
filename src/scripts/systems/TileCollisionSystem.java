@@ -71,12 +71,12 @@ public class TileCollisionSystem implements Runnable {
                     float[] values = {0f};
                     boolean healthAffected = false;
 
-                    if (tile == Tiles.NEXT_LEVEL && pcc != null && pcc.inputs.get("alt").justPressed() && nextLevel != "") {
+                    if ((tile == Tiles.NA || tile == Tiles.NB || tile == Tiles.NC || tile == Tiles.ND) && pcc != null && pcc.inputs.get("alt").justPressed() && nextLevel != "") {
                         // proceed to next level
                         System.out.println("next level");
                         scene.nextScene = nextLevel;
                     }
-                    else if (tile == Tiles.LAVA && hth != null) {
+                    else if ((tile == Tiles.LAVA_TOP || tile == Tiles.LAVA_BODY) && hth != null) {
                         // reduce lots of health, knockback character
                         pos.y = ty + boxCol.y;
                         vel.y = -0.8f - Constants.GRAVITY;

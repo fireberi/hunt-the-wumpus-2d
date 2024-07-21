@@ -9,6 +9,11 @@ import scripts.components.HurtboxComponent;
 import scripts.core.State;
 import scripts.util.Collision;
 
+// NOTE:
+// A note on the layers:
+// - layer 0 is for the player
+// - layer 1 is for enemies
+
 public class AreaCollisionSystem implements Runnable {
 
     private Dominion cherry;
@@ -20,15 +25,13 @@ public class AreaCollisionSystem implements Runnable {
     }
 
     public void run() {
-        cherry.findEntitiesWith(PositionComponent.class, HitboxComponent.class).stream().forEach(attacker -> {
-            PositionComponent pos = attacker.comp1();
-            HitboxComponent hit = attacker.comp2();
+        cherry.findEntitiesWith(PositionComponent.class, HitboxComponent.class).stream().forEach(hitbox -> {
+            PositionComponent pos = hitbox.comp1();
+            HitboxComponent hit = hitbox.comp2();
 
-            hit.updateLogic.update(cherry, attacker.entity());
-
-            cherry.findEntitiesWith(PositionComponent.class, HurtboxComponent.class).stream().forEach(receiver -> {
-                PositionComponent rpos = receiver.comp1();
-                HurtboxComponent hrt = receiver.comp2();
+            cherry.findEntitiesWith(PositionComponent.class, HurtboxComponent.class).stream().forEach(hurtbox -> {
+                PositionComponent rpos = hurtbox.comp1();
+                HurtboxComponent hrt = hurtbox.comp2();
 
                 if (!hrt.active) {
                     hrt.resetJustEnteredAndJustExited();
@@ -36,19 +39,27 @@ public class AreaCollisionSystem implements Runnable {
                     return;
                 }
 
-                if (Collision.AABB(pos.x + hit.x, pos.y + hit.y, hit.w, hit.h, rpos.x + hrt.x, rpos.y + hrt.y, hrt.w, hrt.h) && hit.active) {
+                boolean isOnSameLayer = false;
+                for (int l = 0; l < hit.layer.length; l++) {
+                    if (hit.layer[l] == hrt.layer[l]) {
+                        isOnSameLayer = true;
+                        break;
+                    }
+                }
+
+                if (hit.active && isOnSameLayer && Collision.AABB(pos.x + hit.x, pos.y + hit.y, hit.w, hit.h, rpos.x + hrt.x, rpos.y + hrt.y, hrt.w, hrt.h)) {
                     hrt.enter(hit);
                 }
                 else {
                     hrt.exit(hit);
                 }
 
-                hrt.updateLogic.update(receiver.entity(), attacker.entity(), hrt.entered.contains(hit), hrt.justEntered.contains(hit), hrt.justExited.contains(hit));
+                hit.updateLogic.update(hitbox.entity(), hurtbox.entity(), hrt.entered.contains(hit), hrt.justEntered.contains(hit), hrt.justExited.contains(hit));
 
                 hrt.resetJustEnteredAndJustExited();
             });
 
-            hit.updateLogic.clean(cherry, attacker.entity());
+            hit.updateLogic.clean(cherry, hitbox.entity());
         });
     }
 

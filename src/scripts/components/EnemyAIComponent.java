@@ -2,11 +2,11 @@ package scripts.components;
 
 public class EnemyAIComponent {
 
-    public String mode;
+    public int enemyType;
+    public boolean active;
 
-    public EnemyAIComponent(String mode) {
-        // maybe make mode an enum?
-        this.mode = mode.toLowerCase();
+    public EnemyAIComponent(int enemyType) {
+        this.enemyType = enemyType;
     }
 
 }
