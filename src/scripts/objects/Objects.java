@@ -86,10 +86,10 @@ public final class Objects {
                 Map.entry("attack", new Input())
             ))),
             new PositionComponent(x, y),
-            // new VelocityComponent(0f, 0f, true, gravity),
-            // new SpeedComponent(0.05f, 0.074f, 0.55f, 2.5f),
-            new VelocityComponent(0f, 0f, true, false),
-            new SpeedComponent(0.05f, 0.074f, 2f, 2.5f),
+            new VelocityComponent(0f, 0f, true, gravity),
+            new SpeedComponent(0.05f, 0.074f, 0.55f, 2.5f),
+            // new VelocityComponent(0f, 0f, true, false),
+            // new SpeedComponent(0.05f, 0.074f, 2f, 2.5f),
             new GravityComponent(),
             new JumpComponent(1.15f, 0.75f),
             new BoxColliderComponent(true, 8f, 14f),
@@ -341,8 +341,8 @@ public final class Objects {
                 new double[] {(float) GameMath.randInt(15, 25) / 100},
                 new Frame[][] {
                     {
-                        new Frame(0f, 0f, 12f, 12f, -8f, -4f),
-                        new Frame(12f, 0f, 12f, 12f, -8f, -4f),
+                        new Frame(0f, 0f, 12f, 12f, -7f, -6f),
+                        new Frame(12f, 0f, 12f, 12f, -7f, -6f),
                     },
                 }
             );
@@ -379,7 +379,7 @@ public final class Objects {
             new InventoryComponent(currentInventory, inventory),
             new GraphicsListComponent(new GraphicsComponent[] {
                 // new GraphicsComponent(boxW, boxH, Color.rgb(159, 31, 47), true),
-                // new GraphicsComponent(boxW, boxH, "hurtbox", false),
+                // new GraphicsComponent(hrtW, hrtH, "hurtbox", false),
             }),
             new RenderLayerComponent((byte) 1)
         );
