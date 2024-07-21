@@ -220,40 +220,48 @@ public class EnemyAISystem implements Runnable {
                 HurtboxComponent hrt = e.entity().get(HurtboxComponent.class);
                 InputComponent inp = e.entity().get(InputComponent.class);
                 VelocityComponent vel = e.entity().get(VelocityComponent.class);
+                SpriteComponent spr = e.entity().get(SpriteComponent.class);
                 // ghouls will move toward the player when the player is within its radius of 24 tiles
                 boolean canSeePlayer = Math.sqrt(Math.pow(player.pos.x - pos.x, 2) + Math.pow(player.pos.y - pos.y, 2)) < Constants.TILESIZE * 24f;
 
-                if (!canSeePlayer) {
-                    inp.releaseKeys();
-                    return;
-                }
-
                 // ghouls slow down the players attack when the player is within a 4 tile radius
-                boolean shouldMove = Math.sqrt(Math.pow(player.pos.x - pos.x, 2) + Math.pow(player.pos.y - pos.y, 2)) > Constants.TILESIZE * 8f;
+                if (canSeePlayer) {
+                    boolean shouldMove = Math.sqrt(Math.pow(player.pos.x - pos.x, 2) + Math.pow(player.pos.y - pos.y, 2)) > Constants.TILESIZE * 8f;
 
-                if (shouldMove && player.pos.x - pos.x > Constants.TILESIZE * 0.2) {
-                    inp.inputs.get("right").press();
-                    inp.inputs.get("left").release();
-                }
-                else if (shouldMove && player.pos.x - pos.x < -Constants.TILESIZE * 0.2) {
-                    inp.inputs.get("right").release();
-                    inp.inputs.get("left").press();
+                    if (shouldMove && player.pos.x - pos.x > Constants.TILESIZE * 0.2) {
+                        inp.inputs.get("right").press();
+                        inp.inputs.get("left").release();
+                    }
+                    else if (shouldMove && player.pos.x - pos.x < -Constants.TILESIZE * 0.2) {
+                        inp.inputs.get("right").release();
+                        inp.inputs.get("left").press();
+                    }
+                    else {
+                        inp.inputs.get("right").release();
+                        inp.inputs.get("left").release();
+                    }
+                    if (shouldMove && (player.pos.y + player.hrt.y) - pos.y > Constants.TILESIZE * 4f) {
+                        inp.inputs.get("down").press();
+                        inp.inputs.get("up").release();
+                    }
+                    else if (shouldMove && (player.pos.y + player.hrt.y) - pos.y < -Constants.TILESIZE * 4f) {
+                        inp.inputs.get("down").release();
+                        inp.inputs.get("up").press();
+                    }
+                    else {
+                        inp.inputs.get("down").release();
+                        inp.inputs.get("up").release();
+                    }
                 }
                 else {
-                    inp.inputs.get("right").release();
-                    inp.inputs.get("left").release();
+                    inp.releaseKeys();
                 }
-                if (shouldMove && (player.pos.y + player.hrt.y) - pos.y > Constants.TILESIZE * 0.2 && Math.abs(player.pos.x - pos.x) < Constants.TILESIZE * 2f) {
-                    inp.inputs.get("down").press();
-                    inp.inputs.get("up").release();
-                }
-                else if (shouldMove && (player.pos.y + player.hrt.y) - pos.y < -Constants.TILESIZE * 0.2 && Math.abs(player.pos.x - pos.x) < Constants.TILESIZE * 2f) {
-                    inp.inputs.get("down").release();
-                    inp.inputs.get("up").press();
-                }
-                else {
-                    inp.inputs.get("down").release();
-                    inp.inputs.get("up").release();
+
+                // animation
+                if (spr != null) {
+                    if (spr.image.flip == vel.facingRight) {
+                        spr.image.flip = !vel.facingRight;
+                    }
                 }
             }
             else if (eAI.enemyType == Tiles.enemyTypes.get("the wumpus")) {}

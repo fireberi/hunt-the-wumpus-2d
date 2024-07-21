@@ -29,6 +29,8 @@ class GameManager {
         images.put("hunter", new Image("graphics/hunter.png", 0, 0, false, true));
         images.put("rusty", new Image("graphics/rusty.png", 0, 0, false, true));
         images.put("super_worm", new Image("graphics/super_worm.png", 0, 0, false, true));
+        images.put("super_bat", new Image("graphics/super_bat.png", 0, 0, false, true));
+        images.put("ghoul", new Image("graphics/ghoul.png", 0, 0, false, true));
         //endregion
 
         System.out.println("GameManager init");

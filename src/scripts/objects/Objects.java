@@ -29,7 +29,7 @@ public final class Objects {
             new SpeedComponent(0.05f, 0.074f, 1.25f, 2.5f),
             new GravityComponent(),
             new JumpComponent(1.75f, 0.5f),
-            new BoxColliderComponent(7f, 10f),
+            new BoxColliderComponent(true, 7f, 10f),
             new GraphicsListComponent(new GraphicsComponent[] {
                 new GraphicsComponent(7f, 10f, Color.rgb(255, 255, 255), true)
             })
@@ -44,7 +44,7 @@ public final class Objects {
             new SpeedComponent(0.05f, 0.074f, 1.25f, 2.5f),
             new GravityComponent(),
             new JumpComponent(1.75f, 0.5f),
-            new BoxColliderComponent(7f, 10f),
+            new BoxColliderComponent(true, 7f, 10f),
             new GraphicsListComponent(new GraphicsComponent[] {
                 new GraphicsComponent(7f, 10f, Color.rgb(255, 255, 255), true)
             }),
@@ -86,13 +86,13 @@ public final class Objects {
                 Map.entry("attack", new Input())
             ))),
             new PositionComponent(x, y),
-            new VelocityComponent(0f, 0f, true, gravity),
-            new SpeedComponent(0.05f, 0.074f, 0.55f, 2.5f),
-            // new VelocityComponent(0f, 0f, true, false),
-            // new SpeedComponent(0.05f, 0.074f, 2f, 2.5f),
+            // new VelocityComponent(0f, 0f, true, gravity),
+            // new SpeedComponent(0.05f, 0.074f, 0.55f, 2.5f),
+            new VelocityComponent(0f, 0f, true, false),
+            new SpeedComponent(0.05f, 0.074f, 2f, 2.5f),
             new GravityComponent(),
             new JumpComponent(1.15f, 0.75f),
-            new BoxColliderComponent(8f, 14f),
+            new BoxColliderComponent(true, 8f, 14f),
             new HurtboxComponent(true, 8f, 14f, new boolean[] {true, false}),
             new HealthComponent(200f),
             new InventoryComponent("melee", inventory),
@@ -203,7 +203,7 @@ public final class Objects {
             new VelocityComponent(direction, -0.2f, true, true),
             new SpeedComponent(0f, 0f, 0f, 2.5f),
             new GravityComponent(0.008f),
-            new BoxColliderComponent(4f, 4f),
+            new BoxColliderComponent(true, 4f, 4f),
             new HitboxComponent("arrow", true, 4f, 4f, new boolean[] {false, true}, new HitboxLogic() {
                 @Override
                 public void update(Entity hitbox, Entity hurtbox, boolean entered, boolean justEntered, boolean justExited) {}
@@ -233,7 +233,7 @@ public final class Objects {
             new SpeedComponent(0.05f, 0.074f, 0.15f, 2.5f),
             new GravityComponent(),
             new JumpComponent(1.15f, 0.75f),
-            new BoxColliderComponent(7f, 10f),
+            new BoxColliderComponent(true, 7f, 10f),
             new HurtboxComponent(true, 7f, 10f, new boolean[] {false, true}),
             new GraphicsListComponent(new GraphicsComponent[] {
                 new GraphicsComponent(7f, 10f, Color.rgb(159, 31, 47), true),
@@ -247,6 +247,9 @@ public final class Objects {
     public static Entity createEnemyActor(Dominion cherry, float x, float y, int enemyType) {
         float boxW = 7f;
         float boxH = 10f;
+        boolean boxActive = true;
+        float hrtW = 7f;
+        float hrtH = 10f;
         float health = 50f;
         HashMap<String, InventoryItem> inventory = new HashMap<String, InventoryItem>();
         String currentInventory = "";
@@ -262,6 +265,8 @@ public final class Objects {
         if (enemyType == Tiles.enemyTypes.get("super worm").intValue()) {
             boxW = 14f;
             boxH = 4f;
+            hrtW = 14f;
+            hrtH = 4f;
             health = 50f;
             inventory.put("melee", Objects.createSuperWormAttackItem(cherry, x, y));
             currentInventory = "melee";
@@ -288,7 +293,9 @@ public final class Objects {
         }
         else if (enemyType == Tiles.enemyTypes.get("super bat").intValue()) {
             boxW = 8f;
-            boxH = 8f;
+            boxH = 6f;
+            hrtW = 8f;
+            hrtH = 6f;
             health = 50f;
             gravity = false;
             inventory.put("melee", Objects.createSuperBatAttackItem(cherry, x, y));
@@ -309,17 +316,36 @@ public final class Objects {
         else if (enemyType == Tiles.enemyTypes.get("super spider").intValue()) {
             boxW = 16f;
             boxH = 12f;
+            hrtW = 16f;
+            hrtH = 12f;
             health = 120f;
         }
         else if (enemyType == Tiles.enemyTypes.get("ghoul").intValue()) {
-            boxW = 8f;
-            boxH = 8f;
+            boxW = 0f;
+            boxH = 0f;
+            boxActive = false;
+            hrtW = 8f;
+            hrtH = 8f;
             health = 80f;
             gravity = false;
+            spr = new SpriteComponent(new ImageComponent("ghoul", 24, 12),
+                1, "drift", true,
+                new String[] {"drift"},
+                new boolean[] {true},
+                new double[] {(float) GameMath.randInt(15, 25) / 100},
+                new Frame[][] {
+                    {
+                        new Frame(0f, 0f, 12f, 12f, -8f, -4f),
+                        new Frame(12f, 0f, 12f, 12f, -8f, -4f),
+                    },
+                }
+            );
         }
         else if (enemyType == Tiles.enemyTypes.get("the wumpus").intValue()) {
             boxW = 20f;
             boxH = 20f;
+            hrtW = 20f;
+            hrtH = 20f;
             health = 500f;
         }
         else {
@@ -340,9 +366,9 @@ public final class Objects {
             new SpeedComponent(0.05f, 0.074f, 0.15f, 2.5f),
             new GravityComponent(),
             new JumpComponent(1.15f, 0.75f),
-            new BoxColliderComponent(boxW, boxH),
+            new BoxColliderComponent(boxActive, boxW, boxH),
             new InventoryComponent(currentInventory, inventory),
-            new HurtboxComponent(true, boxW, boxH, new boolean[] {false, true}),
+            new HurtboxComponent(true, hrtW, hrtH, new boolean[] {false, true}),
             new HealthComponent(health),
             spr,
             new GraphicsListComponent(new GraphicsComponent[] {
@@ -429,7 +455,7 @@ public final class Objects {
             new DamageComponent(new Damage[] {Damage.INSTANT}, new float[] {20f}),
             new TimerComponent(false, new Timer[] {new Timer(0.16), new Timer(0.1), new Timer(0.94)}),
             new GraphicsListComponent(new GraphicsComponent[] {
-                new GraphicsComponent(10f, 10f, "hitbox", false),
+                // new GraphicsComponent(10f, 10f, "hitbox", false),
             }),
             new RenderLayerComponent((byte) 2)
         );

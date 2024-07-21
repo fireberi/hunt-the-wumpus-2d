@@ -161,7 +161,7 @@ public class MoveSystem implements Runnable {
         int[] xCollision = Collision.gridAABB(Constants.TILESIZE, map.grid, Tiles.solids, nextX, pos.y + boxCol.y, boxCol.w, boxCol.h);
         int tile = xCollision[0];
 
-        if (tile != 0) {
+        if (tile != 0 && boxCol.active) {
             int tx = xCollision[1] * Constants.TILESIZE;
             int ty = xCollision[2] * Constants.TILESIZE;
 
@@ -196,7 +196,7 @@ public class MoveSystem implements Runnable {
         int[] yCollision = Collision.gridAABB(Constants.TILESIZE, map.grid, Tiles.solids, pos.x + boxCol.x, nextY, boxCol.w, boxCol.h);
         tile = yCollision[0];
 
-        if (tile != 0) {
+        if (tile != 0 && boxCol.active) {
             int ty = yCollision[2] * Constants.TILESIZE;
 
             if (vel.y > 0) {
