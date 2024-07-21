@@ -6,8 +6,8 @@ import dev.dominion.ecs.api.Entity;
 import scripts.components.HitboxComponent;
 import scripts.components.HurtboxComponent;
 import scripts.components.HealthComponent;
-import scripts.components.SpriteComponent;
-import scripts.components.PositionComponent;
+import scripts.components.InventoryComponent;
+import scripts.components.InventoryItem;
 
 import scripts.systems.RenderSystem;
 
@@ -30,23 +30,33 @@ public class EntityDeletionSystem implements Runnable {
             HitboxComponent hit = e.comp();
             Entity entity = e.entity();
             if (hit.markDelete) {
-                cherry.deleteEntity(entity);
+                delete(entity);
             }
         });
         cherry.findEntitiesWith(HurtboxComponent.class).stream().forEach(e -> {
             HurtboxComponent hrt = e.comp();
             Entity entity = e.entity();
             if (hrt.markDelete) {
-                cherry.deleteEntity(entity);
+                delete(entity);
             }
         });
         cherry.findEntitiesWith(HealthComponent.class).stream().forEach(e -> {
             HealthComponent hth = e.comp();
             Entity entity = e.entity();
             if (hth.health <= 0) {
-                cherry.deleteEntity(entity);
+                delete(entity);
             }
         });
+    }
+
+    private void delete(Entity entity) {
+        InventoryComponent inv = entity.get(InventoryComponent.class);
+        if (inv != null) {
+            for (InventoryItem item : inv.inventory.values()) {
+                cherry.deleteEntity(item.item);
+            }
+        }
+        cherry.deleteEntity(entity);
     }
 
 }
