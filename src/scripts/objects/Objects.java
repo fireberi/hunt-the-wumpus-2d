@@ -293,6 +293,18 @@ public final class Objects {
             gravity = false;
             inventory.put("melee", Objects.createSuperBatAttackItem(cherry, x, y));
             currentInventory = "melee";
+            spr = new SpriteComponent(new ImageComponent("super_bat", 32, 8),
+                1, "flap", true,
+                new String[] {"flap"},
+                new boolean[] {true},
+                new double[] {(float) GameMath.randInt(10, 20) / 100},
+                new Frame[][] {
+                    {
+                        new Frame(0f, 0f, 16f, 8f, -8f, -4f),
+                        new Frame(16f, 0f, 16f, 8f, -8f, -4f),
+                    },
+                }
+            );
         }
         else if (enemyType == Tiles.enemyTypes.get("super spider").intValue()) {
             boxW = 16f;

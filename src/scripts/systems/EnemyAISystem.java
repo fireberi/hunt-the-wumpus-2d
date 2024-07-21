@@ -123,38 +123,40 @@ public class EnemyAISystem implements Runnable {
                 HurtboxComponent hrt = e.entity().get(HurtboxComponent.class);
                 InputComponent inp = e.entity().get(InputComponent.class);
                 VelocityComponent vel = e.entity().get(VelocityComponent.class);
-                // super bats will move toward the player when the player is within its radius of 24 tiles
-                boolean canSeePlayer = Math.sqrt(Math.pow(player.pos.x - pos.x, 2) + Math.pow(player.pos.y - pos.y, 2)) < Constants.TILESIZE * 24f;
+                SpriteComponent spr = e.entity().get(SpriteComponent.class);
 
-                if (!canSeePlayer) {
-                    inp.releaseKeys();
-                    return;
-                }
+                // super bats will move toward the player when the player is within its radius of 16 tiles
+                boolean canSeePlayer = Math.sqrt(Math.pow(player.pos.x - pos.x, 2) + Math.pow(player.pos.y - pos.y, 2)) < Constants.TILESIZE * 16f;
 
                 // super bats inflict damage by touching the player
-                if (player.pos.x - pos.x > Constants.TILESIZE * 0.2) {
-                    inp.inputs.get("right").press();
-                    inp.inputs.get("left").release();
-                }
-                else if (player.pos.x - pos.x < -Constants.TILESIZE * 0.2) {
-                    inp.inputs.get("right").release();
-                    inp.inputs.get("left").press();
+                if (canSeePlayer) {
+                    if (player.pos.x - pos.x > Constants.TILESIZE * 0.2) {
+                        inp.inputs.get("right").press();
+                        inp.inputs.get("left").release();
+                    }
+                    else if (player.pos.x - pos.x < -Constants.TILESIZE * 0.2) {
+                        inp.inputs.get("right").release();
+                        inp.inputs.get("left").press();
+                    }
+                    else {
+                        inp.inputs.get("right").release();
+                        inp.inputs.get("left").release();
+                    }
+                    if ((player.pos.y + player.hrt.y) - pos.y > Constants.TILESIZE * 0.2 && Math.abs(player.pos.x - pos.x) < Constants.TILESIZE * 2f) {
+                        inp.inputs.get("down").press();
+                        inp.inputs.get("up").release();
+                    }
+                    else if ((player.pos.y + player.hrt.y) - pos.y < -Constants.TILESIZE * 0.2 && Math.abs(player.pos.x - pos.x) < Constants.TILESIZE * 2f) {
+                        inp.inputs.get("down").release();
+                        inp.inputs.get("up").press();
+                    }
+                    else {
+                        inp.inputs.get("down").release();
+                        inp.inputs.get("up").release();
+                    }
                 }
                 else {
-                    inp.inputs.get("right").release();
-                    inp.inputs.get("left").release();
-                }
-                if ((player.pos.y + player.hrt.y) - pos.y > Constants.TILESIZE * 0.2 && Math.abs(player.pos.x - pos.x) < Constants.TILESIZE * 2f) {
-                    inp.inputs.get("down").press();
-                    inp.inputs.get("up").release();
-                }
-                else if ((player.pos.y + player.hrt.y) - pos.y < -Constants.TILESIZE * 0.2 && Math.abs(player.pos.x - pos.x) < Constants.TILESIZE * 2f) {
-                    inp.inputs.get("down").release();
-                    inp.inputs.get("up").press();
-                }
-                else {
-                    inp.inputs.get("down").release();
-                    inp.inputs.get("up").release();
+                    inp.releaseKeys();
                 }
 
                 if ((Math.abs(player.pos.x - pos.x) < Constants.TILESIZE * 2) && (Math.abs(player.pos.y - pos.y) < Constants.TILESIZE * 2)) {
@@ -162,6 +164,13 @@ public class EnemyAISystem implements Runnable {
                 }
                 else {
                     inp.inputs.get("attack").release();
+                }
+
+                // animation
+                if (spr != null) {
+                    if (spr.image.flip == vel.facingRight) {
+                        spr.image.flip = !vel.facingRight;
+                    }
                 }
             }
             else if (eAI.enemyType == Tiles.enemyTypes.get("super spider")) {
