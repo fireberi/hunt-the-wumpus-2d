@@ -221,8 +221,8 @@ public class EnemyAISystem implements Runnable {
                 InputComponent inp = e.entity().get(InputComponent.class);
                 VelocityComponent vel = e.entity().get(VelocityComponent.class);
                 SpriteComponent spr = e.entity().get(SpriteComponent.class);
-                // ghouls will move toward the player when the player is within its radius of 24 tiles
-                boolean canSeePlayer = Math.sqrt(Math.pow(player.pos.x - pos.x, 2) + Math.pow(player.pos.y - pos.y, 2)) < Constants.TILESIZE * 24f;
+                // ghouls will move toward the player when the player is within its radius of 20 tiles
+                boolean canSeePlayer = Math.sqrt(Math.pow(player.pos.x - pos.x, 2) + Math.pow(player.pos.y - pos.y, 2)) < Constants.TILESIZE * 20f;
 
                 // ghouls slow down the players attack when the player is within a 4 tile radius
                 if (canSeePlayer) {

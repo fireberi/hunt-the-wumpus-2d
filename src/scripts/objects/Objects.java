@@ -245,15 +245,18 @@ public final class Objects {
     }
 
     public static Entity createEnemyActor(Dominion cherry, float x, float y, int enemyType) {
+        boolean gravity = true;
+        float ax = 0.05f;
+        float dx = 0.074f;
+        float maxX = 0.15f;
+        boolean boxActive = true;
         float boxW = 7f;
         float boxH = 10f;
-        boolean boxActive = true;
         float hrtW = 7f;
         float hrtH = 10f;
         float health = 50f;
-        HashMap<String, InventoryItem> inventory = new HashMap<String, InventoryItem>();
         String currentInventory = "";
-        boolean gravity = true;
+        HashMap<String, InventoryItem> inventory = new HashMap<String, InventoryItem>();
         SpriteComponent spr = new SpriteComponent(new ImageComponent("", 0, 0),
             1, "", false,
             new String[0],
@@ -263,6 +266,7 @@ public final class Objects {
         );
 
         if (enemyType == Tiles.enemyTypes.get("super worm").intValue()) {
+            maxX = (float) GameMath.randInt(12, 18) / 100;
             boxW = 14f;
             boxH = 4f;
             hrtW = 14f;
@@ -292,12 +296,13 @@ public final class Objects {
             );
         }
         else if (enemyType == Tiles.enemyTypes.get("super bat").intValue()) {
+            gravity = false;
+            maxX = (float) GameMath.randInt(17, 23) / 100;
             boxW = 8f;
             boxH = 6f;
             hrtW = 8f;
             hrtH = 6f;
             health = 50f;
-            gravity = false;
             inventory.put("melee", Objects.createSuperBatAttackItem(cherry, x, y));
             currentInventory = "melee";
             spr = new SpriteComponent(new ImageComponent("super_bat", 32, 8),
@@ -321,13 +326,14 @@ public final class Objects {
             health = 120f;
         }
         else if (enemyType == Tiles.enemyTypes.get("ghoul").intValue()) {
+            gravity = false;
+            maxX = (float) GameMath.randInt(7, 13) / 100;
+            boxActive = false;
             boxW = 0f;
             boxH = 0f;
-            boxActive = false;
             hrtW = 8f;
             hrtH = 8f;
             health = 80f;
-            gravity = false;
             spr = new SpriteComponent(new ImageComponent("ghoul", 24, 12),
                 1, "drift", true,
                 new String[] {"drift"},
@@ -363,14 +369,14 @@ public final class Objects {
             ))),
             new PositionComponent(x, y),
             new VelocityComponent(0f, 0f, true, gravity),
-            new SpeedComponent(0.05f, 0.074f, 0.15f, 2.5f),
+            new SpeedComponent(ax, dx, maxX, 2.5f),
             new GravityComponent(),
             new JumpComponent(1.15f, 0.75f),
             new BoxColliderComponent(boxActive, boxW, boxH),
-            new InventoryComponent(currentInventory, inventory),
             new HurtboxComponent(true, hrtW, hrtH, new boolean[] {false, true}),
             new HealthComponent(health),
             spr,
+            new InventoryComponent(currentInventory, inventory),
             new GraphicsListComponent(new GraphicsComponent[] {
                 // new GraphicsComponent(boxW, boxH, Color.rgb(159, 31, 47), true),
                 // new GraphicsComponent(boxW, boxH, "hurtbox", false),
