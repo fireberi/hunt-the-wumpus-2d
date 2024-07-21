@@ -14,6 +14,7 @@ import scripts.components.*;
 import scripts.core.Input;
 import scripts.util.DamageTypes.Damage;
 import scripts.util.Frame;
+import scripts.util.GameMath;
 import scripts.util.Timer;
 import scripts.util.Tiles;
 
@@ -122,7 +123,8 @@ public final class Objects {
                 }
             ),
             new GraphicsListComponent(new GraphicsComponent[] {
-                // new GraphicsComponent(8f, 14f, Color.rgb(255, 255, 255), true)
+                // new GraphicsComponent(8f, 14f, Color.rgb(255, 255, 255), true),
+                // new GraphicsComponent(8f, 14f, "hurtbox", false),
             }),
             new RenderLayerComponent((byte) 1)
         );
@@ -267,7 +269,7 @@ public final class Objects {
                 1, "idle", true,
                 new String[] {"idle", "run", "attack"},
                 new boolean[] {true, true, false},
-                new double[] {0.75f, 0.2f, 0.16f},
+                new double[] {(float) GameMath.randInt(70, 120) / 100, (float) GameMath.randInt(15, 40) / 100, 0.16f},
                 new Frame[][] {
                     {
                         new Frame(0f, 0f, 16f, 8f, -8f, -6f),

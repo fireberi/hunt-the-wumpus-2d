@@ -16,6 +16,10 @@ public final class GameMath {
         return target + (current - target) * (float) Math.exp(-decay * delta);
     }
 
+    public static float randInt(int min, int max) {
+        return min + (int) (Math.random() * ((max - min) + 1));
+    }
+
     private GameMath() {}
 
 }

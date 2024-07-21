@@ -17,6 +17,7 @@ import scripts.components.SpriteComponent;
 
 import scripts.core.State;
 import scripts.core.Constants;
+import scripts.util.Collision;
 import scripts.util.Tiles;
 
 public class EnemyAISystem implements Runnable {
@@ -65,40 +66,40 @@ public class EnemyAISystem implements Runnable {
             }
             else if (eAI.enemyType == Tiles.enemyTypes.get("super worm")) {
                 PositionComponent pos = e.entity().get(PositionComponent.class);
-                HurtboxComponent hrt = e.entity().get(HurtboxComponent.class);
                 InputComponent inp = e.entity().get(InputComponent.class);
                 VelocityComponent vel = e.entity().get(VelocityComponent.class);
-                HitboxComponent hit = e.entity().get(InventoryComponent.class).getCurrent().get(HitboxComponent.class);
                 SpriteComponent spr = e.entity().get(SpriteComponent.class);
 
+                PositionComponent hitPos = e.entity().get(InventoryComponent.class).getCurrent().get(PositionComponent.class);
+                HitboxComponent hit = e.entity().get(InventoryComponent.class).getCurrent().get(HitboxComponent.class);
+
                 // super worms will be active when the player is within roughly the same y level and within 16 tiles horizontally
-                eAI.active = Math.abs((player.pos.y - player.hrt.y - (pos.y - hrt.y))) < 0.5 && Math.abs(player.pos.x - pos.x) <  Constants.TILESIZE * 16;
+                boolean canSeePlayer = Math.abs((player.pos.y - player.hrt.y - (pos.y - box.y))) < 0.5 && Math.abs(player.pos.x - pos.x) <  Constants.TILESIZE * 16;
 
                 float playerRight = player.pos.x + player.hrt.x + player.hrt.w;
                 float playerLeft = player.pos.x + player.hrt.x;
-                boolean canAttackPlayer = (vel.facingRight &&
-                    playerLeft >= pos.x &&
-                    playerLeft <= pos.x + hit.w)
-                    || (!vel.facingRight &&
-                    playerRight <= pos.x &&
-                    playerRight >= pos.x - hit.w);
+                boolean canAttackPlayer = Collision.AABB(
+                    hitPos.x + hit.x,
+                    hitPos.y + hit.y,
+                    hit.w, hit.h,
+                    player.pos.x + player.hrt.x,
+                    player.pos.y + player.hrt.y,
+                    player.hrt.w, player.hrt.h);
 
-                if (eAI.active) {
-                    if (!canAttackPlayer) {
-                        if (player.pos.x > pos.x) {
-                            inp.inputs.get("right").press();
-                            inp.inputs.get("left").release();
-                        }
-                        else {
-                            inp.inputs.get("right").release();
-                            inp.inputs.get("left").press();
-                        }
+                if (canSeePlayer && !canAttackPlayer) {
+                    if (player.pos.x > pos.x) {
+                        inp.inputs.get("right").press();
+                        inp.inputs.get("left").release();
                     }
                     else {
                         inp.inputs.get("right").release();
-                        inp.inputs.get("left").release();
-                        inp.inputs.get("attack").press();
+                        inp.inputs.get("left").press();
                     }
+                }
+                else if (canAttackPlayer) {
+                    inp.inputs.get("right").release();
+                    inp.inputs.get("left").release();
+                    inp.inputs.get("attack").press();
                 }
 
                 // animation
@@ -123,9 +124,9 @@ public class EnemyAISystem implements Runnable {
                 InputComponent inp = e.entity().get(InputComponent.class);
                 VelocityComponent vel = e.entity().get(VelocityComponent.class);
                 // super bats will move toward the player when the player is within its radius of 24 tiles
-                eAI.active = Math.sqrt(Math.pow(player.pos.x - pos.x, 2) + Math.pow(player.pos.y - pos.y, 2)) < Constants.TILESIZE * 24f;
+                boolean canSeePlayer = Math.sqrt(Math.pow(player.pos.x - pos.x, 2) + Math.pow(player.pos.y - pos.y, 2)) < Constants.TILESIZE * 24f;
 
-                if (!eAI.active) {
+                if (!canSeePlayer) {
                     inp.releaseKeys();
                     return;
                 }
@@ -169,9 +170,9 @@ public class EnemyAISystem implements Runnable {
                 InputComponent inp = e.entity().get(InputComponent.class);
                 VelocityComponent vel = e.entity().get(VelocityComponent.class);
                 // super spiders will be active when the player is within roughly the same y level and within 24 tiles horizontally
-                eAI.active = Math.abs((player.pos.y - player.hrt.y - (pos.y - hrt.y))) < 0.5 && Math.abs(player.pos.x - pos.x) <  Constants.TILESIZE * 24;
+                boolean canSeePlayer = Math.abs((player.pos.y - player.hrt.y - (pos.y - hrt.y))) < 0.5 && Math.abs(player.pos.x - pos.x) <  Constants.TILESIZE * 24;
 
-                if (!eAI.active) {
+                if (!canSeePlayer) {
                     inp.releaseKeys();
                     return;
                 }
@@ -211,9 +212,9 @@ public class EnemyAISystem implements Runnable {
                 InputComponent inp = e.entity().get(InputComponent.class);
                 VelocityComponent vel = e.entity().get(VelocityComponent.class);
                 // ghouls will move toward the player when the player is within its radius of 24 tiles
-                eAI.active = Math.sqrt(Math.pow(player.pos.x - pos.x, 2) + Math.pow(player.pos.y - pos.y, 2)) < Constants.TILESIZE * 24f;
+                boolean canSeePlayer = Math.sqrt(Math.pow(player.pos.x - pos.x, 2) + Math.pow(player.pos.y - pos.y, 2)) < Constants.TILESIZE * 24f;
 
-                if (!eAI.active) {
+                if (!canSeePlayer) {
                     inp.releaseKeys();
                     return;
                 }
