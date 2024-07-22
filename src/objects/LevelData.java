@@ -55,7 +55,6 @@ public final class LevelData {
             new int[] {5, 9},
             new float[][] {
                 {Tiles.enemyTypes.get("super worm").floatValue(), 67f, 9f},
-                {Tiles.enemyTypes.get("super spider").floatValue(), 20f, 8f},
             },
             "Level2",
             new int[][] {
