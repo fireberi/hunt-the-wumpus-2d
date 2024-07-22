@@ -7,6 +7,8 @@ public class SpeedComponent {
     public float maxX;
     public float maxY;
 
+    public float xMultiplier = 1;
+
     public SpeedComponent(float ax, float dx, float maxX, float maxY) {
         this.ax = ax;
         this.dx = dx;

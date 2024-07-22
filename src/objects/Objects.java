@@ -456,6 +456,8 @@ public final class Objects {
             hrtW = 8f;
             hrtH = 8f;
             health = 80f;
+            currentInventory = "area";
+            inventory.put("area", Objects.createGhoulAttackItem(cherry, x, y));
             spr = new SpriteComponent(new ImageComponent("ghoul", 24, 12),
                 1, "drift", true,
                 new String[] {"drift"},
@@ -613,6 +615,40 @@ public final class Objects {
             )
         );
     }
+
+    private static Entity createGhoulAttackActor(Dominion cherry, float x, float y) {
+        return cherry.createEntity(
+            new PositionComponent(x, y),
+            new HitboxComponent("area", false, 128f, 128f, new boolean[] {true, false}, new HitboxLogic() {
+                @Override
+                public void update(Entity hitbox, Entity hurtbox, boolean entered, boolean justEntered, boolean justExited) {
+                    HitboxComponent hit = hitbox.get(HitboxComponent.class);
+                    VelocityComponent vel = hitbox.get(VelocityComponent.class);
+                    HurtboxComponent hrt = hurtbox.get(HurtboxComponent.class);
+                    VelocityComponent hrtVel = hurtbox.get(VelocityComponent.class);
+                    SpeedComponent hrtSpd = hurtbox.get(SpeedComponent.class);
+                    EffectReceiverComponent fxr = hurtbox.get(EffectReceiverComponent.class);
+                    EffectComponent fxc = hitbox.get(EffectComponent.class);
+
+                    if (entered) {
+                        fxr.add(fxc.effects);
+                    }
+                    if (justExited) {
+                        hrtSpd.xMultiplier = 1;
+                    }
+                }
+                @Override
+                public void clean(Dominion cherry, Entity sword) {}
+            }),
+            new EffectComponent(new Effect[] {
+                new SlowMovementEffect(0.1f),
+            }),
+            new GraphicsListComponent(new GraphicsComponent[] {
+                new GraphicsComponent(128f, 128f, "hitbox", false),
+            }),
+            new RenderLayerComponent((byte) 2)
+        );
+    }
     //endregion
 
     //region inventory items
@@ -709,6 +745,21 @@ public final class Objects {
                     vel.x = ovel.x;
                     vel.y = ovel.y;
                     vel.facingRight = ovel.facingRight;
+                }
+            }
+        );
+    }
+
+    public static InventoryItem createGhoulAttackItem(Dominion cherry, float x, float y) {
+        return new InventoryItem(
+            Objects.createGhoulAttackActor(cherry, x, y),
+            new InventoryLogic() {
+                @Override
+                public void update(Entity item, Entity owner) {
+                    PositionComponent pos = item.get(PositionComponent.class);
+                    PositionComponent opos = owner.get(PositionComponent.class);
+                    pos.x = opos.x;
+                    pos.y = opos.y;
                 }
             }
         );

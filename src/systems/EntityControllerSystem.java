@@ -79,19 +79,19 @@ public class EntityControllerSystem implements Runnable {
 
             // move in direction
             if (vel.facingRight && rightPressed) {
-                if (vel.x < -spd.maxX / 2) {
-                    vel.x = GameMath.approach(vel.x, spd.maxX, 3 * spd.ax);
+                if (vel.x < -(spd.maxX * spd.xMultiplier) / 2) {
+                    vel.x = GameMath.approach(vel.x, (spd.maxX * spd.xMultiplier), 3 * spd.ax);
                 }
                 else {
-                    vel.x = GameMath.approach(vel.x, spd.maxX, spd.ax);
+                    vel.x = GameMath.approach(vel.x, (spd.maxX * spd.xMultiplier), spd.ax);
                 }
             }
             else if (!vel.facingRight && leftPressed) {
-                if (vel.x > spd.maxX / 2) {
-                    vel.x = GameMath.approach(vel.x, -spd.maxX, 3 * spd.ax);
+                if (vel.x > (spd.maxX * spd.xMultiplier) / 2) {
+                    vel.x = GameMath.approach(vel.x, -(spd.maxX * spd.xMultiplier), 3 * spd.ax);
                 }
                 else {
-                    vel.x = GameMath.approach(vel.x, -spd.maxX, spd.ax);
+                    vel.x = GameMath.approach(vel.x, -(spd.maxX * spd.xMultiplier), spd.ax);
                 }
             }
             else if (vel.x != 0) {
@@ -133,10 +133,10 @@ public class EntityControllerSystem implements Runnable {
                 }
 
                 if (vel.facingDown && downPressed) {
-                vel.y = GameMath.approach(vel.y, spd.maxX, spd.ax);
+                vel.y = GameMath.approach(vel.y, (spd.maxX * spd.xMultiplier), spd.ax);
                 }
                 else if (!vel.facingDown && upPressed) {
-                    vel.y = GameMath.approach(vel.y, -spd.maxX, spd.ax);
+                    vel.y = GameMath.approach(vel.y, -(spd.maxX * spd.xMultiplier), spd.ax);
                 }
                 else if (vel.y != 0) {
                     vel.y = GameMath.approach(vel.y, 0, spd.dx);
@@ -172,6 +172,13 @@ public class EntityControllerSystem implements Runnable {
 
                     if (tmc.timers[0].timeout) {
                         spw.spawnerLogic.spawn(cherry, weapon);
+                    }
+                }
+                else if (inv.current == "area") {
+                    HitboxComponent hit = weapon.get(HitboxComponent.class);
+
+                    if (!hit.active) {
+                        hit.active = true;
                     }
                 }
             }
