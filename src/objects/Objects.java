@@ -12,7 +12,7 @@ import dev.dominion.ecs.api.Entity;
 import components.*;
 import components.helpers.*;
 
-import data.DamageTypes.Damage;
+import data.effects.*;
 import data.Tiles;
 
 import core.Input;
@@ -50,6 +50,7 @@ public final class Objects {
                 new GraphicsComponent(7f, 10f, Color.rgb(255, 255, 255), true)
             }),
             new HealthComponent(200f),
+            new EffectReceiverComponent(),
             new InventoryComponent("melee", inventory),
             new FocusComponent(true, 0f, 0f),
             new SpriteComponent(new ImageComponent("hunter", 48, 32),
@@ -87,15 +88,16 @@ public final class Objects {
                 Map.entry("attack", new Input())
             ))),
             new PositionComponent(x, y),
-            new VelocityComponent(0f, 0f, true, gravity),
-            new SpeedComponent(0.05f, 0.074f, 0.55f, 2.5f),
-            // new VelocityComponent(0f, 0f, true, false),
-            // new SpeedComponent(0.05f, 0.074f, 2f, 2.5f),
+            // new VelocityComponent(0f, 0f, true, gravity),
+            // new SpeedComponent(0.05f, 0.074f, 0.55f, 2.5f),
+            new VelocityComponent(0f, 0f, true, false),
+            new SpeedComponent(0.05f, 0.074f, 2f, 2.5f),
             new GravityComponent(),
             new JumpComponent(1.15f, 0.75f),
             new BoxColliderComponent(true, 8f, 14f),
             new HurtboxComponent(true, 8f, 14f, new boolean[] {true, false}),
             new HealthComponent(200f),
+            new EffectReceiverComponent(),
             new InventoryComponent("melee", inventory),
             new FocusComponent(true, 0f, -8f),
             new SpriteComponent(new ImageComponent("hunter", 48, 32), 0, "idle", true,
@@ -153,12 +155,11 @@ public final class Objects {
                     VelocityComponent vel = hitbox.get(VelocityComponent.class);
                     HurtboxComponent hrt = hurtbox.get(HurtboxComponent.class);
                     VelocityComponent hrtVel = hurtbox.get(VelocityComponent.class);
-                    HealthComponent hrtHth = hurtbox.get(HealthComponent.class);
+                    EffectReceiverComponent fxr = hurtbox.get(EffectReceiverComponent.class);
+                    EffectComponent fxc = hitbox.get(EffectComponent.class);
 
                     if (justEntered) {
-                        DamageComponent dmc = hitbox.get(DamageComponent.class);
-                        hrtHth.add(dmc.effects, dmc.values);
-
+                        fxr.add(fxc.effects);
                         // knockback
                         if (vel != null) {
                             if (vel.facingRight) {
@@ -174,7 +175,9 @@ public final class Objects {
                 @Override
                 public void clean(Dominion cherry, Entity sword) {}
             }),
-            new DamageComponent(new Damage[] {Damage.INSTANT}, new float[] {20f}),
+            new EffectComponent(new Effect[] {
+                new InstantDamageEffect(20f),
+            }),
             new TimerComponent(false, new Timer[] {new Timer(0.16), new Timer(0.15), new Timer(0.19)}),
             new SpriteComponent(new ImageComponent("rusty", 32, 32), 1, "idle", true,
                 new String[] {"idle", "air", "run", "attack"},
@@ -223,12 +226,11 @@ public final class Objects {
                     VelocityComponent vel = hitbox.get(VelocityComponent.class);
                     HurtboxComponent hrt = hurtbox.get(HurtboxComponent.class);
                     VelocityComponent hrtVel = hurtbox.get(VelocityComponent.class);
-                    HealthComponent hrtHth = hurtbox.get(HealthComponent.class);
+                    EffectReceiverComponent fxr = hurtbox.get(EffectReceiverComponent.class);
+                    EffectComponent fxc = hitbox.get(EffectComponent.class);
 
                     if (justEntered) {
-                        DamageComponent dmc = hitbox.get(DamageComponent.class);
-                        hrtHth.add(dmc.effects, dmc.values);
-
+                        fxr.add(fxc.effects);
                         // knockback
                         if (vel != null) {
                             if (vel.facingRight) {
@@ -250,7 +252,9 @@ public final class Objects {
                     }
                 }
             }),
-            new DamageComponent(new Damage[] {Damage.INSTANT}, new float[] {30f}),
+            new EffectComponent(new Effect[] {
+                new InstantDamageEffect(30f),
+            }),
             new GraphicsListComponent(new GraphicsComponent[] {
                 new GraphicsComponent(4f, 4f, Color.rgb(0, 207, 255), true),
                 new GraphicsComponent(4f, 4f, "hitbox", false),
@@ -327,6 +331,7 @@ public final class Objects {
                 new GraphicsComponent(7f, 10f, "hurtbox", false),
             }),
             new HealthComponent(50f),
+            new EffectReceiverComponent(),
             new RenderLayerComponent((byte) 1)
         );
     }
@@ -490,6 +495,7 @@ public final class Objects {
             new BoxColliderComponent(boxActive, boxW, boxH),
             new HurtboxComponent(true, hrtW, hrtH, new boolean[] {false, true}),
             new HealthComponent(health),
+            new EffectReceiverComponent(),
             spr,
             new InventoryComponent(currentInventory, inventory),
             new GraphicsListComponent(new GraphicsComponent[] {
@@ -511,12 +517,11 @@ public final class Objects {
                     VelocityComponent vel = hitbox.get(VelocityComponent.class);
                     HurtboxComponent hrt = hurtbox.get(HurtboxComponent.class);
                     VelocityComponent hrtVel = hurtbox.get(VelocityComponent.class);
-                    HealthComponent hrtHth = hurtbox.get(HealthComponent.class);
+                    EffectReceiverComponent fxr = hurtbox.get(EffectReceiverComponent.class);
+                    EffectComponent fxc = hitbox.get(EffectComponent.class);
 
                     if (justEntered) {
-                        DamageComponent dmc = hitbox.get(DamageComponent.class);
-                        hrtHth.add(dmc.effects, dmc.values);
-
+                        fxr.add(fxc.effects);
                         // knockback
                         if (vel != null) {
                             if (vel.facingRight) {
@@ -532,7 +537,9 @@ public final class Objects {
                 @Override
                 public void clean(Dominion cherry, Entity sword) {}
             }),
-            new DamageComponent(new Damage[] {Damage.INSTANT}, new float[] {10f}),
+            new EffectComponent(new Effect[] {
+                new InstantDamageEffect(10f),
+            }),
             new TimerComponent(false, new Timer[] {new Timer(0.16), new Timer(0.1), new Timer(0.74)}),
             new GraphicsListComponent(new GraphicsComponent[] {
                 // new GraphicsComponent(10f, 6f, "hitbox", false),
@@ -552,11 +559,11 @@ public final class Objects {
                     VelocityComponent vel = hitbox.get(VelocityComponent.class);
                     HurtboxComponent hrt = hurtbox.get(HurtboxComponent.class);
                     VelocityComponent hrtVel = hurtbox.get(VelocityComponent.class);
-                    HealthComponent hrtHth = hurtbox.get(HealthComponent.class);
+                    EffectReceiverComponent fxr = hurtbox.get(EffectReceiverComponent.class);
+                    EffectComponent fxc = hitbox.get(EffectComponent.class);
 
                     if (justEntered) {
-                        DamageComponent dmc = hitbox.get(DamageComponent.class);
-                        hrtHth.add(dmc.effects, dmc.values);
+                        fxr.add(fxc.effects);
 
                         // knockback
                         if (vel != null) {
@@ -573,7 +580,9 @@ public final class Objects {
                 @Override
                 public void clean(Dominion cherry, Entity sword) {}
             }),
-            new DamageComponent(new Damage[] {Damage.INSTANT}, new float[] {20f}),
+            new EffectComponent(new Effect[] {
+                new InstantDamageEffect(20f),
+            }),
             new TimerComponent(false, new Timer[] {new Timer(0.16), new Timer(0.1), new Timer(0.94)}),
             new GraphicsListComponent(new GraphicsComponent[] {
                 // new GraphicsComponent(10f, 10f, "hitbox", false),

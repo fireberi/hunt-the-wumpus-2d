@@ -65,7 +65,7 @@ public class SceneBaseLevel extends Scene {
         else {
             tileCollisionSystem = new TileCollisionSystem(cherry, state);
         }
-        HealthDamageSystem healthDamageSystem = new HealthDamageSystem(cherry, state);
+        EffectsSystem effectsSystem = new EffectsSystem(cherry, state);
         SpriteSystem spriteSystem = new SpriteSystem(cherry, state);
         InputSystem inputSystem = new InputSystem(cherry, state);
 
@@ -84,7 +84,7 @@ public class SceneBaseLevel extends Scene {
         updateScheduler.schedule(inventorySystem);
         updateScheduler.schedule(areaCollisionSystem);
         updateScheduler.schedule(tileCollisionSystem);
-        updateScheduler.schedule(healthDamageSystem);
+        updateScheduler.schedule(effectsSystem);
         updateScheduler.schedule(spriteSystem);
         updateScheduler.schedule(inputSystem);
 

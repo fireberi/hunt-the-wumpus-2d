@@ -9,9 +9,11 @@ import components.BoxColliderComponent;
 import components.TilemapComponent;
 import components.PlayerControllerComponent;
 import components.HealthComponent;
+import components.EffectReceiverComponent;
+import components.EffectComponent;
 
+import data.effects.*;
 import data.Tiles;
-import data.DamageTypes.Damage;
 
 import core.Constants;
 import core.State;
@@ -50,6 +52,7 @@ public class TileCollisionSystem implements Runnable {
 
             // optional components
             PlayerControllerComponent pcc = entity.get(PlayerControllerComponent.class);
+            EffectReceiverComponent fxr = entity.get(EffectReceiverComponent.class);
             HealthComponent hth = entity.get(HealthComponent.class);
 
             cherry.findEntitiesWith(TilemapComponent.class).stream().forEach(tilemap -> {
@@ -68,8 +71,7 @@ public class TileCollisionSystem implements Runnable {
                     int tx = collision[1] * Constants.TILESIZE;
                     int ty = collision[2] * Constants.TILESIZE;
 
-                    Damage[] effects = {null};
-                    float[] values = {0f};
+                    Effect[] effects = {null};
                     boolean healthAffected = false;
 
                     if ((tile == Tiles.NA || tile == Tiles.NB || tile == Tiles.NC || tile == Tiles.ND) && pcc != null && pcc.inputs.get("alt").justPressed() && nextLevel != "") {
@@ -77,25 +79,23 @@ public class TileCollisionSystem implements Runnable {
                         System.out.println("next level");
                         scene.nextScene = nextLevel;
                     }
-                    else if ((tile == Tiles.LAVA_TOP || tile == Tiles.LAVA_BODY) && hth != null) {
+                    else if ((tile == Tiles.LAVA_TOP || tile == Tiles.LAVA_BODY) && fxr != null) {
                         // reduce lots of health, knockback character
                         pos.y = ty + boxCol.y;
                         vel.y = -0.8f - Constants.GRAVITY;
-                        effects[0] = Damage.INSTANT;
-                        values[0] = 50f;
+                        effects[0] = new InstantDamageEffect(50f);
                         healthAffected = true;
                     }
-                    else if (tile == Tiles.SPIKE && hth != null) {
+                    else if (tile == Tiles.SPIKE && fxr != null) {
                         // reduce a bit of health, knockback character
                         pos.y = ty + boxCol.y;
                         vel.y = -0.8f - Constants.GRAVITY;
-                        effects[0] = Damage.INSTANT;
-                        values[0] = 20f;
+                        effects[0] = new InstantDamageEffect(20f);
                         healthAffected = true;
                     }
 
-                    if (hth != null && healthAffected) {
-                        hth.add(effects, values);
+                    if (fxr != null && healthAffected) {
+                        fxr.add(effects);
                     }
                 }
             });
