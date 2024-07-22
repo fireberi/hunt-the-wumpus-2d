@@ -1,4 +1,4 @@
-package components;
+package components.helpers;
 
 import dev.dominion.ecs.api.Entity;
 

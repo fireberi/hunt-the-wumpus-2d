@@ -1,5 +1,7 @@
 package components;
 
+import components.helpers.HitboxLogic;
+
 public class HitboxComponent extends BoxComponent {
 
     public String type;

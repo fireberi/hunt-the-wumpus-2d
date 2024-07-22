@@ -12,8 +12,8 @@ import dev.dominion.ecs.api.Scheduler;
 
 import components.TilemapComponent;
 import components.RenderLayerComponent;
-import components.InventoryItem;
-import components.InventoryLogic;
+import components.helpers.InventoryItem;
+import components.helpers.InventoryLogic;
 import systems.*;
 
 import objects.*;

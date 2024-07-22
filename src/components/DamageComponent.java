@@ -1,6 +1,6 @@
 package components;
 
-import util.DamageTypes.Damage;
+import data.DamageTypes.Damage;
 
 public class DamageComponent {
 

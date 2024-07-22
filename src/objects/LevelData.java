@@ -2,7 +2,7 @@ package objects;
 
 import components.TilemapComponent;
 
-import util.Tiles;
+import data.Tiles;
 
 public final class LevelData {
 

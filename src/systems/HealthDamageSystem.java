@@ -10,7 +10,8 @@ import components.DamageComponent;
 import components.HitboxComponent;
 import components.HurtboxComponent;
 
-import util.DamageTypes.Damage;
+import data.DamageTypes.Damage;
+
 import core.State;
 
 public class HealthDamageSystem implements Runnable {

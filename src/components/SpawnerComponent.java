@@ -1,5 +1,7 @@
 package components;
 
+import components.helpers.SpawnerLogic;
+
 public class SpawnerComponent {
 
     public SpawnerLogic spawnerLogic;

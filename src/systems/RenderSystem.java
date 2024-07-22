@@ -22,12 +22,13 @@ import components.FocusComponent;
 import components.ImageComponent;
 import components.SpriteComponent;
 import components.RenderLayerComponent;
+import components.helpers.Frame;
+
+import data.Tiles;
 
 import core.Constants;
 import core.State;
 import util.GameMath;
-import util.Frame;
-import util.Tiles;
 
 public class RenderSystem implements Runnable {
 

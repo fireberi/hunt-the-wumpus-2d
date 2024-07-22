@@ -10,12 +10,13 @@ import components.TilemapComponent;
 import components.PlayerControllerComponent;
 import components.HealthComponent;
 
+import data.Tiles;
+import data.DamageTypes.Damage;
+
 import core.Constants;
 import core.State;
 import core.Scene;
 import util.Collision;
-import util.Tiles;
-import util.DamageTypes.Damage;
 
 public class TileCollisionSystem implements Runnable {
 

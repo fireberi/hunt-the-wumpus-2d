@@ -2,7 +2,7 @@ package components;
 
 import java.util.ArrayList;
 
-import util.DamageTypes.Damage;
+import data.DamageTypes.Damage;
 
 public class HealthComponent {
 

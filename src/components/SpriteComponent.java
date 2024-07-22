@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 import components.ImageComponent;
-import util.Frame;
+import components.helpers.Frame;
 
 public class SpriteComponent {
 

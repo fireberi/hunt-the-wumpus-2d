@@ -4,6 +4,8 @@ import java.util.HashMap;
 
 import dev.dominion.ecs.api.Entity;
 
+import components.helpers.InventoryItem;
+
 public class InventoryComponent {
 
     public HashMap<String, InventoryItem> inventory;

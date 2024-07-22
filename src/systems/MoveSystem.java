@@ -10,10 +10,11 @@ import components.VelocityComponent;
 import components.BoxColliderComponent;
 import components.TilemapComponent;
 
+import data.Tiles;
+
 import core.Constants;
 import core.State;
 import util.Collision;
-import util.Tiles;
 
 public class MoveSystem implements Runnable {
 

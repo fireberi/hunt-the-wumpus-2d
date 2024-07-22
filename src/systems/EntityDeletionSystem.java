@@ -7,7 +7,7 @@ import components.HitboxComponent;
 import components.HurtboxComponent;
 import components.HealthComponent;
 import components.InventoryComponent;
-import components.InventoryItem;
+import components.helpers.InventoryItem;
 
 import systems.RenderSystem;
 

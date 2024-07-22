@@ -10,13 +10,14 @@ import dev.dominion.ecs.api.Dominion;
 import dev.dominion.ecs.api.Entity;
 
 import components.*;
+import components.helpers.*;
+
+import data.DamageTypes.Damage;
+import data.Tiles;
 
 import core.Input;
-import util.DamageTypes.Damage;
-import util.Frame;
 import util.GameMath;
 import util.Timer;
-import util.Tiles;
 
 public final class Objects {
 

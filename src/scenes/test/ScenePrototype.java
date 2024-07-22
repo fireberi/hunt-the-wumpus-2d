@@ -13,6 +13,7 @@ import dev.dominion.ecs.api.Entity;
 import dev.dominion.ecs.api.Scheduler;
 
 import components.*;
+import components.helpers.*;
 
 import systems.*;
 

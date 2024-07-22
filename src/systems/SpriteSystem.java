@@ -3,9 +3,9 @@ package systems;
 import dev.dominion.ecs.api.Dominion;
 
 import components.SpriteComponent;
+import components.helpers.Frame;
 
 import core.State;
-import util.Frame;
 
 public class SpriteSystem implements Runnable {
 

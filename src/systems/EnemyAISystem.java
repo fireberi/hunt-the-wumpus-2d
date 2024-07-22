@@ -15,10 +15,11 @@ import components.PlayerControllerComponent;
 import components.InventoryComponent;
 import components.SpriteComponent;
 
+import data.Tiles;
+
 import core.State;
 import core.Constants;
 import util.Collision;
-import util.Tiles;
 
 public class EnemyAISystem implements Runnable {
 

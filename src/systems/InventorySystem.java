@@ -4,7 +4,7 @@ import dev.dominion.ecs.api.Dominion;
 import dev.dominion.ecs.api.Entity;
 
 import components.InventoryComponent;
-import components.InventoryItem;
+import components.helpers.InventoryItem;
 
 import core.State;
 
