@@ -14,6 +14,7 @@ import scripts.components.SpeedComponent;
 import scripts.components.InventoryComponent;
 import scripts.components.TimerComponent;
 import scripts.components.HitboxComponent;
+import scripts.components.SpawnerComponent;
 
 import scripts.util.Timer;
 import scripts.util.GameMath;
@@ -39,6 +40,7 @@ public class EntityControllerSystem implements Runnable {
             JumpComponent jmp = e.comp4();
             BoxColliderComponent boxCol = e.comp5();
             PositionComponent pos = e.comp6();
+            Entity entity = e.entity();
 
             boolean rightJustPressed = inp.get("right").justPressed();
             boolean rightPressed = inp.get("right").pressed();
@@ -141,7 +143,7 @@ public class EntityControllerSystem implements Runnable {
                 }
             }
 
-            InventoryComponent inv = e.entity().get(InventoryComponent.class);
+            InventoryComponent inv = entity.get(InventoryComponent.class);
             if (inv != null && inv.inventory.size() != 0) {
                 Entity weapon = inv.getCurrent();
 
@@ -158,11 +160,19 @@ public class EntityControllerSystem implements Runnable {
                     if (tmc.timers[0].timeout) {
                         hit.active = true;
                     }
+                }
+                else if (inv.current == "spawner") {
+                    TimerComponent tmc = weapon.get(TimerComponent.class);
+                    SpawnerComponent spw = weapon.get(SpawnerComponent.class);
 
-                    // // spawn an arrow
-                    // if (cancelJustPressed) {
-                    //     Objects.createArrowActor(cherry, pos.x, pos.y, vel.facingRight);
-                    // }
+                    if (attackPressed && !tmc.active()) {
+                        // run spawn function
+                        tmc.startTimer(0, 0);
+                    }
+
+                    if (tmc.timers[0].timeout) {
+                        spw.spawnerLogic.spawn(cherry, weapon);
+                    }
                 }
             }
         });

@@ -178,15 +178,12 @@ public class EnemyAISystem implements Runnable {
                 HurtboxComponent hrt = e.entity().get(HurtboxComponent.class);
                 InputComponent inp = e.entity().get(InputComponent.class);
                 VelocityComponent vel = e.entity().get(VelocityComponent.class);
-                // super spiders will be active when the player is within roughly the same y level and within 24 tiles horizontally
+                SpriteComponent spr = e.entity().get(SpriteComponent.class);
+
+                // super spiders can see very far, but they cannot attack very far
                 boolean canSeePlayer = Math.abs((player.pos.y - player.hrt.y - (pos.y - hrt.y))) < 0.5 && Math.abs(player.pos.x - pos.x) <  Constants.TILESIZE * 24;
 
-                if (!canSeePlayer) {
-                    inp.releaseKeys();
-                    return;
-                }
-
-                // super spiders will move in range of the player, about 8 tiles, and start spewing webs at the player, slowing the player down and dealing damage
+                // super spiders stay stationary all the time, but will start spewing webs at the player if they are in range, poisoning the player
                 float range = Constants.TILESIZE * 8f;
 
                 float playerRight = player.pos.x + player.hrt.x + player.hrt.w;
@@ -198,21 +195,34 @@ public class EnemyAISystem implements Runnable {
                     playerRight <= pos.x &&
                     playerRight >= pos.x - range);
 
-                if (!canAttackPlayer) {
-                    if (player.pos.x > pos.x) {
-                        inp.inputs.get("right").press();
-                        inp.inputs.get("left").release();
-                    }
-                    else {
+                if (canSeePlayer) {
+                    vel.facingRight = player.pos.x > pos.x;
+
+                    if (canAttackPlayer) {
                         inp.inputs.get("right").release();
-                        inp.inputs.get("left").press();
+                        inp.inputs.get("left").release();
+                        inp.inputs.get("attack").press();
                     }
-                    inp.inputs.get("attack").release();
                 }
                 else {
-                    inp.inputs.get("right").release();
-                    inp.inputs.get("left").release();
-                    inp.inputs.get("attack").press();
+                    inp.releaseKeys();
+                }
+
+                // animation
+                if (spr != null) {
+                    if (spr.image.flip == vel.facingRight) {
+                        spr.image.flip = !vel.facingRight;
+                    }
+                    if (canSeePlayer && canAttackPlayer) {
+                        spr.nextAnim = "attack";
+                        if (false) {
+                            spr.frame().time = 0;
+                            spr.currentFrame = 0;
+                        }
+                    }
+                    else {
+                        spr.nextAnim = "idle";
+                    }
                 }
             }
             else if (eAI.enemyType == Tiles.enemyTypes.get("ghoul")) {

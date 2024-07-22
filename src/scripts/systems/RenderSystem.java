@@ -44,6 +44,11 @@ public class RenderSystem implements Runnable {
     private HashMap<Byte, ArrayList<TilemapComponent>> tilemapLayers = new HashMap<Byte, ArrayList<TilemapComponent>>();
     private byte maxLayers = 4;
 
+    // layer 0: map
+    // layer 1: entities
+    // layer 2: weapons
+    // layer 3: UNUSED
+
     private int cameraDecay = 10;
 
     public RenderSystem(Dominion cherry, State state, GraphicsContext ctx, float cameraX, float cameraY, HashMap <String, Image> images) {

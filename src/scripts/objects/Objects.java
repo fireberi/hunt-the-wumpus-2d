@@ -130,6 +130,17 @@ public final class Objects {
         );
     }
 
+    private static Entity createEntitySpawnerActor(Dominion cherry, float x, float y, SpawnerLogic spawnerLogic, Timer[] timers, SpriteComponent sprite) {
+        return cherry.createEntity(
+            new PositionComponent(x, y),
+            new VelocityComponent(0f, 0f, true, false),
+            new SpawnerComponent(spawnerLogic),
+            new TimerComponent(false, timers),
+            sprite,
+            new RenderLayerComponent((byte) 2)
+        );
+    }
+
     public static Entity createSwordActor(Dominion cherry, float x, float y, boolean facingRight) {
         return cherry.createEntity(
             new PositionComponent(x, y),
@@ -200,13 +211,35 @@ public final class Objects {
         float direction = facingRight ? 2.5f : -2.5f;
         return cherry.createEntity(
             new PositionComponent(x, y),
-            new VelocityComponent(direction, -0.2f, true, true),
+            new VelocityComponent(direction, -0.2f, facingRight, true),
             new SpeedComponent(0f, 0f, 0f, 2.5f),
             new GravityComponent(0.008f),
             new BoxColliderComponent(true, 4f, 4f),
-            new HitboxComponent("arrow", true, 4f, 4f, new boolean[] {false, true}, new HitboxLogic() {
+            new HitboxComponent("arrow", true, 4f, 4f, new boolean[] {true, false}, new HitboxLogic() {
                 @Override
-                public void update(Entity hitbox, Entity hurtbox, boolean entered, boolean justEntered, boolean justExited) {}
+                public void update(Entity hitbox, Entity hurtbox, boolean entered, boolean justEntered, boolean justExited) {
+                    HitboxComponent hit = hitbox.get(HitboxComponent.class);
+                    VelocityComponent vel = hitbox.get(VelocityComponent.class);
+                    HurtboxComponent hrt = hurtbox.get(HurtboxComponent.class);
+                    VelocityComponent hrtVel = hurtbox.get(VelocityComponent.class);
+                    HealthComponent hrtHth = hurtbox.get(HealthComponent.class);
+
+                    if (justEntered) {
+                        DamageComponent dmc = hitbox.get(DamageComponent.class);
+                        hrtHth.add(dmc.effects, dmc.values);
+
+                        // knockback
+                        if (vel != null) {
+                            if (vel.facingRight) {
+                                hrtVel.x += 1.5;
+                            }
+                            else {
+                                hrtVel.x -= 1.5;
+                            }
+                            hrtVel.y -= 1;
+                        }
+                    }
+                }
                 @Override
                 public void clean(Dominion cherry, Entity arrow) {
                     HitboxComponent hit = arrow.get(HitboxComponent.class);
@@ -220,6 +253,58 @@ public final class Objects {
             new GraphicsListComponent(new GraphicsComponent[] {
                 new GraphicsComponent(4f, 4f, Color.rgb(0, 207, 255), true),
                 new GraphicsComponent(4f, 4f, "hitbox", false),
+            }),
+            new RenderLayerComponent((byte) 2)
+        );
+    }
+
+    public static Entity createSpiderwebActor(Dominion cherry, float x, float y, boolean facingRight) {
+        float direction = facingRight ? 1.2f : -1.2f;
+        return cherry.createEntity(
+            new PositionComponent(x, y),
+            new VelocityComponent(direction, -0.1f, facingRight, true),
+            new SpeedComponent(0f, 0f, 0f, 2.5f),
+            new GravityComponent(0.006f),
+            new BoxColliderComponent(true, 6f, 6f),
+            new HitboxComponent("projectile", true, 6f, 6f, new boolean[] {false, false}, new HitboxLogic() {
+                @Override
+                public void update(Entity hitbox, Entity hurtbox, boolean entered, boolean justEntered, boolean justExited) {
+                    HitboxComponent hit = hitbox.get(HitboxComponent.class);
+                    VelocityComponent vel = hitbox.get(VelocityComponent.class);
+                    HurtboxComponent hrt = hurtbox.get(HurtboxComponent.class);
+                    VelocityComponent hrtVel = hurtbox.get(VelocityComponent.class);
+                    HealthComponent hrtHth = hurtbox.get(HealthComponent.class);
+
+                    if (justEntered) {
+                        DamageComponent dmc = hitbox.get(DamageComponent.class);
+                        hrtHth.add(dmc.effects, dmc.values);
+
+                        // knockback
+                        if (vel != null) {
+                            if (vel.facingRight) {
+                                hrtVel.x += 1.5;
+                            }
+                            else {
+                                hrtVel.x -= 1.5;
+                            }
+                            hrtVel.y -= 1;
+                        }
+                    }
+                }
+                @Override
+                public void clean(Dominion cherry, Entity arrow) {
+                    HitboxComponent hit = arrow.get(HitboxComponent.class);
+                    BoxColliderComponent boxCol = arrow.get(BoxColliderComponent.class);
+                    if (boxCol.right || boxCol.left || boxCol.bottom || boxCol.top) {
+                        hit.markDelete = true;
+                    }
+                }
+            }),
+            new DamageComponent(new Damage[] {Damage.INSTANT}, new float[] {30f}),
+            // new DamageComponent(new Damage[] {Damage.CONTINUOUS}, new float[] {30f}),
+            new GraphicsListComponent(new GraphicsComponent[] {
+                new GraphicsComponent(6f, 6f, Color.rgb(0, 207, 255), true),
+                new GraphicsComponent(6f, 6f, "hitbox", false),
             }),
             new RenderLayerComponent((byte) 2)
         );
@@ -272,9 +357,9 @@ public final class Objects {
             hrtW = 14f;
             hrtH = 4f;
             health = 50f;
-            inventory.put("melee", Objects.createSuperWormAttackItem(cherry, x, y));
             currentInventory = "melee";
-            spr = new SpriteComponent(new ImageComponent("super_worm", 32, 16),
+            inventory.put("melee", Objects.createSuperWormAttackItem(cherry, x, y));
+            spr = new SpriteComponent(new ImageComponent("superWorm", 32, 16),
                 1, "idle", true,
                 new String[] {"idle", "run", "attack"},
                 new boolean[] {true, true, false},
@@ -303,9 +388,9 @@ public final class Objects {
             hrtW = 8f;
             hrtH = 6f;
             health = 50f;
-            inventory.put("melee", Objects.createSuperBatAttackItem(cherry, x, y));
             currentInventory = "melee";
-            spr = new SpriteComponent(new ImageComponent("super_bat", 32, 8),
+            inventory.put("melee", Objects.createSuperBatAttackItem(cherry, x, y));
+            spr = new SpriteComponent(new ImageComponent("superBat", 32, 8),
                 1, "flap", true,
                 new String[] {"flap"},
                 new boolean[] {true},
@@ -324,6 +409,34 @@ public final class Objects {
             hrtW = 16f;
             hrtH = 12f;
             health = 120f;
+            currentInventory = "spawner";
+            inventory.put("spawner", Objects.createSuperSpiderAttackItem(cherry, x, y));
+            spr = new SpriteComponent(new ImageComponent("superSpider", 40, 14),
+                1, "idle", true,
+                new String[] {"idle", "attack"},
+                new boolean[] {true, true},
+                new double[] {(float) GameMath.randInt(90, 140) / 100, 0.2},
+                new Frame[][] {
+                    {
+                        new Frame(0f, 0f, 20f, 14f, -10f, -8f),
+                        new Frame(20f, 0f, 20f, 14f, -10f, -8f),
+                    },
+                    {
+                        new Frame(0f, 14f, 20f, 14f, -10f, -8f),
+                        new Frame(20f, 14f, 20f, 14f, -10f, -8f),
+                        new Frame(20f, 0f, 20f, 14f, -10f, -8f),
+                        new Frame(20f, 0f, 20f, 14f, -10f, -8f),
+                        new Frame(20f, 0f, 20f, 14f, -10f, -8f),
+                        new Frame(20f, 0f, 20f, 14f, -10f, -8f),
+                        // new Frame(20f, 0f, 20f, 14f, -10f, -8f),
+                        // new Frame(20f, 14f, 20f, 14f, -10f, -8f),
+                        // new Frame(0f, 0f, 20f, 14f, -10f, -8f),
+                        // new Frame(0f, 0f, 20f, 14f, -10f, -8f),
+                        // new Frame(0f, 0f, 20f, 14f, -10f, -8f),
+                        // new Frame(0f, 0f, 20f, 14f, -10f, -8f),
+                    },
+                }
+            );
         }
         else if (enemyType == Tiles.enemyTypes.get("ghoul").intValue()) {
             gravity = false;
@@ -466,6 +579,27 @@ public final class Objects {
             new RenderLayerComponent((byte) 2)
         );
     }
+
+    private static Entity createSuperSpiderAttackActor(Dominion cherry, float x, float y) {
+        return createEntitySpawnerActor(cherry, x, y,
+            new SpawnerLogic() {
+                @Override
+                public void spawn(Dominion cherry, Entity spawner) {
+                    PositionComponent pos = spawner.get(PositionComponent.class);
+                    VelocityComponent vel = spawner.get(VelocityComponent.class);
+                    Objects.createSpiderwebActor(cherry, pos.x, pos.y, vel.facingRight);
+                }
+            },
+            new Timer[] {new Timer(0.2), new Timer(0.1), new Timer(0.9)},
+            new SpriteComponent(new ImageComponent("", 0, 0),
+                1, "", false,
+                new String[0],
+                new boolean[0],
+                new double[0],
+                new Frame[0][]
+            )
+        );
+    }
     //endregion
 
     //region inventory items
@@ -530,6 +664,26 @@ public final class Objects {
     public static InventoryItem createSuperBatAttackItem(Dominion cherry, float x, float y) {
         return new InventoryItem(
             Objects.createSuperBatAttackActor(cherry, x, y),
+            new InventoryLogic() {
+                @Override
+                public void update(Entity item, Entity owner) {
+                    PositionComponent pos = item.get(PositionComponent.class);
+                    VelocityComponent vel = item.get(VelocityComponent.class);
+                    PositionComponent opos = owner.get(PositionComponent.class);
+                    VelocityComponent ovel = owner.get(VelocityComponent.class);
+                    pos.x = opos.x;
+                    pos.y = opos.y;
+                    vel.x = ovel.x;
+                    vel.y = ovel.y;
+                    vel.facingRight = ovel.facingRight;
+                }
+            }
+        );
+    }
+
+    public static InventoryItem createSuperSpiderAttackItem(Dominion cherry, float x, float y) {
+        return new InventoryItem(
+            Objects.createSuperSpiderAttackActor(cherry, x, y),
             new InventoryLogic() {
                 @Override
                 public void update(Entity item, Entity owner) {
