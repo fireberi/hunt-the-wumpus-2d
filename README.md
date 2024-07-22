@@ -17,5 +17,5 @@ javac -d ./bin/ -sourcepath ./src/ -classpath /path/to/this/binary/dominion-ecs-
 
 Next, run the game!
 ```
-java -classpath ./bin/:/path/to/this/binary/dominion-ecs-api-0.9.0.jar:/path/to/this/binary/dominion-ecs-engine-0.9.0.jar:./src/:./res/ --module-path /path/to/this/binary/javafx-sdk-21.0.3/lib --add-modules javafx.controls scripts.core.Main
+java -classpath ./bin/:/path/to/this/binary/dominion-ecs-api-0.9.0.jar:/path/to/this/binary/dominion-ecs-engine-0.9.0.jar:./src/:./res/ --module-path /path/to/this/binary/javafx-sdk-21.0.3/lib --add-modules javafx.controls core.Main
 ```
