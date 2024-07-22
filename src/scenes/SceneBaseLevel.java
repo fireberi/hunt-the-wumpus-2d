@@ -1,7 +1,8 @@
 package scenes;
 
 import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -41,8 +42,9 @@ public class SceneBaseLevel extends Scene {
             Objects.createEnemyActor(cherry, x, y, e);
         }
 
-        Objects.createCharacterActor(cherry, playerSpawnX, playerSpawnY, true, new HashMap<String, InventoryItem>(Map.ofEntries(
-                Map.entry("melee", Objects.createSwordItem(cherry))
+        Objects.createCharacterActor(cherry, playerSpawnX, playerSpawnY, 200f, true, new ArrayList<InventoryItem>(Arrays.asList(
+                Objects.createSwordItem(cherry, playerSpawnX, playerSpawnY),
+                Objects.createBowItem(cherry, playerSpawnX, playerSpawnY)
             ))
         );
 

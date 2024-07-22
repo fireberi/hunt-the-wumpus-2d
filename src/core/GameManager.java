@@ -32,6 +32,8 @@ class GameManager {
         images.put("superSpider", new Image("graphics/super_spider.png", 0, 0, false, true));
         images.put("ghoul", new Image("graphics/ghoul.png", 0, 0, false, true));
         images.put("rusty", new Image("graphics/rusty.png", 0, 0, false, true));
+        images.put("dusty", new Image("graphics/dusty.png", 0, 0, false, true));
+        images.put("arrow", new Image("graphics/arrow.png", 0, 0, false, true));
         images.put("spiderweb", new Image("graphics/spiderweb.png", 0, 0, false, true));
         //endregion
 

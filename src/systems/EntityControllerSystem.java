@@ -62,6 +62,15 @@ public class EntityControllerSystem implements Runnable {
             boolean attackPressed = inp.get("attack").pressed();
             boolean attackJustReleased = inp.get("attack").justReleased();
 
+            boolean cycleJustPressed = false;
+            boolean cyclePressed = false;
+            boolean cycleJustReleased = false;
+            if (inp.get("cycle") != null) {
+                cycleJustPressed = inp.get("cycle").justPressed();
+                cyclePressed = inp.get("cycle").pressed();
+                cycleJustReleased = inp.get("cycle").justReleased();
+            }
+
             // determine direction
             if (rightJustPressed && !leftJustPressed) {
                 vel.facingRight = true;
@@ -145,9 +154,15 @@ public class EntityControllerSystem implements Runnable {
 
             InventoryComponent inv = entity.get(InventoryComponent.class);
             if (inv != null && inv.inventory.size() != 0) {
-                Entity weapon = inv.getCurrent();
+                if (cycleJustPressed) {
+                    inv.nextItem();
+                }
 
-                if (inv.current == "melee") {
+                String itemType = inv.getCurrentItemType();
+
+                Entity weapon = inv.getCurrentItem();
+
+                if (itemType == "melee") {
                     TimerComponent tmc = weapon.get(TimerComponent.class);
                     HitboxComponent hit = weapon.get(HitboxComponent.class);
 
@@ -161,7 +176,7 @@ public class EntityControllerSystem implements Runnable {
                         hit.active = true;
                     }
                 }
-                else if (inv.current == "spawner") {
+                else if (itemType == "spawner") {
                     TimerComponent tmc = weapon.get(TimerComponent.class);
                     SpawnerComponent spw = weapon.get(SpawnerComponent.class);
 
@@ -174,7 +189,7 @@ public class EntityControllerSystem implements Runnable {
                         spw.spawnerLogic.spawn(cherry, weapon);
                     }
                 }
-                else if (inv.current == "area") {
+                else if (itemType == "area") {
                     HitboxComponent hit = weapon.get(HitboxComponent.class);
 
                     if (!hit.active) {

@@ -15,6 +15,9 @@ import components.HitboxComponent;
 import components.TimerComponent;
 import components.SpriteComponent;
 
+// temp
+import components.HealthComponent;
+
 import objects.Objects;
 
 import util.Timer;
@@ -36,13 +39,14 @@ public class PlayerControllerSystem implements Runnable {
 
     public void run() {
         cherry.findEntitiesWith(PlayerControllerComponent.class, VelocityComponent.class, SpeedComponent.class, JumpComponent.class, BoxColliderComponent.class, PositionComponent.class).stream().forEach(e -> {
+            Entity entity = e.entity();
             PlayerControllerComponent pcc = e.comp1();
             VelocityComponent vel = e.comp2();
             SpeedComponent spd = e.comp3();
             JumpComponent jmp = e.comp4();
             BoxColliderComponent boxCol = e.comp5();
             PositionComponent pos = e.comp6();
-            InputComponent inp = e.entity().get(InputComponent.class);
+            InputComponent inp = entity.get(InputComponent.class);
 
             boolean rightJustPressed = pcc.inputs.get("right").justPressed();
             boolean rightPressed = pcc.inputs.get("right").pressed();
@@ -102,6 +106,15 @@ public class PlayerControllerSystem implements Runnable {
             if (confirmJustReleased) {
                 inp.inputs.get("attack").release();
             }
+            if (cancelJustPressed) {
+                inp.inputs.get("cycle").press();
+            }
+            if (cancelJustReleased) {
+                inp.inputs.get("cycle").release();
+            }
+            if (altJustPressed) {
+                System.out.println(entity.get(HealthComponent.class).health);
+            }
 
             // animation checks
             boolean flip = !vel.facingRight;
@@ -118,26 +131,38 @@ public class PlayerControllerSystem implements Runnable {
                 nextAnim = "air";
             }
 
-            InventoryComponent inv = e.entity().get(InventoryComponent.class);
+            // animation check
+            InventoryComponent inv = entity.get(InventoryComponent.class);
+            String itemType = "";
+
             if (inv.inventory.size() != 0) {
-                Entity weapon = inv.getCurrent();
-                if (inv.current == "melee") {
-                    // animation check
+                Entity weapon = inv.getCurrentItem();
+                itemType = inv.getCurrentItemType();
+
+                if (itemType == "melee") {
                     TimerComponent tmc = weapon.get(TimerComponent.class);
                     if (tmc.timers[0].active || tmc.timers[1].active) {
                         nextAnim = "melee";
                     }
                 }
+                else if (itemType == "spawner") {
+                    TimerComponent tmc = weapon.get(TimerComponent.class);
+                    if (tmc.active()) {
+                        nextAnim = "shoot";
+                    }
+                }
             }
 
             // set animation
-            SpriteComponent spr = e.entity().get(SpriteComponent.class);
+            SpriteComponent spr = entity.get(SpriteComponent.class);
             SpriteComponent swordSpr = null;
+            SpriteComponent bowSpr = null;
             if (inv.inventory.size() != 0) {
-                swordSpr = e.entity().get(InventoryComponent.class).inventory.get("melee").item.get(SpriteComponent.class);
+                swordSpr = entity.get(InventoryComponent.class).getItemWithType("melee").get(SpriteComponent.class);
+                bowSpr = entity.get(InventoryComponent.class).getItemWithType("spawner").get(SpriteComponent.class);
             }
             if (spr != null) {
-                if (nextAnim != "melee") {
+                if (nextAnim != "melee" && nextAnim != "shoot") {
                     if (spr.image.flip != flip) {
                         spr.image.flip = flip;
                     }
@@ -145,14 +170,35 @@ public class PlayerControllerSystem implements Runnable {
                 spr.nextAnim = nextAnim;
             }
             if (swordSpr != null) {
+                if (itemType == "spawner" && swordSpr.image.active) {
+                    swordSpr.image.active = false;
+                }
+                else if (itemType == "melee" && !swordSpr.image.active) {
+                    swordSpr.image.active = true;
+                }
                 if (nextAnim != "melee") {
                     if (swordSpr.image.flip != flip) {
                         swordSpr.image.flip = flip;
                     }
                 }
-                swordSpr.nextAnim = nextAnim;
-                if (swordSpr.nextAnim == "melee") {
-                    swordSpr.nextAnim = "attack";
+                if (nextAnim != "shoot") {
+                    swordSpr.nextAnim = nextAnim;
+                }
+            }
+            if (bowSpr != null) {
+                if (itemType == "melee" && bowSpr.image.active) {
+                    bowSpr.image.active = false;
+                }
+                else if (itemType == "spawner" && !bowSpr.image.active) {
+                    bowSpr.image.active = true;
+                }
+                if (nextAnim != "shoot") {
+                    if (bowSpr.image.flip != flip) {
+                        bowSpr.image.flip = flip;
+                    }
+                }
+                if (nextAnim != "melee") {
+                    bowSpr.nextAnim = nextAnim;
                 }
             }
         });

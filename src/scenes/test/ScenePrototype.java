@@ -1,7 +1,8 @@
 package scenes.test;
 
 import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -69,14 +70,15 @@ public class ScenePrototype extends Scene {
         Objects.createSimpleEnemyActor(cherry, 160f, 80f, true);
         Objects.createSimpleEnemyActor(cherry, 20f, 100f, true);
         Objects.createSimpleEnemyActor(cherry, 120f, 160f, true);
-        Objects.createTestCharacterActor(cherry, 108f, 170f, true, new HashMap<String, InventoryItem>(Map.ofEntries(
-                Map.entry("melee", new InventoryItem(
+        Objects.createTestCharacterActor(cherry, 108f, 170f, true, new ArrayList<InventoryItem>(Arrays.asList(
+                new InventoryItem(
+                    "melee",
                     Objects.createSwordActor(cherry, 108f, 170f, true),
                     new InventoryLogic() {
                         @Override
                         public void update(Entity item, Entity owner) {}
                     }
-                ))
+                )
             ))
         );
 

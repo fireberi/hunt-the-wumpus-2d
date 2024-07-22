@@ -298,7 +298,7 @@ public class RenderSystem implements Runnable {
                         y += 1;
                     }
                 }
-                if (spr != null) {
+                if (spr != null && spr.image.active) {
                     // render sprite
                     Image image = images.get(spr.image.imageName);
                     Frame f = spr.frame();
@@ -318,7 +318,7 @@ public class RenderSystem implements Runnable {
                         }
                     }
                 }
-                if (img != null) {
+                if (img != null && img.active) {
                     // render image
                     Image image = images.get(img.imageName);
                     if (!img.flip) {

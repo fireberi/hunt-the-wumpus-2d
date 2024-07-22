@@ -12,6 +12,7 @@ public class ImageComponent {
     public float sw;
     public float sh;
     public boolean flip = false;
+    public boolean active = true;
 
     public ImageComponent(String imageName, float w, float h) {
         this.imageName = imageName;

@@ -37,7 +37,7 @@ public final class Objects {
         );
     }
 
-    public static Entity createTestCharacterActor(Dominion cherry, float x, float y, boolean gravity, HashMap<String, InventoryItem> inventory) {
+    public static Entity createTestCharacterActor(Dominion cherry, float x, float y, boolean gravity, ArrayList<InventoryItem> inventory) {
         return cherry.createEntity(
             new PlayerControllerComponent(),
             new PositionComponent(x, y),
@@ -51,13 +51,13 @@ public final class Objects {
             }),
             new HealthComponent(200f),
             new EffectReceiverComponent(),
-            new InventoryComponent("melee", inventory),
+            new InventoryComponent(0, inventory),
             new FocusComponent(true, 0f, 0f),
             new SpriteComponent(new ImageComponent("hunter", 48, 32),
                 "idle", true,
                 new String[] {"idle", "air", "run"},
-                new boolean[] {true, false, true, false},
-                new double[] {0.75f, 0f, 0.15f},
+                new boolean[] {true, false, true},
+                new double[] {0.75, 0, 0.15},
                 new Frame[][] {
                     {
                         new Frame(0f, 0f, 16f, 16f, -8f, -11f),
@@ -77,7 +77,7 @@ public final class Objects {
         );
     }
 
-    public static Entity createCharacterActor(Dominion cherry, float x, float y, boolean gravity, HashMap<String, InventoryItem> inventory) {
+    public static Entity createCharacterActor(Dominion cherry, float x, float y, float health, boolean gravity, ArrayList<InventoryItem> inventory) {
         return cherry.createEntity(
             new PlayerControllerComponent(),
             new InputComponent(new HashMap<String, Input>(Map.ofEntries(
@@ -85,25 +85,26 @@ public final class Objects {
                 Map.entry("left", new Input()),
                 Map.entry("down", new Input()),
                 Map.entry("up", new Input()),
-                Map.entry("attack", new Input())
+                Map.entry("attack", new Input()),
+                Map.entry("cycle", new Input())
             ))),
             new PositionComponent(x, y),
-            // new VelocityComponent(0f, 0f, true, gravity),
-            // new SpeedComponent(0.05f, 0.074f, 0.55f, 2.5f),
-            new VelocityComponent(0f, 0f, true, false),
-            new SpeedComponent(0.05f, 0.074f, 2f, 2.5f),
+            new VelocityComponent(0f, 0f, true, gravity),
+            new SpeedComponent(0.05f, 0.074f, 0.55f, 2.5f),
+            // new VelocityComponent(0f, 0f, true, false),
+            // new SpeedComponent(0.05f, 0.074f, 2f, 2.5f),
             new GravityComponent(),
             new JumpComponent(1.15f, 0.75f),
             new BoxColliderComponent(true, 8f, 14f),
             new HurtboxComponent(true, 8f, 14f, new boolean[] {true, false}),
-            new HealthComponent(200f),
+            new HealthComponent(health),
             new EffectReceiverComponent(),
-            new InventoryComponent("melee", inventory),
+            new InventoryComponent(0, inventory),
             new FocusComponent(true, 0f, -8f),
             new SpriteComponent(new ImageComponent("hunter", 48, 32), 0, "idle", true,
-                new String[] {"idle", "air", "run", "melee"},
-                new boolean[] {true, false, true, false},
-                new double[] {0.75f, 0.1f, 0.14f, 0.08f},
+                new String[] {"idle", "air", "run", "melee", "shoot"},
+                new boolean[] {true, false, true, false, false},
+                new double[] {0.75, 0.1, 0.14, 0.08, 0.04},
                 new Frame[][] {
                     {
                         new Frame(0f, 0f, 16f, 16f, -7f, -9f),
@@ -120,6 +121,13 @@ public final class Objects {
                     },
                     {
                         new Frame(32f, 0f, 16f, 16f, -7f, -9f),
+                        new Frame(16f, 16f, 16f, 16f, -7f, -9f),
+                        new Frame(32f, 16f, 16f, 16f, -7f, -9f),
+                    },
+                    {
+                        new Frame(16f, 16f, 16f, 16f, -7f, -9f),
+                        new Frame(16f, 16f, 16f, 16f, -7f, -9f),
+                        new Frame(0f, 16f, 16f, 16f, -7f, -9f),
                         new Frame(16f, 16f, 16f, 16f, -7f, -9f),
                         new Frame(32f, 16f, 16f, 16f, -7f, -9f),
                     }
@@ -180,9 +188,9 @@ public final class Objects {
             }),
             new TimerComponent(false, new Timer[] {new Timer(0.16), new Timer(0.15), new Timer(0.19)}),
             new SpriteComponent(new ImageComponent("rusty", 32, 32), 1, "idle", true,
-                new String[] {"idle", "air", "run", "attack"},
+                new String[] {"idle", "air", "run", "melee"},
                 new boolean[] {true, false, true, false},
-                new double[] {0.75f, 10f, 0.14f, 0.08f},
+                new double[] {0.75, 10, 0.14, 0.08},
                 new Frame[][] {
                     {
                         new Frame(0f, 0f, 16f, 16f, -14f, -12f),
@@ -211,15 +219,56 @@ public final class Objects {
         );
     }
 
+    public static Entity createBowActor(Dominion cherry, float x, float y) {
+        return createEntitySpawnerActor(cherry, x, y,
+            new SpawnerLogic() {
+                @Override
+                public void spawn(Dominion cherry, Entity spawner) {
+                    PositionComponent pos = spawner.get(PositionComponent.class);
+                    SpriteComponent spr = spawner.get(SpriteComponent.class);
+                    Objects.createArrowActor(cherry, pos.x, pos.y, !spr.image.flip);
+                }
+            },
+            new Timer[] {new Timer(0.2), new Timer(0.35), new Timer(0.05)},
+            new SpriteComponent(new ImageComponent("dusty", 65, 20),
+                1, "idle", true,
+                new String[] {"idle", "air", "run", "shoot"},
+                new boolean[] {false, false, true, false},
+                new double[] {10, 10, 0.14, 0.04},
+                new Frame[][] {
+                    {
+                        new Frame(0f, 0f, 19f, 20f, -7f, -10f),
+                    },
+                    {
+                        new Frame(0f, 0f, 19f, 20f, -7f, -10f),
+                    },
+                    {
+                        new Frame(0f, 0f, 19f, 20f, -7f, -10f),
+                    },
+                    {
+                        new Frame(35f, 0f, 10f, 20f, -2f, -10f),
+                        new Frame(35f, 0f, 10f, 20f, -2f, -10f),
+                        new Frame(19f, 0f, 16f, 20f, -7f, -10f),
+                        new Frame(35f, 0f, 10f, 20f, -2f, -10f),
+                        new Frame(52f, 0f, 8f, 20f, -1f, -10f),
+                        new Frame(45f, 0f, 7f, 20f, 0f, -10f),
+                        new Frame(45f, 0f, 7f, 20f, 0f, -10f),
+                        new Frame(52f, 0f, 8f, 20f, -1f, -10f),
+                    },
+                }
+            )
+        );
+    }
+
     public static Entity createArrowActor(Dominion cherry, float x, float y, boolean facingRight) {
-        float direction = facingRight ? 2.5f : -2.5f;
+        float direction = facingRight ? 1.5f : -1.5f;
         return cherry.createEntity(
             new PositionComponent(x, y),
-            new VelocityComponent(direction, -0.2f, facingRight, true),
+            new VelocityComponent(direction, -0.1f, facingRight, true),
             new SpeedComponent(0f, 0f, 0f, 2.5f),
-            new GravityComponent(0.008f),
+            new GravityComponent(0.006f),
             new BoxColliderComponent(true, 4f, 4f),
-            new HitboxComponent("arrow", true, 4f, 4f, new boolean[] {true, false}, new HitboxLogic() {
+            new HitboxComponent("arrow", true, 4f, 4f, new boolean[] {false, true}, new HitboxLogic() {
                 @Override
                 public void update(Entity hitbox, Entity hurtbox, boolean entered, boolean justEntered, boolean justExited) {
                     HitboxComponent hit = hitbox.get(HitboxComponent.class);
@@ -241,6 +290,7 @@ public final class Objects {
                             }
                             hrtVel.y -= 1;
                         }
+                        hit.markDelete = true;
                     }
                 }
                 @Override
@@ -255,9 +305,10 @@ public final class Objects {
             new EffectComponent(new Effect[] {
                 new InstantDamageEffect(30f),
             }),
+            new ImageComponent("arrow", -20f, -3.5f, 24f, 7f),
             new GraphicsListComponent(new GraphicsComponent[] {
-                new GraphicsComponent(4f, 4f, Color.rgb(0, 207, 255), true),
-                new GraphicsComponent(4f, 4f, "hitbox", false),
+                // new GraphicsComponent(4f, 4f, Color.rgb(0, 207, 255), true),
+                // new GraphicsComponent(4f, 4f, "hitbox", false),
             }),
             new RenderLayerComponent((byte) 2)
         );
@@ -349,8 +400,8 @@ public final class Objects {
         float hrtW = 7f;
         float hrtH = 10f;
         float health = 50f;
-        String currentInventory = "";
-        HashMap<String, InventoryItem> inventory = new HashMap<String, InventoryItem>();
+        int currentInventory = 0;
+        ArrayList<InventoryItem> inventory = new ArrayList<InventoryItem>();
         SpriteComponent spr = new SpriteComponent(new ImageComponent("", 0, 0),
             1, "", false,
             new String[0],
@@ -366,13 +417,12 @@ public final class Objects {
             hrtW = 14f;
             hrtH = 4f;
             health = 50f;
-            currentInventory = "melee";
-            inventory.put("melee", Objects.createSuperWormAttackItem(cherry, x, y));
+            inventory.add(Objects.createSuperWormAttackItem(cherry, x, y));
             spr = new SpriteComponent(new ImageComponent("superWorm", 32, 16),
                 1, "idle", true,
                 new String[] {"idle", "run", "attack"},
                 new boolean[] {true, true, false},
-                new double[] {(float) GameMath.randInt(70, 120) / 100, (float) GameMath.randInt(15, 40) / 100, 0.16f},
+                new double[] {GameMath.randInt(70, 120) / 100, GameMath.randInt(15, 40) / 100, 0.16f},
                 new Frame[][] {
                     {
                         new Frame(0f, 0f, 16f, 8f, -8f, -6f),
@@ -397,13 +447,12 @@ public final class Objects {
             hrtW = 8f;
             hrtH = 6f;
             health = 50f;
-            currentInventory = "melee";
-            inventory.put("melee", Objects.createSuperBatAttackItem(cherry, x, y));
+            inventory.add(Objects.createSuperBatAttackItem(cherry, x, y));
             spr = new SpriteComponent(new ImageComponent("superBat", 32, 8),
                 1, "flap", true,
                 new String[] {"flap"},
                 new boolean[] {true},
-                new double[] {(float) GameMath.randInt(10, 20) / 100},
+                new double[] {GameMath.randInt(10, 20) / 100},
                 new Frame[][] {
                     {
                         new Frame(0f, 0f, 16f, 8f, -8f, -4f),
@@ -418,13 +467,12 @@ public final class Objects {
             hrtW = 16f;
             hrtH = 12f;
             health = 120f;
-            currentInventory = "spawner";
-            inventory.put("spawner", Objects.createSuperSpiderAttackItem(cherry, x, y));
+            inventory.add(Objects.createSuperSpiderAttackItem(cherry, x, y));
             spr = new SpriteComponent(new ImageComponent("superSpider", 40, 14),
                 1, "idle", true,
                 new String[] {"idle", "attack"},
                 new boolean[] {true, true},
-                new double[] {(float) GameMath.randInt(90, 140) / 100, 0.2},
+                new double[] {GameMath.randInt(90, 140) / 100, 0.2},
                 new Frame[][] {
                     {
                         new Frame(0f, 0f, 20f, 14f, -10f, -8f),
@@ -456,13 +504,12 @@ public final class Objects {
             hrtW = 8f;
             hrtH = 8f;
             health = 80f;
-            currentInventory = "area";
-            inventory.put("area", Objects.createGhoulAttackItem(cherry, x, y));
+            inventory.add(Objects.createGhoulAttackItem(cherry, x, y));
             spr = new SpriteComponent(new ImageComponent("ghoul", 24, 12),
                 1, "drift", true,
                 new String[] {"drift"},
                 new boolean[] {true},
-                new double[] {(float) GameMath.randInt(15, 25) / 100},
+                new double[] {GameMath.randInt(15, 25) / 100},
                 new Frame[][] {
                     {
                         new Frame(0f, 0f, 12f, 12f, -7f, -6f),
@@ -652,9 +699,10 @@ public final class Objects {
     //endregion
 
     //region inventory items
-    public static InventoryItem createSwordItem(Dominion cherry) {
+    public static InventoryItem createSwordItem(Dominion cherry, float x, float y) {
         return new InventoryItem(
-            Objects.createSwordActor(cherry, 0f, 0f, true),
+            "melee",
+            Objects.createSwordActor(cherry, x, y, true),
             new InventoryLogic() {
                 @Override
                 public void update(Entity item, Entity owner) {
@@ -681,8 +729,30 @@ public final class Objects {
         );
     }
 
+    public static InventoryItem createBowItem(Dominion cherry, float x, float y) {
+        return new InventoryItem(
+            "spawner",
+            Objects.createBowActor(cherry, x, y),
+            new InventoryLogic() {
+                @Override
+                public void update(Entity item, Entity owner) {
+                    PositionComponent pos = item.get(PositionComponent.class);
+                    VelocityComponent vel = item.get(VelocityComponent.class);
+                    PositionComponent opos = owner.get(PositionComponent.class);
+                    VelocityComponent ovel = owner.get(VelocityComponent.class);
+                    pos.x = opos.x;
+                    pos.y = opos.y;
+                    vel.x = ovel.x;
+                    vel.y = ovel.y;
+                    vel.facingRight = ovel.facingRight;
+                }
+            }
+        );
+    }
+
     public static InventoryItem createSuperWormAttackItem(Dominion cherry, float x, float y) {
         return new InventoryItem(
+            "melee",
             Objects.createSuperWormAttackActor(cherry, x, y),
             new InventoryLogic() {
                 @Override
@@ -712,6 +782,7 @@ public final class Objects {
 
     public static InventoryItem createSuperBatAttackItem(Dominion cherry, float x, float y) {
         return new InventoryItem(
+            "melee",
             Objects.createSuperBatAttackActor(cherry, x, y),
             new InventoryLogic() {
                 @Override
@@ -732,6 +803,7 @@ public final class Objects {
 
     public static InventoryItem createSuperSpiderAttackItem(Dominion cherry, float x, float y) {
         return new InventoryItem(
+            "spawner",
             Objects.createSuperSpiderAttackActor(cherry, x, y),
             new InventoryLogic() {
                 @Override
@@ -752,6 +824,7 @@ public final class Objects {
 
     public static InventoryItem createGhoulAttackItem(Dominion cherry, float x, float y) {
         return new InventoryItem(
+            "area",
             Objects.createGhoulAttackActor(cherry, x, y),
             new InventoryLogic() {
                 @Override

@@ -23,7 +23,7 @@ public class InventorySystem implements Runnable {
             InventoryComponent inv = e.comp();
             Entity entity = e.entity();
 
-            for (InventoryItem i : inv.inventory.values()) {
+            for (InventoryItem i : inv.inventory) {
                 i.updateLogic.update(i.item, entity);
             }
         });

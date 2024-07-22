@@ -52,7 +52,7 @@ public class EntityDeletionSystem implements Runnable {
     private void delete(Entity entity) {
         InventoryComponent inv = entity.get(InventoryComponent.class);
         if (inv != null) {
-            for (InventoryItem item : inv.inventory.values()) {
+            for (InventoryItem item : inv.inventory) {
                 cherry.deleteEntity(item.item);
             }
         }

@@ -6,6 +6,7 @@ public class Frame {
     public float y;
     public float w;
     public float h;
+    // offset x, offset y
     public float ox;
     public float oy;
     public double time = 0;

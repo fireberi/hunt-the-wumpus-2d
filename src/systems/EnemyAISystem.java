@@ -33,6 +33,7 @@ public class EnemyAISystem implements Runnable {
 
     public void run() {
         cherry.findEntitiesWith(EnemyAIComponent.class, BoxColliderComponent.class).stream().forEach(e -> {
+            Entity entity = e.entity();
             EnemyAIComponent eAI = e.comp1();
             BoxColliderComponent box = e.comp2();
 
@@ -53,8 +54,8 @@ public class EnemyAISystem implements Runnable {
             }
 
             if (eAI.enemyType == -1) {
-                VelocityComponent vel = e.entity().get(VelocityComponent.class);
-                SpeedComponent spd = e.entity().get(SpeedComponent.class);
+                VelocityComponent vel = entity.get(VelocityComponent.class);
+                SpeedComponent spd = entity.get(SpeedComponent.class);
 
                 if (box.left) {
                     vel.facingRight = true;
@@ -66,13 +67,13 @@ public class EnemyAISystem implements Runnable {
                 vel.x = spd.maxX * ((vel.facingRight) ? 1 : -1);
             }
             else if (eAI.enemyType == Tiles.enemyTypes.get("super worm")) {
-                PositionComponent pos = e.entity().get(PositionComponent.class);
-                InputComponent inp = e.entity().get(InputComponent.class);
-                VelocityComponent vel = e.entity().get(VelocityComponent.class);
-                SpriteComponent spr = e.entity().get(SpriteComponent.class);
+                PositionComponent pos = entity.get(PositionComponent.class);
+                InputComponent inp = entity.get(InputComponent.class);
+                VelocityComponent vel = entity.get(VelocityComponent.class);
+                SpriteComponent spr = entity.get(SpriteComponent.class);
 
-                PositionComponent hitPos = e.entity().get(InventoryComponent.class).getCurrent().get(PositionComponent.class);
-                HitboxComponent hit = e.entity().get(InventoryComponent.class).getCurrent().get(HitboxComponent.class);
+                PositionComponent hitPos = entity.get(InventoryComponent.class).getCurrentItem().get(PositionComponent.class);
+                HitboxComponent hit = entity.get(InventoryComponent.class).getCurrentItem().get(HitboxComponent.class);
 
                 // super worms will be active when the player is within roughly the same y level and within 16 tiles horizontally
                 boolean canSeePlayer = Math.abs((player.pos.y - player.hrt.y - (pos.y - box.y))) < 0.5 && Math.abs(player.pos.x - pos.x) <  Constants.TILESIZE * 16;
@@ -120,11 +121,11 @@ public class EnemyAISystem implements Runnable {
                 }
             }
             else if (eAI.enemyType == Tiles.enemyTypes.get("super bat")) {
-                PositionComponent pos = e.entity().get(PositionComponent.class);
-                HurtboxComponent hrt = e.entity().get(HurtboxComponent.class);
-                InputComponent inp = e.entity().get(InputComponent.class);
-                VelocityComponent vel = e.entity().get(VelocityComponent.class);
-                SpriteComponent spr = e.entity().get(SpriteComponent.class);
+                PositionComponent pos = entity.get(PositionComponent.class);
+                HurtboxComponent hrt = entity.get(HurtboxComponent.class);
+                InputComponent inp = entity.get(InputComponent.class);
+                VelocityComponent vel = entity.get(VelocityComponent.class);
+                SpriteComponent spr = entity.get(SpriteComponent.class);
 
                 // super bats will move toward the player when the player is within its radius of 16 tiles
                 boolean canSeePlayer = Math.sqrt(Math.pow(player.pos.x - pos.x, 2) + Math.pow(player.pos.y - pos.y, 2)) < Constants.TILESIZE * 16f;
@@ -175,11 +176,11 @@ public class EnemyAISystem implements Runnable {
                 }
             }
             else if (eAI.enemyType == Tiles.enemyTypes.get("super spider")) {
-                PositionComponent pos = e.entity().get(PositionComponent.class);
-                HurtboxComponent hrt = e.entity().get(HurtboxComponent.class);
-                InputComponent inp = e.entity().get(InputComponent.class);
-                VelocityComponent vel = e.entity().get(VelocityComponent.class);
-                SpriteComponent spr = e.entity().get(SpriteComponent.class);
+                PositionComponent pos = entity.get(PositionComponent.class);
+                HurtboxComponent hrt = entity.get(HurtboxComponent.class);
+                InputComponent inp = entity.get(InputComponent.class);
+                VelocityComponent vel = entity.get(VelocityComponent.class);
+                SpriteComponent spr = entity.get(SpriteComponent.class);
 
                 // super spiders can see very far, but they cannot attack very far
                 boolean canSeePlayer = Math.abs((player.pos.y - player.hrt.y - (pos.y - hrt.y))) < 0.5 && Math.abs(player.pos.x - pos.x) <  Constants.TILESIZE * 24;
@@ -227,11 +228,11 @@ public class EnemyAISystem implements Runnable {
                 }
             }
             else if (eAI.enemyType == Tiles.enemyTypes.get("ghoul")) {
-                PositionComponent pos = e.entity().get(PositionComponent.class);
-                HurtboxComponent hrt = e.entity().get(HurtboxComponent.class);
-                InputComponent inp = e.entity().get(InputComponent.class);
-                VelocityComponent vel = e.entity().get(VelocityComponent.class);
-                SpriteComponent spr = e.entity().get(SpriteComponent.class);
+                PositionComponent pos = entity.get(PositionComponent.class);
+                HurtboxComponent hrt = entity.get(HurtboxComponent.class);
+                InputComponent inp = entity.get(InputComponent.class);
+                VelocityComponent vel = entity.get(VelocityComponent.class);
+                SpriteComponent spr = entity.get(SpriteComponent.class);
                 // ghouls will move toward the player when the player is within its radius of 12 tiles
                 boolean canSeePlayer = Math.sqrt(Math.pow(player.pos.x - pos.x, 2) + Math.pow(player.pos.y - pos.y, 2)) < Constants.TILESIZE * 12f;
 
