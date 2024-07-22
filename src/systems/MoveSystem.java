@@ -9,6 +9,7 @@ import components.PositionComponent;
 import components.VelocityComponent;
 import components.BoxColliderComponent;
 import components.TilemapComponent;
+import components.HealthComponent;
 
 import data.Tiles;
 
@@ -32,6 +33,7 @@ public class MoveSystem implements Runnable {
             PositionComponent pos = e.comp1();
             VelocityComponent vel = e.comp2();
             BoxColliderComponent boxCol = e.comp3();
+            HealthComponent hth = e.entity().get(HealthComponent.class);
 
             if (vel.x == 0 && vel.y == 0) {
                 return;
@@ -66,7 +68,7 @@ public class MoveSystem implements Runnable {
             else {
                 cherry.findEntitiesWith(TilemapComponent.class).stream().forEach(tilemap -> {
                     TilemapComponent map = tilemap.comp();
-                    processGridCollision(pos, vel, boxCol, map);
+                    processGridCollision(pos, vel, boxCol, map, hth);
                 });
             }
         });
@@ -155,7 +157,7 @@ public class MoveSystem implements Runnable {
         return new float[] {newX, newY};
     }
 
-    private void processGridCollision(PositionComponent pos, VelocityComponent vel, BoxColliderComponent boxCol, TilemapComponent map) {
+    private void processGridCollision(PositionComponent pos, VelocityComponent vel, BoxColliderComponent boxCol, TilemapComponent map, HealthComponent hth) {
         //region solid blocks
         float nextX = pos.x + boxCol.x + vel.x;
 
@@ -222,6 +224,12 @@ public class MoveSystem implements Runnable {
         }
         else {
             pos.y += vel.y;
+        }
+
+        // TODO: separate into own system
+        int mapBottom = Constants.TILESIZE * map.grid.length;
+        if (pos.y > mapBottom && hth != null) {
+            hth.health = 0;
         }
         //endregion
     }
