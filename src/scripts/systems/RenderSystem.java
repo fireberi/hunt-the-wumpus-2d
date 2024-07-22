@@ -41,6 +41,7 @@ public class RenderSystem implements Runnable {
     private HashMap<Byte, ArrayList<PositionComponent>> positionLayers = new HashMap<Byte, ArrayList<PositionComponent>>();
     private HashMap<Byte, ArrayList<GraphicsListComponent>> graphicsListLayers = new HashMap<Byte, ArrayList<GraphicsListComponent>>();
     private HashMap<Byte, ArrayList<SpriteComponent>> spriteLayers = new HashMap<Byte, ArrayList<SpriteComponent>>();
+    private HashMap<Byte, ArrayList<ImageComponent>> imageLayers = new HashMap<Byte, ArrayList<ImageComponent>>();
     private HashMap<Byte, ArrayList<TilemapComponent>> tilemapLayers = new HashMap<Byte, ArrayList<TilemapComponent>>();
     private byte maxLayers = 4;
 
@@ -61,8 +62,9 @@ public class RenderSystem implements Runnable {
         for (byte lyr = 0; lyr < maxLayers; lyr++) {
             positionLayers.put(lyr, new ArrayList<PositionComponent>());
             tilemapLayers.put(lyr, new ArrayList<TilemapComponent>());
-            graphicsListLayers.put(lyr, new ArrayList<GraphicsListComponent>());
             spriteLayers.put(lyr, new ArrayList<SpriteComponent>());
+            imageLayers.put(lyr, new ArrayList<ImageComponent>());
+            graphicsListLayers.put(lyr, new ArrayList<GraphicsListComponent>());
         }
     }
 
@@ -107,6 +109,7 @@ public class RenderSystem implements Runnable {
             positionLayers.get(lyr).clear();
             graphicsListLayers.get(lyr).clear();
             spriteLayers.get(lyr).clear();
+            imageLayers.get(lyr).clear();
             tilemapLayers.get(lyr).clear();
         }
         cherry.findEntitiesWith(RenderLayerComponent.class).stream().forEach(e -> {
@@ -115,13 +118,15 @@ public class RenderSystem implements Runnable {
             PositionComponent pos = entity.get(PositionComponent.class);
             TilemapComponent map = entity.get(TilemapComponent.class);
             SpriteComponent spr = entity.get(SpriteComponent.class);
+            ImageComponent img = entity.get(ImageComponent.class);
             GraphicsListComponent gfl = entity.get(GraphicsListComponent.class);
 
             if (pos != null || map != null) {
                 positionLayers.get(lyr).add(pos);
-                spriteLayers.get(lyr).add(spr);
-                graphicsListLayers.get(lyr).add(gfl);
                 tilemapLayers.get(lyr).add(map);
+                spriteLayers.get(lyr).add(spr);
+                imageLayers.get(lyr).add(img);
+                graphicsListLayers.get(lyr).add(gfl);
             }
         });
         //endregion
@@ -132,13 +137,15 @@ public class RenderSystem implements Runnable {
             for (PositionComponent pos : positionLayers.get(lyr)) {
                 TilemapComponent map = tilemapLayers.get(lyr).get(i);
                 SpriteComponent spr = spriteLayers.get(lyr).get(i);
+                ImageComponent img = imageLayers.get(lyr).get(i);
                 GraphicsListComponent gfl = graphicsListLayers.get(lyr).get(i);
+                int s = Constants.VIEWPORT_SCALE;
 
                 if (map != null) {
                     // render tilemap
                     int[][] grid = map.grid;
 
-                    Image img = images.get("mapSpritesheet");
+                    Image image = images.get("mapSpritesheet");
                     int imgX = 0;
                     int imgY = 0;
                     int imgW = 8;
@@ -281,7 +288,7 @@ public class RenderSystem implements Runnable {
                                 ctx.fillRect(renderX, renderY, Constants.SCALE, Constants.SCALE);
                             }
                             if (drawImage) {
-                                ctx.drawImage(img, imgX, imgY, imgW, imgH,
+                                ctx.drawImage(image, imgX, imgY, imgW, imgH,
                                     renderX, renderY,
                                     imgW * Constants.VIEWPORT_SCALE, imgH * Constants.VIEWPORT_SCALE);
                             }
@@ -292,23 +299,40 @@ public class RenderSystem implements Runnable {
                 }
                 if (spr != null) {
                     // render sprite
-                    Image img = images.get(spr.image.imageName);
+                    Image image = images.get(spr.image.imageName);
                     Frame f = spr.frame();
-                    int s = Constants.VIEWPORT_SCALE;
 
                     if (f != null) {
                         if (!spr.image.flip) {
-                            ctx.drawImage(img, f.x, f.y, f.w, f.h,
+                            ctx.drawImage(image, f.x, f.y, f.w, f.h,
                                 (pos.x + f.ox - camPos.x) * s,
                                 (pos.y + f.oy - camPos.y) * s,
                                 f.w * s, f.h * s);
                         }
                         else {
-                            ctx.drawImage(img, f.x, f.y, f.w, f.h,
+                            ctx.drawImage(image, f.x, f.y, f.w, f.h,
                                 (pos.x - f.ox - camPos.x) * s,
                                 (pos.y + f.oy - camPos.y) * s,
                                 -f.w * s, f.h * s);
                         }
+                    }
+                }
+                if (img != null) {
+                    // render image
+                    Image image = images.get(img.imageName);
+                    if (!img.flip) {
+                        ctx.drawImage(image,
+                            img.sx, img.sy, img.sw, img.sh,
+                            (pos.x + img.x - camPos.x) * s,
+                            (pos.y + img.y - camPos.y) * s,
+                            img.w * s, img.h * s);
+                    }
+                    else {
+                        ctx.drawImage(image,
+                            img.sx, img.sy, img.sw, img.sh,
+                            (pos.x - img.x - camPos.x) * s,
+                            (pos.y + img.y - camPos.y) * s,
+                            -img.w * s, img.h * s);
                     }
                 }
                 if (gfl != null) {

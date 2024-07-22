@@ -27,11 +27,12 @@ class GameManager {
         //region load images
         images.put("mapSpritesheet", new Image("graphics/map.png", 0, 0, false, true));
         images.put("hunter", new Image("graphics/hunter.png", 0, 0, false, true));
-        images.put("rusty", new Image("graphics/rusty.png", 0, 0, false, true));
         images.put("superWorm", new Image("graphics/super_worm.png", 0, 0, false, true));
         images.put("superBat", new Image("graphics/super_bat.png", 0, 0, false, true));
         images.put("superSpider", new Image("graphics/super_spider.png", 0, 0, false, true));
         images.put("ghoul", new Image("graphics/ghoul.png", 0, 0, false, true));
+        images.put("rusty", new Image("graphics/rusty.png", 0, 0, false, true));
+        images.put("spiderweb", new Image("graphics/spiderweb.png", 0, 0, false, true));
         //endregion
 
         System.out.println("GameManager init");

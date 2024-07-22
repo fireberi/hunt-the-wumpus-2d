@@ -302,9 +302,10 @@ public final class Objects {
             }),
             new DamageComponent(new Damage[] {Damage.INSTANT}, new float[] {30f}),
             // new DamageComponent(new Damage[] {Damage.CONTINUOUS}, new float[] {30f}),
+            new ImageComponent("spiderweb", -3.5f, -3.5f, 7f, 7f),
             new GraphicsListComponent(new GraphicsComponent[] {
-                new GraphicsComponent(6f, 6f, Color.rgb(0, 207, 255), true),
-                new GraphicsComponent(6f, 6f, "hitbox", false),
+                // new GraphicsComponent(6f, 6f, Color.rgb(0, 207, 255), true),
+                // new GraphicsComponent(6f, 6f, "hitbox", false),
             }),
             new RenderLayerComponent((byte) 2)
         );

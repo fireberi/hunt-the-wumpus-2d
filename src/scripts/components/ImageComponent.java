@@ -31,8 +31,8 @@ public class ImageComponent {
         this.y = y;
         this.w = w;
         this.h = h;
-        this.sx = x;
-        this.sy = y;
+        this.sx = 0;
+        this.sy = 0;
         this.sw = w;
         this.sh = h;
     }
