@@ -271,29 +271,30 @@ public final class Objects {
             new SpeedComponent(0f, 0f, 0f, 2.5f),
             new GravityComponent(0.006f),
             new BoxColliderComponent(true, 6f, 6f),
-            new HitboxComponent("projectile", true, 6f, 6f, new boolean[] {false, false}, new HitboxLogic() {
+            new HitboxComponent("projectile", true, 6f, 6f, new boolean[] {true, false}, new HitboxLogic() {
                 @Override
                 public void update(Entity hitbox, Entity hurtbox, boolean entered, boolean justEntered, boolean justExited) {
                     HitboxComponent hit = hitbox.get(HitboxComponent.class);
                     VelocityComponent vel = hitbox.get(VelocityComponent.class);
                     HurtboxComponent hrt = hurtbox.get(HurtboxComponent.class);
                     VelocityComponent hrtVel = hurtbox.get(VelocityComponent.class);
-                    HealthComponent hrtHth = hurtbox.get(HealthComponent.class);
+                    EffectReceiverComponent fxr = hurtbox.get(EffectReceiverComponent.class);
+                    EffectComponent fxc = hitbox.get(EffectComponent.class);
+
+                    boolean knockback = false;
 
                     if (justEntered) {
-                        DamageComponent dmc = hitbox.get(DamageComponent.class);
-                        hrtHth.add(dmc.effects, dmc.values);
-
-                        // knockback
-                        if (vel != null) {
-                            if (vel.facingRight) {
-                                hrtVel.x += 1.5;
-                            }
-                            else {
-                                hrtVel.x -= 1.5;
-                            }
-                            hrtVel.y -= 1;
+                        fxr.add(fxc.effects);
+                        knockback = true;
+                    }
+                    if (knockback && vel != null) {
+                        if (vel.facingRight) {
+                            hrtVel.x += 1.5;
                         }
+                        else {
+                            hrtVel.x -= 1.5;
+                        }
+                        hrtVel.y -= 1;
                     }
                 }
                 @Override
@@ -305,8 +306,9 @@ public final class Objects {
                     }
                 }
             }),
-            new DamageComponent(new Damage[] {Damage.INSTANT}, new float[] {30f}),
-            // new DamageComponent(new Damage[] {Damage.CONTINUOUS}, new float[] {30f}),
+            new EffectComponent(new Effect[] {
+                new ContinuousDamageEffect(8f, 5, 1),
+            }),
             new ImageComponent("spiderweb", -3.5f, -3.5f, 7f, 7f),
             new GraphicsListComponent(new GraphicsComponent[] {
                 // new GraphicsComponent(6f, 6f, Color.rgb(0, 207, 255), true),
