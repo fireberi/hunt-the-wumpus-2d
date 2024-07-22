@@ -691,7 +691,7 @@ public final class Objects {
                 public void clean(Dominion cherry, Entity sword) {}
             }),
             new EffectComponent(new Effect[] {
-                new SlowMovementEffect(0.1f),
+                new SlowMovementEffect(0.7f),
             }),
             new GraphicsListComponent(new GraphicsComponent[] {
                 new GraphicsComponent(128f, 128f, "hitbox", false),
