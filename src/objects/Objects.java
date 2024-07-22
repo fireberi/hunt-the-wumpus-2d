@@ -243,7 +243,10 @@ public final class Objects {
                         new Frame(0f, 0f, 19f, 20f, -7f, -10f),
                     },
                     {
-                        new Frame(0f, 0f, 19f, 20f, -7f, -10f),
+                        new Frame(0f, 0f, 19f, 20f, -19f, -11f),
+                        new Frame(0f, 0f, 19f, 20f, -14f, -10f),
+                        new Frame(0f, 0f, 19f, 20f, -11f, -10f),
+                        new Frame(0f, 0f, 19f, 20f, -14f, -10f),
                     },
                     {
                         new Frame(35f, 0f, 10f, 20f, -2f, -10f),
@@ -305,7 +308,7 @@ public final class Objects {
             new EffectComponent(new Effect[] {
                 new InstantDamageEffect(30f),
             }),
-            new ImageComponent("arrow", -20f, -3.5f, 24f, 7f),
+            new ImageComponent("arrow", -20f, -3.5f, 24f, 7f, !facingRight),
             new GraphicsListComponent(new GraphicsComponent[] {
                 // new GraphicsComponent(4f, 4f, Color.rgb(0, 207, 255), true),
                 // new GraphicsComponent(4f, 4f, "hitbox", false),
