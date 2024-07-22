@@ -266,7 +266,7 @@ public final class Objects {
             new PositionComponent(x, y),
             new VelocityComponent(direction, -0.1f, facingRight, true),
             new SpeedComponent(0f, 0f, 0f, 2.5f),
-            new GravityComponent(0.006f),
+            new GravityComponent(0.005f),
             new BoxColliderComponent(true, 4f, 4f),
             new HitboxComponent("arrow", true, 4f, 4f, new boolean[] {false, true}, new HitboxLogic() {
                 @Override
@@ -315,12 +315,12 @@ public final class Objects {
     }
 
     public static Entity createSpiderwebActor(Dominion cherry, float x, float y, boolean facingRight) {
-        float direction = facingRight ? 1.2f : -1.2f;
+        float direction = facingRight ? 1.1f : -1.1f;
         return cherry.createEntity(
             new PositionComponent(x, y),
             new VelocityComponent(direction, -0.1f, facingRight, true),
             new SpeedComponent(0f, 0f, 0f, 2.5f),
-            new GravityComponent(0.006f),
+            new GravityComponent(0.002f),
             new BoxColliderComponent(true, 6f, 6f),
             new HitboxComponent("projectile", true, 6f, 6f, new boolean[] {true, false}, new HitboxLogic() {
                 @Override

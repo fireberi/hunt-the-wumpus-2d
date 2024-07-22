@@ -186,7 +186,7 @@ public class EnemyAISystem implements Runnable {
                 boolean canSeePlayer = Math.abs((player.pos.y - player.hrt.y - (pos.y - hrt.y))) < 0.5 && Math.abs(player.pos.x - pos.x) <  Constants.TILESIZE * 24;
 
                 // super spiders stay stationary all the time, but will start spewing webs at the player if they are in range, poisoning the player
-                float range = Constants.TILESIZE * 8f;
+                float range = Constants.TILESIZE * 16f;
 
                 float playerRight = player.pos.x + player.hrt.x + player.hrt.w;
                 float playerLeft = player.pos.x + player.hrt.x;
