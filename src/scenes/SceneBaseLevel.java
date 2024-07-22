@@ -42,11 +42,7 @@ public class SceneBaseLevel extends Scene {
             Objects.createEnemyActor(cherry, x, y, e);
         }
 
-        Objects.createCharacterActor(cherry, playerSpawnX, playerSpawnY, 200f, true, new ArrayList<InventoryItem>(Arrays.asList(
-                Objects.createSwordItem(cherry, playerSpawnX, playerSpawnY),
-                Objects.createBowItem(cherry, playerSpawnX, playerSpawnY)
-            ))
-        );
+        Objects.createCharacterActor(cherry, playerSpawnX, playerSpawnY, 200f, true);
 
         // create map
         cherry.createEntity(new RenderLayerComponent((byte) 0), mapData);

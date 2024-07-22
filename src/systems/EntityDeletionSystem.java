@@ -44,7 +44,13 @@ public class EntityDeletionSystem implements Runnable {
             HealthComponent hth = e.comp();
             Entity entity = e.entity();
             if (hth.health <= 0) {
-                delete(entity);
+                if (hth.respawnLogic == null) {
+                    delete(entity);
+                }
+                else {
+                    hth.respawnLogic.respawn();
+                    delete(entity);
+                }
             }
         });
     }

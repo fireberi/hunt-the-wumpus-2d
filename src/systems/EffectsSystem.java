@@ -63,17 +63,6 @@ public class EffectsSystem implements Runnable {
                     markDeletes[i] = true;
                 }
 
-                if (hth != null && hth.health <= 0) {
-                    HitboxComponent hit = entity.get(HitboxComponent.class);
-                    HurtboxComponent hrt = entity.get(HurtboxComponent.class);
-                    if (hit != null) {
-                        hit.markDelete = true;
-                    }
-                    else if (hrt != null) {
-                        hrt.markDelete = true;
-                    }
-                }
-
                 i++;
             }
 

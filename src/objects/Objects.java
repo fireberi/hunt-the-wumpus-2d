@@ -3,6 +3,7 @@ package objects;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javafx.scene.paint.Color;
 
@@ -77,7 +78,7 @@ public final class Objects {
         );
     }
 
-    public static Entity createCharacterActor(Dominion cherry, float x, float y, float health, boolean gravity, ArrayList<InventoryItem> inventory) {
+    public static Entity createCharacterActor(Dominion cherry, float x, float y, float health, boolean gravity) {
         return cherry.createEntity(
             new PlayerControllerComponent(),
             new InputComponent(new HashMap<String, Input>(Map.ofEntries(
@@ -97,9 +98,19 @@ public final class Objects {
             new JumpComponent(1.15f, 0.75f),
             new BoxColliderComponent(true, 8f, 14f),
             new HurtboxComponent(true, 8f, 14f, new boolean[] {true, false}),
-            new HealthComponent(health),
+            new HealthComponent(health, new RespawnLogic() {
+                @Override
+                public void respawn() {
+                    createCharacterActor(cherry, x, y, 200f, gravity);
+                }
+            }),
             new EffectReceiverComponent(),
-            new InventoryComponent(0, inventory),
+            new InventoryComponent(0,
+                new ArrayList<InventoryItem>(Arrays.asList(
+                    Objects.createSwordItem(cherry, x, y),
+                    Objects.createBowItem(cherry, x, y)
+                ))
+            ),
             new FocusComponent(true, 0f, -8f),
             new SpriteComponent(new ImageComponent("hunter", 48, 32), 0, "idle", true,
                 new String[] {"idle", "air", "run", "melee", "shoot"},
