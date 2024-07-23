@@ -112,9 +112,6 @@ public class PlayerControllerSystem implements Runnable {
             if (cancelJustReleased) {
                 inp.inputs.get("cycle").release();
             }
-            if (altJustPressed) {
-                System.out.println(entity.get(HealthComponent.class).health);
-            }
 
             // animation checks
             boolean flip = !vel.facingRight;

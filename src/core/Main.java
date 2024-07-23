@@ -7,6 +7,7 @@ package core;
 - Dominion
 - components
 - systems
+- objects
 - data
 - core
 - util
@@ -57,14 +58,15 @@ public class Main extends Application {
         textFPS.setX(2);
         textFPS.setY(8);
 
-        Text textTick = new Text();
-        textTick.setText("Tick: ");
-        textTick.setFill(Color.WHITE);
-        textTick.setFont(Font.font("PT Mono", FontWeight.BOLD, 12));
-        textTick.setTextAlignment(TextAlignment.LEFT);
-        textTick.setTextOrigin(VPos.CENTER);
-        textTick.setX(2);
-        textTick.setY(24);
+        Text textTick = null;
+        // Text textTick = new Text();
+        // textTick.setText("Tick: ");
+        // textTick.setFill(Color.WHITE);
+        // textTick.setFont(Font.font("PT Mono", FontWeight.BOLD, 12));
+        // textTick.setTextAlignment(TextAlignment.LEFT);
+        // textTick.setTextOrigin(VPos.CENTER);
+        // textTick.setX(2);
+        // textTick.setY(24);
         //endregion
 
         //region setup javafx stage and scene
@@ -72,7 +74,7 @@ public class Main extends Application {
 
         root.getChildren().add(canvas);
         root.getChildren().add(textFPS);
-        root.getChildren().add(textTick);
+        // root.getChildren().add(textTick);
 
         Scene scene = new Scene(root, Constants.WIDTH * Constants.VIEWPORT_SCALE, Constants.HEIGHT * Constants.VIEWPORT_SCALE, Color.BLACK);
 
@@ -135,7 +137,7 @@ public class Main extends Application {
 
                     while (accumulator >= fuzzyTickInterval) {
                         // will pass in seconds
-                        gameManager.update(tickInterval / 1000000000.0, ctx);
+                        gameManager.update(tickInterval / 1000000000.0);
 
                         accumulator -= tickInterval;
                         if (accumulator < 0) {
@@ -149,7 +151,7 @@ public class Main extends Application {
                 }
                 else {
                     if (InputManager.inputs.get("_advance").justPressed()) {
-                        gameManager.update(tickInterval / 1000000000.0, ctx);
+                        gameManager.update(tickInterval / 1000000000.0);
 
                         accumulator = 0;
 
@@ -160,6 +162,7 @@ public class Main extends Application {
                 }
 
                 gameManager.render(ctx, stage);
+                gameManager.checkNextScene(ctx);
                 InputManager.cleanUpDevInputs();
 
                 // FPS
@@ -171,7 +174,9 @@ public class Main extends Application {
                 }
 
                 // tick
-                textTick.setText("Tick: " + tick);
+                if (textTick != null) {
+                    textTick.setText("Tick: " + tick);
+                }
             }
         }.start();
         //endregion

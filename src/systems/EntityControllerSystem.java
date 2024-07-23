@@ -152,6 +152,9 @@ public class EntityControllerSystem implements Runnable {
                 }
             }
 
+            // reset multipliers
+            spd.xMultiplier = 1;
+
             InventoryComponent inv = entity.get(InventoryComponent.class);
             if (inv != null && inv.inventory.size() != 0) {
                 if (cycleJustPressed) {

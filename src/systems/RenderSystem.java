@@ -363,7 +363,7 @@ public class RenderSystem implements Runnable {
                         txt.textLogic.update(cherry, txt);
                     }
                     ctx.setFill(Color.WHITE);
-                    ctx.setFont(Font.font("PT Mono", FontWeight.BOLD, 20));
+                    ctx.setFont(Font.font(txt.font.getFamily(), txt.font.getSize() * Constants.VIEWPORT_SCALE / 3));
                     ctx.setTextAlign(txt.alignment);
                     ctx.fillText(txt.text, (pos.x - cameraX) * vs, (pos.y - cameraY) * vs);
                 }

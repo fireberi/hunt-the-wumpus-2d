@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 
 import scenes.test.*;
 import scenes.levels.*;
+import scenes.menus.*;
 
 class GameManager {
 
@@ -17,12 +18,17 @@ class GameManager {
     private HashMap<String, Image> images = new HashMap<String, Image>();
 
     void init() {
-        sceneName = "Level1";
+        sceneName = "Start";
         sceneData.put("Test", new SceneTest());
         sceneData.put("Prototype", new ScenePrototype());
+        sceneData.put("Start", new SceneStart());
+        sceneData.put("Introduction1", new SceneIntroduction1());
+        sceneData.put("Introduction2", new SceneIntroduction2());
+        sceneData.put("Introduction3", new SceneIntroduction3());
         sceneData.put("Level1", new SceneLevel1());
         sceneData.put("Level2", new SceneLevel2());
         sceneData.put("Level3", new SceneLevel3());
+        sceneData.put("EndScreen", new SceneEndScreen());
 
         //region load images
         images.put("mapSpritesheet", new Image("graphics/map.png", 0, 0, false, true));
@@ -40,23 +46,12 @@ class GameManager {
         System.out.println("GameManager init");
     }
 
-    void update(double TICKINTERVAL, GraphicsContext ctx) {
+    void update(double TICKINTERVAL) {
         // TICKINTERVAL is in seconds
 
         Scene scene = sceneData.get(sceneName);
 
-        if (scene.nextScene != "") {
-            scene.active = false;
-            scene.shutDown();
-            sceneName = scene.nextScene;
-            scene = sceneData.get(sceneName);
-        }
-
-        if (!scene.active) {
-            scene.init(ctx, images);
-            scene.active = true;
-        }
-        else {
+        if (scene.active) {
             scene.update(TICKINTERVAL);
         }
     }
@@ -69,6 +64,23 @@ class GameManager {
 
         if (scene.active) {
             scene.render(ctx);
+        }
+    }
+
+    void checkNextScene(GraphicsContext ctx) {
+        Scene scene = sceneData.get(sceneName);
+
+        if (scene.nextScene != "") {
+            scene.active = false;
+            scene.shutDown();
+            sceneName = scene.nextScene;
+            scene.nextScene = "";
+            scene = sceneData.get(sceneName);
+        }
+
+        if (!scene.active) {
+            scene.init(ctx, images);
+            scene.active = true;
         }
     }
 

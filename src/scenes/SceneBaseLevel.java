@@ -25,13 +25,7 @@ import core.Scene;
 import core.State;
 import core.Constants;
 
-public class SceneBaseLevel extends Scene {
-
-    public Dominion cherry = Dominion.create("cherry");
-    State state = new State();
-
-    Scheduler updateScheduler = cherry.createScheduler();
-    Scheduler renderScheduler = cherry.createScheduler();
+public class SceneBaseLevel extends SceneCherry {
 
     public void loadLevel(GraphicsContext ctx, HashMap<String, Image> images, String levelName, int[] playerSpawn, float[][] enemySpawns, String nextLevel, TilemapComponent mapData) {
         // create entities
@@ -47,21 +41,39 @@ public class SceneBaseLevel extends Scene {
         Objects.createCharacterActor(cherry, playerSpawnX, playerSpawnY, 200f, true);
 
         // HUD
+        int hudY = 16;
         cherry.createEntity(
-            new PositionComponent(Constants.WIDTH / 2, Constants.HEIGHT - 20, true),
+            new PositionComponent(Constants.WIDTH / 2, hudY, true),
             new GraphicsListComponent(new GraphicsComponent[] {
-                new GraphicsComponent(280, 16, Color.web("rgba(47, 47, 63, 0.5)"), true),
-                new GraphicsComponent(276, 12, Color.web("rgba(79, 79, 95, 0.5)"), true),
+                new GraphicsComponent(200, 16, Color.web("rgba(95, 63, 79, 0.5)"), true),
+                new GraphicsComponent(196, 12, Color.web("rgba(111, 63, 63, 0.5)"), true),
             }),
             new RenderLayerComponent((byte) 3)
         );
-        Objects.createTextActor(cherry, levelName, 290, Constants.HEIGHT - 18, TextAlignment.RIGHT, true, null);
-        Objects.createTextActor(cherry, "", 30, Constants.HEIGHT - 18, TextAlignment.LEFT, true, new TextLogic() {
+        Objects.createTextActor(cherry, levelName, 250, hudY + 2, 20, TextAlignment.RIGHT, true, null);
+        Objects.createTextActor(cherry, "", 70, hudY + 2, 20, TextAlignment.LEFT, true, new TextLogic() {
             @Override
             public void update(Dominion cherry, TextComponent txt) {
                 cherry.findEntitiesWith(PlayerControllerComponent.class).stream().forEach(e -> {
                     HealthComponent hth = e.entity().get(HealthComponent.class);
                     txt.text = "HEALTH: " + (int) hth.health;
+                });
+            }
+        });
+        Objects.createTextActor(cherry, "< NO WEAPON >", Constants.WIDTH / 2, hudY + 2, 20, TextAlignment.CENTER, true, new TextLogic() {
+            @Override
+            public void update(Dominion cherry, TextComponent txt) {
+                cherry.findEntitiesWith(PlayerControllerComponent.class, InventoryComponent.class).stream().forEach(e -> {
+                    HealthComponent hth = e.entity().get(HealthComponent.class);
+                    InventoryComponent inv = e.comp2();
+                    String weaponText = "NO WEAPON";
+                    if (inv.getCurrentItemType() == "melee") {
+                        weaponText = "RUSTY (sword)";
+                    }
+                    else if (inv.getCurrentItemType() == "spawner") {
+                        weaponText = "DUSTY (bow)";
+                    }
+                    txt.text = "< " + weaponText + " >";
                 });
             }
         });
@@ -108,25 +120,6 @@ public class SceneBaseLevel extends Scene {
         updateScheduler.schedule(inputSystem);
 
         renderScheduler.schedule(renderSystem);
-    }
-
-    @Override
-    public void update(double tickInterval) {
-        // tickInterval is in seconds
-        state.updateDelta(tickInterval);
-        updateScheduler.tick();
-    }
-
-    @Override
-    public void render(GraphicsContext ctx) {
-        renderScheduler.tick();
-    }
-
-    @Override
-    public void shutDown() {
-        updateScheduler.shutDown();
-        renderScheduler.shutDown();
-        System.out.println("level shut down");
     }
 
 }

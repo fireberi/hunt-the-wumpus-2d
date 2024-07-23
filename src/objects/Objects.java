@@ -81,6 +81,13 @@ public final class Objects {
     }
 
     public static Entity createCharacterActor(Dominion cherry, float x, float y, float health, boolean gravity) {
+        boolean dev = false;
+        VelocityComponent vel = new VelocityComponent(0f, 0f, true, gravity);
+        SpeedComponent spd = new SpeedComponent(0.05f, 0.074f, 0.55f, 2.5f);
+        if (dev) {
+            vel = new VelocityComponent(0f, 0f, true, false);
+            spd = new SpeedComponent(0.05f, 0.074f, 2f, 2.5f);
+        }
         return cherry.createEntity(
             new PlayerControllerComponent(),
             new InputComponent(new HashMap<String, Input>(Map.ofEntries(
@@ -92,10 +99,8 @@ public final class Objects {
                 Map.entry("cycle", new Input())
             ))),
             new PositionComponent(x, y),
-            new VelocityComponent(0f, 0f, true, gravity),
-            new SpeedComponent(0.05f, 0.074f, 0.55f, 2.5f),
-            // new VelocityComponent(0f, 0f, true, false),
-            // new SpeedComponent(0.05f, 0.074f, 2f, 2.5f),
+            vel,
+            spd,
             new GravityComponent(),
             new JumpComponent(1.15f, 0.75f),
             new BoxColliderComponent(true, 8f, 14f),
@@ -856,10 +861,10 @@ public final class Objects {
     //endregion
 
     //region HUD
-    public static Entity createTextActor(Dominion cherry, String text, float x, float y, TextAlignment alignment, boolean fixedPosition, TextLogic textLogic) {
+    public static Entity createTextActor(Dominion cherry, String text, float x, float y, int size, TextAlignment alignment, boolean fixedPosition, TextLogic textLogic) {
         return cherry.createEntity(
             new PositionComponent(x, y, fixedPosition),
-            new TextComponent(text, "PT Mono", FontWeight.BOLD, alignment, 20, textLogic),
+            new TextComponent(text, "PT Mono", FontWeight.BOLD, alignment, size, textLogic),
             new RenderLayerComponent((byte) 3)
         );
     }
