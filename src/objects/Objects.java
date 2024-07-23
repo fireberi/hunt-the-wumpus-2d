@@ -243,8 +243,9 @@ public final class Objects {
                 @Override
                 public void spawn(Dominion cherry, Entity spawner) {
                     PositionComponent pos = spawner.get(PositionComponent.class);
+                    VelocityComponent vel = spawner.get(VelocityComponent.class);
                     SpriteComponent spr = spawner.get(SpriteComponent.class);
-                    Objects.createArrowActor(cherry, pos.x, pos.y, !spr.image.flip);
+                    Objects.createArrowActor(cherry, pos.x, pos.y, !spr.image.flip, vel.y);
                 }
             },
             new Timer[] {new Timer(0.2), new Timer(0.35), new Timer(0.05)},
@@ -281,11 +282,11 @@ public final class Objects {
         );
     }
 
-    public static Entity createArrowActor(Dominion cherry, float x, float y, boolean facingRight) {
+    public static Entity createArrowActor(Dominion cherry, float x, float y, boolean facingRight, float velY) {
         float direction = facingRight ? 1.5f : -1.5f;
         return cherry.createEntity(
             new PositionComponent(x, y),
-            new VelocityComponent(direction, -0.1f, facingRight, true),
+            new VelocityComponent(direction, velY, facingRight, true),
             new SpeedComponent(0f, 0f, 0f, 2.5f),
             new GravityComponent(0.005f),
             new BoxColliderComponent(true, 4f, 4f),
@@ -764,7 +765,6 @@ public final class Objects {
                     pos.x = opos.x;
                     pos.y = opos.y;
                     vel.x = ovel.x;
-                    vel.y = ovel.y;
                     vel.facingRight = ovel.facingRight;
                 }
             }

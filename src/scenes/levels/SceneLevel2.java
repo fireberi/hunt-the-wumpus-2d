@@ -20,7 +20,7 @@ public final class SceneLevel2 extends SceneBaseLevel {
         loadLevel(ctx, images, "Level 2", LevelData.level2.playerSpawn, LevelData.level2.enemySpawns, LevelData.level2.nextLevel, LevelData.level2.tilemap);
 
         Objects.createTextActor(cherry, "You also have your trusty dusty bow, Dusty!\n\nPress X or K to cycle weapons", 80, 80, 16, TextAlignment.CENTER, false, null);
-        Objects.createTextActor(cherry, "Try killing this bat with Dusty", 220, 110, 16, TextAlignment.CENTER, false, null);
+        Objects.createTextActor(cherry, "Try killing this bat with Dusty\n\nHint: down arrow key or S\nchanges the direction of bow", 220, 110, 16, TextAlignment.CENTER, false, null);
         Objects.createTextActor(cherry, "Watch out!\n\nLava does lots\n\nof damage!", 360, 96, 16, TextAlignment.CENTER, false, null);
         Objects.createTextActor(cherry, "Spiders shoot webs that poison you...\n\nGhouls slow you down :o", 720, 140, 16, TextAlignment.CENTER, false, null);
         Objects.createTextActor(cherry, "Your on your own now!\n\nGood luck hunting the Wumpus!", 920, 144, 16, TextAlignment.CENTER, false, null);

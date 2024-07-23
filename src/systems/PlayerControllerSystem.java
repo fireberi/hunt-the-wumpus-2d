@@ -144,8 +144,26 @@ public class PlayerControllerSystem implements Runnable {
                 }
                 else if (itemType == "spawner") {
                     TimerComponent tmc = weapon.get(TimerComponent.class);
+                    VelocityComponent wpnVel = weapon.get(VelocityComponent.class);
                     if (tmc.active()) {
                         nextAnim = "shoot";
+                    }
+                    // set bow shoot direction
+                    float upwardsShotVelocity = -0.8f;
+                    float flatShotVelocity = -0.1f;
+                    if (downJustPressed) {
+                        if (wpnVel.y == upwardsShotVelocity) {
+                            wpnVel.y = flatShotVelocity;
+                        }
+                        else if (wpnVel.y == flatShotVelocity) {
+                            wpnVel.y = upwardsShotVelocity;
+                        }
+                    }
+                    if (wpnVel.y < upwardsShotVelocity) {
+                        wpnVel.y = flatShotVelocity;
+                    }
+                    else if (wpnVel.y > flatShotVelocity) {
+                        wpnVel.y = upwardsShotVelocity;
                     }
                 }
             }
