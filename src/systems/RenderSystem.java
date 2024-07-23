@@ -21,8 +21,10 @@ import components.TilemapComponent;
 import components.FocusComponent;
 import components.ImageComponent;
 import components.SpriteComponent;
+import components.TextComponent;
 import components.RenderLayerComponent;
 import components.helpers.Frame;
+import components.helpers.TextLogic;
 
 import data.Tiles;
 
@@ -40,16 +42,17 @@ public class RenderSystem implements Runnable {
     private HashMap<String, Image> images;
 
     private HashMap<Byte, ArrayList<PositionComponent>> positionLayers = new HashMap<Byte, ArrayList<PositionComponent>>();
-    private HashMap<Byte, ArrayList<GraphicsListComponent>> graphicsListLayers = new HashMap<Byte, ArrayList<GraphicsListComponent>>();
+    private HashMap<Byte, ArrayList<TilemapComponent>> tilemapLayers = new HashMap<Byte, ArrayList<TilemapComponent>>();
     private HashMap<Byte, ArrayList<SpriteComponent>> spriteLayers = new HashMap<Byte, ArrayList<SpriteComponent>>();
     private HashMap<Byte, ArrayList<ImageComponent>> imageLayers = new HashMap<Byte, ArrayList<ImageComponent>>();
-    private HashMap<Byte, ArrayList<TilemapComponent>> tilemapLayers = new HashMap<Byte, ArrayList<TilemapComponent>>();
+    private HashMap<Byte, ArrayList<GraphicsListComponent>> graphicsListLayers = new HashMap<Byte, ArrayList<GraphicsListComponent>>();
+    private HashMap<Byte, ArrayList<TextComponent>> textLayers = new HashMap<Byte, ArrayList<TextComponent>>();
     private byte maxLayers = 4;
 
     // layer 0: map
     // layer 1: entities
     // layer 2: weapons
-    // layer 3: UNUSED
+    // layer 3: text
 
     private int cameraDecay = 10;
 
@@ -66,6 +69,7 @@ public class RenderSystem implements Runnable {
             spriteLayers.put(lyr, new ArrayList<SpriteComponent>());
             imageLayers.put(lyr, new ArrayList<ImageComponent>());
             graphicsListLayers.put(lyr, new ArrayList<GraphicsListComponent>());
+            textLayers.put(lyr, new ArrayList<TextComponent>());
         }
     }
 
@@ -108,10 +112,11 @@ public class RenderSystem implements Runnable {
         // reset the layers
         for (byte lyr = 0; lyr < maxLayers; lyr++) {
             positionLayers.get(lyr).clear();
-            graphicsListLayers.get(lyr).clear();
+            tilemapLayers.get(lyr).clear();
             spriteLayers.get(lyr).clear();
             imageLayers.get(lyr).clear();
-            tilemapLayers.get(lyr).clear();
+            graphicsListLayers.get(lyr).clear();
+            textLayers.get(lyr).clear();
         }
         cherry.findEntitiesWith(RenderLayerComponent.class).stream().forEach(e -> {
             Entity entity = e.entity();
@@ -121,6 +126,7 @@ public class RenderSystem implements Runnable {
             SpriteComponent spr = entity.get(SpriteComponent.class);
             ImageComponent img = entity.get(ImageComponent.class);
             GraphicsListComponent gfl = entity.get(GraphicsListComponent.class);
+            TextComponent txt = entity.get(TextComponent.class);
 
             if (pos != null || map != null) {
                 positionLayers.get(lyr).add(pos);
@@ -128,6 +134,7 @@ public class RenderSystem implements Runnable {
                 spriteLayers.get(lyr).add(spr);
                 imageLayers.get(lyr).add(img);
                 graphicsListLayers.get(lyr).add(gfl);
+                textLayers.get(lyr).add(txt);
             }
         });
         //endregion
@@ -140,7 +147,16 @@ public class RenderSystem implements Runnable {
                 SpriteComponent spr = spriteLayers.get(lyr).get(i);
                 ImageComponent img = imageLayers.get(lyr).get(i);
                 GraphicsListComponent gfl = graphicsListLayers.get(lyr).get(i);
-                int s = Constants.VIEWPORT_SCALE;
+                TextComponent txt = textLayers.get(lyr).get(i);
+                int s = Constants.SCALE;
+                int vs = Constants.VIEWPORT_SCALE;
+
+                float cameraX = camPos.x;
+                float cameraY = camPos.y;
+                if (pos.fixedPosition) {
+                    cameraX = 0;
+                    cameraY = 0;
+                }
 
                 if (map != null) {
                     // render tilemap
@@ -283,15 +299,15 @@ public class RenderSystem implements Runnable {
                             else {
                                 draw = false;
                             }
-                            int renderX = (int) Math.floor(x * Constants.SCALE - camPos.x * Constants.VIEWPORT_SCALE);
-                            int renderY = (int) Math.floor(y * Constants.SCALE - camPos.y * Constants.VIEWPORT_SCALE);
+                            int renderX = (int) Math.floor((x + pos.x) * s - cameraX * vs);
+                            int renderY = (int) Math.floor((y + pos.y) * s - cameraY * vs);
                             if (draw && !drawImage) {
-                                ctx.fillRect(renderX, renderY, Constants.SCALE, Constants.SCALE);
+                                ctx.fillRect(renderX, renderY, s, s);
                             }
                             if (drawImage) {
                                 ctx.drawImage(image, imgX, imgY, imgW, imgH,
                                     renderX, renderY,
-                                    imgW * Constants.VIEWPORT_SCALE, imgH * Constants.VIEWPORT_SCALE);
+                                    imgW * vs, imgH * vs);
                             }
                             x += 1;
                         }
@@ -306,15 +322,15 @@ public class RenderSystem implements Runnable {
                     if (f != null) {
                         if (!spr.image.flip) {
                             ctx.drawImage(image, f.x, f.y, f.w, f.h,
-                                (pos.x + f.ox - camPos.x) * s,
-                                (pos.y + f.oy - camPos.y) * s,
-                                f.w * s, f.h * s);
+                                (pos.x + f.ox - cameraX) * vs,
+                                (pos.y + f.oy - cameraY) * vs,
+                                f.w * vs, f.h * vs);
                         }
                         else {
                             ctx.drawImage(image, f.x, f.y, f.w, f.h,
-                                (pos.x - f.ox - camPos.x) * s,
-                                (pos.y + f.oy - camPos.y) * s,
-                                -f.w * s, f.h * s);
+                                (pos.x - f.ox - cameraX) * vs,
+                                (pos.y + f.oy - cameraY) * vs,
+                                -f.w * vs, f.h * vs);
                         }
                     }
                 }
@@ -324,23 +340,32 @@ public class RenderSystem implements Runnable {
                     if (!img.flip) {
                         ctx.drawImage(image,
                             img.sx, img.sy, img.sw, img.sh,
-                            (pos.x + img.x - camPos.x) * s,
-                            (pos.y + img.y - camPos.y) * s,
-                            img.w * s, img.h * s);
+                            (pos.x + img.x - cameraX) * vs,
+                            (pos.y + img.y - cameraY) * vs,
+                            img.w * vs, img.h * vs);
                     }
                     else {
                         ctx.drawImage(image,
                             img.sx, img.sy, img.sw, img.sh,
-                            (pos.x - img.x - camPos.x) * s,
-                            (pos.y + img.y - camPos.y) * s,
-                            -img.w * s, img.h * s);
+                            (pos.x - img.x - cameraX) * vs,
+                            (pos.y + img.y - cameraY) * vs,
+                            -img.w * vs, img.h * vs);
                     }
                 }
                 if (gfl != null) {
                     // render graphics
                     for (GraphicsComponent gfx : gfl.list) {
-                        drawRect(pos, gfx, gfx.fill);
+                        drawRect(pos, gfx, gfx.fill, cameraX, cameraY);
                     }
+                }
+                if (txt != null) {
+                    if (txt.textLogic != null) {
+                        txt.textLogic.update(cherry, txt);
+                    }
+                    ctx.setFill(Color.WHITE);
+                    ctx.setFont(Font.font("PT Mono", FontWeight.BOLD, 20));
+                    ctx.setTextAlign(txt.alignment);
+                    ctx.fillText(txt.text, (pos.x - cameraX) * vs, (pos.y - cameraY) * vs);
                 }
                 i++;
             }
@@ -368,11 +393,11 @@ public class RenderSystem implements Runnable {
         }
     }
 
-    private void drawRect(PositionComponent pos, GraphicsComponent gfx, boolean fill) {
+    private void drawRect(PositionComponent pos, GraphicsComponent gfx, boolean fill, float cameraX, float cameraY) {
         ctx.setFill(gfx.color);
         ctx.setStroke(gfx.color);
         if (fill) {
-            ctx.fillRect(Math.floor((pos.x + gfx.x - camPos.x) * Constants.VIEWPORT_SCALE), Math.floor((pos.y + gfx.y - camPos.y) * Constants.VIEWPORT_SCALE), gfx.w * Constants.VIEWPORT_SCALE, gfx.h * Constants.VIEWPORT_SCALE);
+            ctx.fillRect(Math.floor((pos.x + gfx.x - cameraX) * Constants.VIEWPORT_SCALE), Math.floor((pos.y + gfx.y - cameraY) * Constants.VIEWPORT_SCALE), gfx.w * Constants.VIEWPORT_SCALE, gfx.h * Constants.VIEWPORT_SCALE);
         }
         else {
             ctx.setLineWidth(1 * Constants.VIEWPORT_SCALE);

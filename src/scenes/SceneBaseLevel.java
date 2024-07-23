@@ -5,16 +5,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.image.Image;
 
 import dev.dominion.ecs.api.Dominion;
 import dev.dominion.ecs.api.Entity;
 import dev.dominion.ecs.api.Scheduler;
 
-import components.TilemapComponent;
-import components.RenderLayerComponent;
-import components.helpers.InventoryItem;
-import components.helpers.InventoryLogic;
+import components.*;
+import components.helpers.*;
 import systems.*;
 
 import objects.*;
@@ -31,7 +33,7 @@ public class SceneBaseLevel extends Scene {
     Scheduler updateScheduler = cherry.createScheduler();
     Scheduler renderScheduler = cherry.createScheduler();
 
-    public void loadLevel(GraphicsContext ctx, HashMap<String, Image> images, int[] playerSpawn, float[][] enemySpawns, String nextLevel, TilemapComponent mapData) {
+    public void loadLevel(GraphicsContext ctx, HashMap<String, Image> images, String levelName, int[] playerSpawn, float[][] enemySpawns, String nextLevel, TilemapComponent mapData) {
         // create entities
         float playerSpawnX = playerSpawn[0] * Constants.TILESIZE;
         float playerSpawnY = playerSpawn[1] * Constants.TILESIZE;
@@ -44,8 +46,28 @@ public class SceneBaseLevel extends Scene {
 
         Objects.createCharacterActor(cherry, playerSpawnX, playerSpawnY, 200f, true);
 
+        // HUD
+        cherry.createEntity(
+            new PositionComponent(Constants.WIDTH / 2, Constants.HEIGHT - 20, true),
+            new GraphicsListComponent(new GraphicsComponent[] {
+                new GraphicsComponent(280, 16, Color.web("rgba(47, 47, 63, 0.5)"), true),
+                new GraphicsComponent(276, 12, Color.web("rgba(79, 79, 95, 0.5)"), true),
+            }),
+            new RenderLayerComponent((byte) 3)
+        );
+        Objects.createTextActor(cherry, levelName, 290, Constants.HEIGHT - 18, TextAlignment.RIGHT, true, null);
+        Objects.createTextActor(cherry, "", 30, Constants.HEIGHT - 18, TextAlignment.LEFT, true, new TextLogic() {
+            @Override
+            public void update(Dominion cherry, TextComponent txt) {
+                cherry.findEntitiesWith(PlayerControllerComponent.class).stream().forEach(e -> {
+                    HealthComponent hth = e.entity().get(HealthComponent.class);
+                    txt.text = "HEALTH: " + (int) hth.health;
+                });
+            }
+        });
+
         // create map
-        cherry.createEntity(new RenderLayerComponent((byte) 0), mapData);
+        cherry.createEntity(new PositionComponent(0f, 0f), mapData, new RenderLayerComponent((byte) 0));
 
         // create systems
         TimerSystem timerSystem = new TimerSystem(cherry, state);
@@ -68,7 +90,6 @@ public class SceneBaseLevel extends Scene {
         InputSystem inputSystem = new InputSystem(cherry, state);
 
         RenderSystem renderSystem = new RenderSystem(cherry, state, ctx, playerSpawnX - 160f, playerSpawnY - 90f, images);
-        TextSystem textSystem = new TextSystem(cherry, ctx);
 
         EntityDeletionSystem entityDeletionSystem = new EntityDeletionSystem(cherry, state, renderSystem);
 
@@ -87,7 +108,6 @@ public class SceneBaseLevel extends Scene {
         updateScheduler.schedule(inputSystem);
 
         renderScheduler.schedule(renderSystem);
-        renderScheduler.schedule(textSystem);
     }
 
     @Override

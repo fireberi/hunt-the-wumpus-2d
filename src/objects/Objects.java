@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import javafx.scene.paint.Color;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 
 import dev.dominion.ecs.api.Dominion;
 import dev.dominion.ecs.api.Entity;
@@ -849,6 +851,16 @@ public final class Objects {
                     pos.y = opos.y;
                 }
             }
+        );
+    }
+    //endregion
+
+    //region HUD
+    public static Entity createTextActor(Dominion cherry, String text, float x, float y, TextAlignment alignment, boolean fixedPosition, TextLogic textLogic) {
+        return cherry.createEntity(
+            new PositionComponent(x, y, fixedPosition),
+            new TextComponent(text, "PT Mono", FontWeight.BOLD, alignment, 20, textLogic),
+            new RenderLayerComponent((byte) 3)
         );
     }
     //endregion

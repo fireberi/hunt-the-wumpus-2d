@@ -16,7 +16,7 @@ public final class SceneLevel3 extends SceneBaseLevel {
 
     @Override
     public void init(GraphicsContext ctx, HashMap<String, Image> images) {
-        loadLevel(ctx, images, LevelData.level3.playerSpawn, LevelData.level3.enemySpawns, LevelData.level3.nextLevel, LevelData.level3.tilemap);
+        loadLevel(ctx, images, "Level 3", LevelData.level3.playerSpawn, LevelData.level3.enemySpawns, LevelData.level3.nextLevel, LevelData.level3.tilemap);
 
         System.out.println("SceneLevel3 init");
     }
