@@ -25,7 +25,7 @@ public final class SceneIntroduction2 extends SceneCherry {
     @Override
     public void init(GraphicsContext ctx, HashMap<String, Image> images) {
 
-        Objects.createTextActor(cherry, "The fate of the Almighty Kingdom is up to you. You are the land's most renowned\n\nfighter, warrior, hunter. You have traveled far and wide, conquering numerous\n\nhostile beasts. Your years of experience are... about 150 plus? 160 plus? You\n\ncan't really keep up with the decades now.", Constants.WIDTH / 2, Constants.HEIGHT / 2 - 20, 16, TextAlignment.CENTER, true, null);
+        Objects.createTextActor(cherry, "The fate of the Almighty Kingdom is up to you. You are the land's most renowned\n\nfighter, warrior, hunter (your name is Hunter). You have travelled far and\n\nwide, conquering numerous hostile beasts. Your years of experience are... about\n\n150 plus? 160 plus? You can't really keep up with the decades now.", Constants.WIDTH / 2, Constants.HEIGHT / 2 - 20, 16, TextAlignment.CENTER, true, null);
 
         Objects.createTextActor(cherry, "Press C to continue", Constants.WIDTH / 2, Constants.HEIGHT - 16, 16, TextAlignment.CENTER, true, null);
 
