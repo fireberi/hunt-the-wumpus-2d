@@ -709,10 +709,10 @@ public final class Objects {
                 public void clean(Dominion cherry, Entity sword) {}
             }),
             new EffectComponent(new Effect[] {
-                new SlowMovementEffect(0.7f),
+                new SlowMovementEffect(0.5f),
             }),
             new GraphicsListComponent(new GraphicsComponent[] {
-                new GraphicsComponent(128f, 128f, "hitbox", false),
+                // new GraphicsComponent(128f, 128f, "hitbox", false),
             }),
             new RenderLayerComponent((byte) 2)
         );
