@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.image.Image;
 
@@ -25,9 +26,19 @@ public final class SceneIntroduction1 extends SceneCherry {
     @Override
     public void init(GraphicsContext ctx, HashMap<String, Image> images) {
 
-        Objects.createTextActor(cherry, "For many centuries, the legendary Wumpus has terrorised the citizens of the\n\nAlmighty Kingdom. On the last day of every month, the Wumpus comes out to hunt,\n\nand gobbles up any person it sees. The King has already put in vast amounts of\n\nresources and effort on troops to search the wilderness and destroy the Wumpus,\n\nand each time little troops arrive back. Often, they remark that they\n\nencountered bats, giant worms, weird ghosts that slow you down... the list goes\n\non (at least I think it does).", Constants.WIDTH / 2, Constants.HEIGHT / 2 - 40, 16, TextAlignment.CENTER, true, null);
+        Objects.createTextActor(cherry,
+            Constants.WIDTH / 2,
+            Constants.HEIGHT / 2 - 40,
+            true,
+            "For many centuries, the legendary Wumpus has terrorised the citizens of the\n\nAlmighty Kingdom. On the last day of every month, the Wumpus comes out to hunt,\n\nand gobbles up any person it sees. The King has already put in vast amounts of\n\nresources and effort on troops to search the wilderness and destroy the Wumpus,\n\nand each time little troops arrive back. Often, they remark that they\n\nencountered bats, giant worms, weird ghosts that slow you down... the list goes\n\non (at least I think it does).",
+            16, TextAlignment.CENTER, Color.WHITE, null);
 
-        Objects.createTextActor(cherry, "Press C to continue", Constants.WIDTH / 2, Constants.HEIGHT - 16, 16, TextAlignment.CENTER, true, null);
+        Objects.createTextActor(cherry,
+            Constants.WIDTH / 2,
+            Constants.HEIGHT - 16,
+            true,
+            "Press C to continue",
+            16, TextAlignment.CENTER, Color.rgb(223, 223, 0), null);
 
         final int __ = Tiles.__;
         final int W0 = Tiles.W0;

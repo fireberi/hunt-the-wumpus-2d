@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.image.Image;
 
@@ -89,10 +90,24 @@ public final class SceneEndScreen extends SceneCherry {
             new RenderLayerComponent((byte) 2)
         );
 
-        Objects.createTextActor(cherry, "Congratulations!", Constants.WIDTH / 2, Constants.HEIGHT / 2 - 48, 32, TextAlignment.CENTER, true, null);
-        Objects.createTextActor(cherry, "You beat the game! :D", Constants.WIDTH / 2, Constants.HEIGHT / 2 - 32, 24, TextAlignment.CENTER, true, null);
-
-        Objects.createTextActor(cherry, "Press C to continue", Constants.WIDTH / 2, Constants.HEIGHT - 16, 16, TextAlignment.CENTER, true, null);
+        Objects.createTextActor(cherry,
+            Constants.WIDTH / 2,
+            Constants.HEIGHT / 2 - 48,
+            true,
+             "Congratulations!",
+             32, TextAlignment.CENTER, Color.WHITE, null);
+        Objects.createTextActor(cherry,
+            Constants.WIDTH / 2,
+            Constants.HEIGHT / 2 - 32,
+            true,
+            "You beat the game! :D",
+             24, TextAlignment.CENTER, Color.WHITE, null);
+        Objects.createTextActor(cherry,
+            Constants.WIDTH / 2,
+            Constants.HEIGHT - 16,
+            true,
+            "Press C to continue",
+             16, TextAlignment.CENTER, Color.rgb(223, 223, 0), null);
 
         final int __ = Tiles.__;
         final int W0 = Tiles.W0;

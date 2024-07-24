@@ -50,8 +50,13 @@ public class SceneBaseLevel extends SceneCherry {
             }),
             new RenderLayerComponent((byte) 3)
         );
-        Objects.createTextActor(cherry, levelName, 250, hudY + 2, 20, TextAlignment.RIGHT, true, null);
-        Objects.createTextActor(cherry, "", 70, hudY + 2, 20, TextAlignment.LEFT, true, new TextLogic() {
+
+        Objects.createTextActor(cherry,
+            70,
+            hudY + 2,
+            true,
+            "",
+            20, TextAlignment.LEFT, Color.WHITE, new TextLogic() {
             @Override
             public void update(Dominion cherry, TextComponent txt) {
                 cherry.findEntitiesWith(PlayerControllerComponent.class).stream().forEach(e -> {
@@ -60,7 +65,12 @@ public class SceneBaseLevel extends SceneCherry {
                 });
             }
         });
-        Objects.createTextActor(cherry, "< NO WEAPON >", Constants.WIDTH / 2, hudY + 2, 20, TextAlignment.CENTER, true, new TextLogic() {
+        Objects.createTextActor(cherry,
+            Constants.WIDTH / 2,
+            hudY + 2,
+            true,
+            "< NO WEAPON >",
+            20, TextAlignment.CENTER, Color.WHITE, new TextLogic() {
             @Override
             public void update(Dominion cherry, TextComponent txt) {
                 cherry.findEntitiesWith(PlayerControllerComponent.class, InventoryComponent.class).stream().forEach(e -> {
@@ -77,6 +87,12 @@ public class SceneBaseLevel extends SceneCherry {
                 });
             }
         });
+        Objects.createTextActor(cherry,
+            250,
+            hudY + 2,
+            true,
+            levelName,
+            20, TextAlignment.RIGHT, Color.WHITE, null);
 
         // create map
         cherry.createEntity(new PositionComponent(0f, 0f), mapData, new RenderLayerComponent((byte) 0));

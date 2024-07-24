@@ -7,6 +7,7 @@ import java.util.Arrays;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.image.Image;
 
 import dev.dominion.ecs.api.Dominion;
@@ -113,7 +114,7 @@ public class ScenePrototype extends Scene {
 
         cherry.createEntity(
             new PositionComponent(25f, 50f),
-            new TextComponent("     false\nfalse     false\n     false", "PT Mono", FontWeight.BOLD, 12)
+            new TextComponent("     false\nfalse     false\n     false", "PT Mono", FontWeight.BOLD, 12, TextAlignment.CENTER, Color.WHITE, null)
         );
 
         //region system setup

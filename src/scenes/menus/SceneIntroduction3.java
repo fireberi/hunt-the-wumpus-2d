@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.image.Image;
 
@@ -25,9 +26,19 @@ public final class SceneIntroduction3 extends SceneCherry {
     @Override
     public void init(GraphicsContext ctx, HashMap<String, Image> images) {
 
-        Objects.createTextActor(cherry, "You are armed with your trusty rusty sword and trusty dusty bow —— named Rusty\n\nand Dusty respectively. (The King offered you new gear, but because of your\n\nover-confidence, you refused. Oh well. I guess you can pick some new gear up\n\nwhile you explore the wilderness...)\n\n\n\nSo.\n\n\n\nReady?", Constants.WIDTH / 2, Constants.HEIGHT / 2 - 40, 16, TextAlignment.CENTER, true, null);
+        Objects.createTextActor(cherry,
+            Constants.WIDTH / 2,
+           Constants.HEIGHT / 2 - 40,
+            true,
+            "You are armed with your trusty rusty sword and trusty dusty bow —— named Rusty\n\nand Dusty respectively. (The King offered you new gear, but because of your\n\nover-confidence, you refused. Oh well. I guess you can pick some new gear up\n\nwhile you explore the wilderness...)\n\n\n\nSo.\n\n\n\nReady?",
+            16, TextAlignment.CENTER, Color.WHITE, null);
 
-        Objects.createTextActor(cherry, "Press C to START!", Constants.WIDTH / 2, Constants.HEIGHT - 16, 16, TextAlignment.CENTER, true, null);
+        Objects.createTextActor(cherry,
+            Constants.WIDTH / 2,
+            Constants.HEIGHT - 16,
+            true,
+            "Press C to START!",
+            16, TextAlignment.CENTER, Color.rgb(223, 223, 0), null);
 
         final int __ = Tiles.__;
         final int W0 = Tiles.W0;

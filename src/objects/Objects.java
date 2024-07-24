@@ -861,10 +861,10 @@ public final class Objects {
     //endregion
 
     //region HUD
-    public static Entity createTextActor(Dominion cherry, String text, float x, float y, int size, TextAlignment alignment, boolean fixedPosition, TextLogic textLogic) {
+    public static Entity createTextActor(Dominion cherry, float x, float y, boolean fixedPosition, String text, int size, TextAlignment alignment, Color color, TextLogic textLogic) {
         return cherry.createEntity(
             new PositionComponent(x, y, fixedPosition),
-            new TextComponent(text, "PT Mono", FontWeight.BOLD, alignment, size, textLogic),
+            new TextComponent(text, "PT Mono", FontWeight.BOLD, size, alignment, color, textLogic),
             new RenderLayerComponent((byte) 3)
         );
     }
