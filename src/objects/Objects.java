@@ -119,7 +119,7 @@ public final class Objects {
                 ))
             ),
             new FocusComponent(true, 0f, -8f),
-            new SpriteComponent(new ImageComponent("hunter", 48, 32), 0, "idle", true,
+            new SpriteComponent(new ImageComponent("hunter", 48, 32), "idle", true,
                 new String[] {"idle", "air", "run", "melee", "shoot"},
                 new boolean[] {true, false, true, false, false},
                 new double[] {0.75, 0.1, 0.14, 0.08, 0.04},
@@ -205,7 +205,7 @@ public final class Objects {
                 new InstantDamageEffect(20f),
             }),
             new TimerComponent(false, new Timer[] {new Timer(0.16), new Timer(0.15), new Timer(0.19)}),
-            new SpriteComponent(new ImageComponent("rusty", 32, 32), 1, "idle", true,
+            new SpriteComponent(new ImageComponent("rusty", 32, 32), "idle", true,
                 new String[] {"idle", "air", "run", "melee"},
                 new boolean[] {true, false, true, false},
                 new double[] {0.75, 10, 0.14, 0.08},
@@ -250,7 +250,7 @@ public final class Objects {
             },
             new Timer[] {new Timer(0.2), new Timer(0.35), new Timer(0.05)},
             new SpriteComponent(new ImageComponent("dusty", 65, 20),
-                1, "idle", true,
+                "idle", true,
                 new String[] {"idle", "air", "run", "shoot"},
                 new boolean[] {false, false, true, false},
                 new double[] {10, 10, 0.14, 0.04},
@@ -425,7 +425,7 @@ public final class Objects {
         int currentInventory = 0;
         ArrayList<InventoryItem> inventory = new ArrayList<InventoryItem>();
         SpriteComponent spr = new SpriteComponent(new ImageComponent("", 0, 0),
-            1, "", false,
+            "", false,
             new String[0],
             new boolean[0],
             new double[0],
@@ -441,7 +441,7 @@ public final class Objects {
             health = 50f;
             inventory.add(Objects.createSuperWormAttackItem(cherry, x, y));
             spr = new SpriteComponent(new ImageComponent("superWorm", 32, 16),
-                1, "idle", true,
+                "idle", true,
                 new String[] {"idle", "run", "attack"},
                 new boolean[] {true, true, false},
                 new double[] {GameMath.randInt(70, 120) / 100, GameMath.randInt(15, 40) / 100, 0.16f},
@@ -471,7 +471,7 @@ public final class Objects {
             health = 50f;
             inventory.add(Objects.createSuperBatAttackItem(cherry, x, y));
             spr = new SpriteComponent(new ImageComponent("superBat", 32, 8),
-                1, "flap", true,
+                "flap", true,
                 new String[] {"flap"},
                 new boolean[] {true},
                 new double[] {GameMath.randInt(10, 20) / 100},
@@ -491,7 +491,7 @@ public final class Objects {
             health = 120f;
             inventory.add(Objects.createSuperSpiderAttackItem(cherry, x, y));
             spr = new SpriteComponent(new ImageComponent("superSpider", 40, 14),
-                1, "idle", true,
+                "idle", true,
                 new String[] {"idle", "attack"},
                 new boolean[] {true, true},
                 new double[] {GameMath.randInt(90, 140) / 100, 0.2},
@@ -528,7 +528,7 @@ public final class Objects {
             health = 80f;
             inventory.add(Objects.createGhoulAttackItem(cherry, x, y));
             spr = new SpriteComponent(new ImageComponent("ghoul", 24, 12),
-                1, "drift", true,
+                "drift", true,
                 new String[] {"drift"},
                 new boolean[] {true},
                 new double[] {GameMath.randInt(15, 25) / 100},
@@ -676,7 +676,7 @@ public final class Objects {
             },
             new Timer[] {new Timer(0.2), new Timer(0.1), new Timer(0.9)},
             new SpriteComponent(new ImageComponent("", 0, 0),
-                1, "", false,
+                "", false,
                 new String[0],
                 new boolean[0],
                 new double[0],

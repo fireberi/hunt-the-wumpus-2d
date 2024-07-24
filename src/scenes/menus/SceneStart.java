@@ -60,7 +60,7 @@ public final class SceneStart extends SceneCherry {
 
         cherry.createEntity(
             new PositionComponent(Constants.WIDTH / 2, Constants.HEIGHT / 2 + 15),
-            new SpriteComponent(new ImageComponent("hunter", 48, 32), 0, "idle", true,
+            new SpriteComponent(new ImageComponent("hunter", 48, 32), "idle", true,
                 new String[] {"idle"},
                 new boolean[] {true},
                 new double[] {0.75},

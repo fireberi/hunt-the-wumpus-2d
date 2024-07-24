@@ -19,7 +19,6 @@ public class SpriteComponent {
     public String nextAnim;
     public int currentFrame = 0;
     public boolean active;
-    public int layer;
     // this property is for the render system to know whether this entity has been cached
     public boolean hasCached = false;
 
@@ -32,7 +31,6 @@ public class SpriteComponent {
         this.nextAnim = "default";
         this.currentAnim = "default";
         this.active = false;
-        this.layer = 0;
         this.repeats = new boolean[] {false};
     }
 
@@ -45,33 +43,6 @@ public class SpriteComponent {
         this.nextAnim = nextAnim;
         this.currentAnim = nextAnim;
         this.active = active;
-        this.layer = 0;
-        this.repeats = repeats;
-    }
-
-    public SpriteComponent(ImageComponent image, int layer) {
-        this.image = image;
-
-        this.names = new String[] {"default"};
-        this.waitTimes = new double[] {0};
-        this.frameData = new Frame[][] {{new Frame(0, 0, image.w, image.h, 0, 0)}};
-        this.nextAnim = "default";
-        this.currentAnim = "default";
-        this.active = false;
-        this.layer = layer;
-        this.repeats = new boolean[] {false};
-    }
-
-    public SpriteComponent(ImageComponent image, int layer, String nextAnim, boolean active, String[] names, boolean[] repeats, double[] waitTimes, Frame[][] frames) {
-        this.image = image;
-
-        this.names = names;
-        this.waitTimes = waitTimes;
-        this.frameData = frames;
-        this.nextAnim = nextAnim;
-        this.currentAnim = nextAnim;
-        this.active = active;
-        this.layer = layer;
         this.repeats = repeats;
     }
 

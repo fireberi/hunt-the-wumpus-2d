@@ -29,7 +29,7 @@ public final class SceneEndScreen extends SceneCherry {
 
         cherry.createEntity(
             new PositionComponent(Constants.WIDTH / 2, Constants.HEIGHT / 2 + 7),
-            new SpriteComponent(new ImageComponent("hunter", 48, 32), 0, "victory", true,
+            new SpriteComponent(new ImageComponent("hunter", 48, 32), "victory", true,
                 new String[] {"victory"},
                 new boolean[] {true},
                 new double[] {0.05},
@@ -61,7 +61,7 @@ public final class SceneEndScreen extends SceneCherry {
 
         cherry.createEntity(
             new PositionComponent(Constants.WIDTH / 2 + 9, Constants.HEIGHT / 2 + 10),
-            new SpriteComponent(new ImageComponent("rusty", 48, 32), 0, "victory", true,
+            new SpriteComponent(new ImageComponent("rusty", 48, 32), "victory", true,
                 new String[] {"victory"},
                 new boolean[] {true},
                 new double[] {0.05},
