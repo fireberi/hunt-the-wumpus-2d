@@ -6,9 +6,9 @@ import java.util.Arrays;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.text.TextAlignment;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.image.Image;
 
 import dev.dominion.ecs.api.Dominion;
@@ -56,7 +56,7 @@ public class SceneBaseLevel extends SceneCherry {
             hudY + 2,
             true,
             "",
-            20, TextAlignment.LEFT, Color.WHITE, new TextLogic() {
+            FontWeight.BOLD, 20, TextAlignment.LEFT, Color.WHITE, new TextLogic() {
             @Override
             public void update(Dominion cherry, TextComponent txt) {
                 cherry.findEntitiesWith(PlayerControllerComponent.class).stream().forEach(e -> {
@@ -70,7 +70,7 @@ public class SceneBaseLevel extends SceneCherry {
             hudY + 2,
             true,
             "< NO WEAPON >",
-            20, TextAlignment.CENTER, Color.WHITE, new TextLogic() {
+            FontWeight.NORMAL, 20, TextAlignment.CENTER, Color.WHITE, new TextLogic() {
             @Override
             public void update(Dominion cherry, TextComponent txt) {
                 cherry.findEntitiesWith(PlayerControllerComponent.class, InventoryComponent.class).stream().forEach(e -> {
@@ -92,7 +92,7 @@ public class SceneBaseLevel extends SceneCherry {
             hudY + 2,
             true,
             levelName,
-            20, TextAlignment.RIGHT, Color.WHITE, null);
+            FontWeight.NORMAL, 20, TextAlignment.RIGHT, Color.WHITE, null);
 
         // create map
         cherry.createEntity(new PositionComponent(0f, 0f), mapData, new RenderLayerComponent((byte) 0));

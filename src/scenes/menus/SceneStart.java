@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.image.Image;
 
@@ -31,31 +32,31 @@ public final class SceneStart extends SceneCherry {
             Constants.HEIGHT / 2 - 20,
             true,
             "HUNT THE WUMPUS!",
-            40, TextAlignment.CENTER, Color.WHITE, null);
+            FontWeight.BOLD, 40, TextAlignment.CENTER, Color.WHITE, null);
         Objects.createTextActor(cherry,
             Constants.WIDTH / 2,
             Constants.HEIGHT / 2 + 50,
             true,
             "Press C to play",
-            16, TextAlignment.CENTER, Color.rgb(223, 223, 0), null);
+            FontWeight.BOLD, 16, TextAlignment.CENTER, Color.rgb(223, 223, 0), null);
         Objects.createTextActor(cherry,
             1,
             Constants.HEIGHT - 10,
             true,
             "Game, programming and art by Daniel C",
-            10, TextAlignment.LEFT, Color.WHITE, null);
+            FontWeight.NORMAL, 10, TextAlignment.LEFT, Color.WHITE, null);
         Objects.createTextActor(cherry,
             1,
             Constants.HEIGHT - 6,
             true,
             "Made for Software Engineering class",
-            10, TextAlignment.LEFT, Color.WHITE, null);
+            FontWeight.NORMAL, 10, TextAlignment.LEFT, Color.WHITE, null);
         Objects.createTextActor(cherry,
             1,
             Constants.HEIGHT - 2,
             true,
             "Programmed with Java, JavaFX and the Dominion ECS library",
-            10, TextAlignment.LEFT, Color.WHITE, null);
+            FontWeight.NORMAL, 10, TextAlignment.LEFT, Color.WHITE, null);
 
         cherry.createEntity(
             new PositionComponent(Constants.WIDTH / 2, Constants.HEIGHT / 2 + 15),
