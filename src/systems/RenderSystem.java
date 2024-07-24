@@ -362,7 +362,7 @@ public class RenderSystem implements Runnable {
                     if (txt.textLogic != null) {
                         txt.textLogic.update(cherry, txt);
                     }
-                    ctx.setFill(txt.colour);
+                    ctx.setFill(txt.color);
                     ctx.setFont(Font.font(txt.font.getFamily(), txt.weight, txt.font.getSize() * Constants.TEXT_SCALE));
                     ctx.setTextAlign(txt.alignment);
                     ctx.fillText(txt.text, (pos.x - cameraX) * vs, (pos.y - cameraY) * vs);

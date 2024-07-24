@@ -15,7 +15,7 @@ public class TextComponent {
     public FontWeight weight;
     public int size;
     public TextAlignment alignment;
-    public Color colour;
+    public Color color;
     public TextLogic textLogic;
 
     public TextComponent(String text, String font, FontWeight weight, int size, TextAlignment alignment) {
@@ -24,27 +24,27 @@ public class TextComponent {
         this.weight = weight;
         this.size = size;
         this.alignment = alignment;
-        this.colour = Color.WHITE;
+        this.color = Color.WHITE;
         this.textLogic = null;
     }
 
-    public TextComponent(String text, String font, FontWeight weight, int size, TextAlignment alignment, Color colour) {
+    public TextComponent(String text, String font, FontWeight weight, int size, TextAlignment alignment, Color color) {
         this.text = text;
         this.font = Font.font(font, weight, size);
         this.weight = weight;
         this.size = size;
         this.alignment = alignment;
-        this.colour = colour;
+        this.color = color;
         this.textLogic = textLogic;
     }
 
-    public TextComponent(String text, String font, FontWeight weight, int size, TextAlignment alignment, Color colour, TextLogic textLogic) {
+    public TextComponent(String text, String font, FontWeight weight, int size, TextAlignment alignment, Color color, TextLogic textLogic) {
         this.text = text;
         this.font = Font.font(font, weight, size);
         this.weight = weight;
         this.size = size;
         this.alignment = alignment;
-        this.colour = colour;
+        this.color = color;
         this.textLogic = textLogic;
     }
 
