@@ -33,10 +33,11 @@ import javafx.scene.input.MouseEvent;
 
 public class Main extends Application {
 
-    GameManager gameManager;
-    long startTime = System.currentTimeMillis();
-    long latestTime = System.currentTimeMillis();
-    long runningTime = latestTime - startTime;
+    private GameManager gameManager;
+    private long startTime = System.currentTimeMillis();
+    private long latestTime = System.currentTimeMillis();
+    private long runningTime = latestTime - startTime;
+    private final boolean DEVMODE = true;
 
     @Override // Application class
     public void start(Stage stage) {
@@ -49,14 +50,25 @@ public class Main extends Application {
         //endregion
 
         //region text displays
+        Text textDevMode = new Text();
+        if (DEVMODE) {
+            textDevMode.setText("DEVMODE: TRUE");
+            textDevMode.setFill(Color.WHITE);
+            textDevMode.setFont(Font.font("PT Mono", FontWeight.BOLD, 10 * Constants.TEXT_SCALE));
+            textDevMode.setTextAlignment(TextAlignment.LEFT);
+            textDevMode.setTextOrigin(VPos.CENTER);
+            textDevMode.setX(1);
+            textDevMode.setY(8);
+        }
+
         Text textFPS = new Text();
         textFPS.setText("FPS: ");
         textFPS.setFill(Color.WHITE);
-        textFPS.setFont(Font.font("PT Mono", FontWeight.BOLD, 12));
+        textFPS.setFont(Font.font("PT Mono", FontWeight.BOLD, 10 * Constants.TEXT_SCALE));
         textFPS.setTextAlignment(TextAlignment.LEFT);
         textFPS.setTextOrigin(VPos.CENTER);
-        textFPS.setX(2);
-        textFPS.setY(8);
+        textFPS.setX(1);
+        textFPS.setY(DEVMODE ? 20 : 8);
 
         Text textTick = null;
         // Text textTick = new Text();
@@ -73,6 +85,9 @@ public class Main extends Application {
         Group root = new Group();
 
         root.getChildren().add(canvas);
+        if (DEVMODE) {
+            root.getChildren().add(textDevMode);
+        }
         root.getChildren().add(textFPS);
         // root.getChildren().add(textTick);
 
@@ -127,12 +142,22 @@ public class Main extends Application {
                 long cappedDelta = Math.min(now - last, cappedDeltaLimit);
                 last = now;
 
+                if (DEVMODE) {
+                    if (InputManager.inputs.get("_freeze").justPressed()) {
+                        freezed = !freezed;
+                    }
+                    if (InputManager.inputs.get("_advance").justPressed() && freezed) {
+                        gameManager.update(tickInterval / 1000000000.0);
 
-                if (InputManager.inputs.get("_freeze").justPressed()) {
-                    freezed = !freezed;
+                        accumulator = 0;
+
+                        InputManager.cleanUpInputs();
+
+                        tick += 1;
+                    }
                 }
 
-                if (!freezed) {
+                if (!DEVMODE || !freezed) {
                     accumulator += cappedDelta;
 
                     while (accumulator >= fuzzyTickInterval) {
@@ -143,17 +168,6 @@ public class Main extends Application {
                         if (accumulator < 0) {
                             accumulator = 0;
                         }
-
-                        InputManager.cleanUpInputs();
-
-                        tick += 1;
-                    }
-                }
-                else {
-                    if (InputManager.inputs.get("_advance").justPressed()) {
-                        gameManager.update(tickInterval / 1000000000.0);
-
-                        accumulator = 0;
 
                         InputManager.cleanUpInputs();
 
