@@ -52,7 +52,7 @@ public class EffectsSystem implements Runnable {
                         System.out.println(hth.health);
                     }
 
-                    if (cdmg.repeats >= cdmg.MAXREPEATS) {
+                    if (cdmg.repeats >= cdmg.MAX_REPEATS) {
                         markDeletes[i] = true;
                     }
                 }
