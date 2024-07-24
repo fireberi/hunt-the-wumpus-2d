@@ -41,7 +41,7 @@ public final class SceneLevel1 extends SceneBaseLevel {
             832,
             56,
             false,
-            "Press Z or L to enter the next level",
+            "Press Down or S to enter the next level",
             FontWeight.NORMAL, 16, TextAlignment.CENTER, Color.WHITE, null);
 
         System.out.println("SceneLevel1 init");

@@ -74,7 +74,7 @@ public class TileCollisionSystem implements Runnable {
                     Effect[] effects = {null};
                     boolean healthAffected = false;
 
-                    if ((tile == Tiles.NA || tile == Tiles.NB || tile == Tiles.NC || tile == Tiles.ND) && pcc != null && pcc.inputs.get("alt").justPressed() && nextLevel != "") {
+                    if ((tile == Tiles.NA || tile == Tiles.NB || tile == Tiles.NC || tile == Tiles.ND) && pcc != null && pcc.inputs.get("down").justPressed() && nextLevel != "") {
                         // proceed to next level
                         System.out.println("next level");
                         scene.nextScene = nextLevel;

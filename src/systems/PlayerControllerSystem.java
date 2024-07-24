@@ -106,10 +106,10 @@ public class PlayerControllerSystem implements Runnable {
             if (confirmJustReleased) {
                 inp.inputs.get("attack").release();
             }
-            if (cancelJustPressed) {
+            if (altJustPressed) {
                 inp.inputs.get("cycle").press();
             }
-            if (cancelJustReleased) {
+            if (altJustReleased) {
                 inp.inputs.get("cycle").release();
             }
 
@@ -151,7 +151,7 @@ public class PlayerControllerSystem implements Runnable {
                     // set bow shoot direction
                     float upwardsShotVelocity = -0.8f;
                     float flatShotVelocity = -0.1f;
-                    if (downJustPressed) {
+                    if (cancelJustPressed) {
                         if (wpnVel.y == upwardsShotVelocity) {
                             wpnVel.y = flatShotVelocity;
                         }

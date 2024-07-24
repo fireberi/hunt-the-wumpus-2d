@@ -31,7 +31,7 @@ public final class SceneLevel2 extends SceneBaseLevel {
             152,
             80,
             false,
-            "Press X or K to\n\ncycle weapons",
+            "Press L or Z to\n\ncycle weapons",
             FontWeight.NORMAL, 16, TextAlignment.CENTER, Color.WHITE, null);
         Objects.createTextActor(cherry,
             264,
@@ -43,7 +43,7 @@ public final class SceneLevel2 extends SceneBaseLevel {
             456,
             112,
             false,
-            "Now try this one (hint: Press\n\nDown or S to change the angle)",
+            "Now try this one (hint: Press\n\nX or K to change the angle)",
             FontWeight.NORMAL, 16, TextAlignment.CENTER, Color.WHITE, null);
         Objects.createTextActor(cherry,
             640,
